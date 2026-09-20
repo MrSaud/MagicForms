@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
+  <rect width="1024" height="1024" rx="224" fill="#ffffff"/>
+  <!-- Web wordmark (128×32) scaled for legibility; separate glyphs avoid tspan overlap in raster export -->
+  <g transform="translate(118 372) scale(8.75)">
+    <text
+      x="0"
+      y="24"
+      font-family="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
+      font-size="22"
+      font-weight="700"
+      fill="#0071e3"
+    >S</text>
+    <text
+      x="15"
+      y="24"
+      font-family="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
+      font-size="22"
+      font-weight="700"
+      fill="#1d1d1f"
+    >Forms</text>
+  </g>
+</svg>

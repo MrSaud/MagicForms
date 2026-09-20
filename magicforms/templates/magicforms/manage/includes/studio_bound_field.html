@@ -1,0 +1,11 @@
+{% comment %}Render one Django BoundField: expects `bound`{% endcomment %}
+<div class="mf-field">
+  {{ bound.errors }}
+  {% if bound.field.widget.input_type == 'checkbox' %}
+    <label class="mf-check-label" for="{{ bound.id_for_label }}">{{ bound }} <span>{{ bound.label }}</span></label>
+  {% else %}
+    <label class="mf-label" for="{{ bound.id_for_label }}">{{ bound.label }}</label>
+    {{ bound }}
+  {% endif %}
+  {% if bound.help_text %}<p class="mf-hint">{{ bound.help_text }}</p>{% endif %}
+</div>

@@ -1,0 +1,13 @@
+{% extends "errors/base_error.html" %}
+{% load i18n %}
+
+{% block error_title %}{% trans "Access denied" %} · MagicForms{% endblock %}
+{% block error_code %}403{% endblock %}
+{% block error_heading %}{% trans "Access denied" %}{% endblock %}
+{% block error_message %}
+  {% trans "You do not have permission to view this page. Sign in with an account that has access, or contact your administrator." %}
+{% endblock %}
+{% block error_actions %}
+  <a class="mf-button mf-button--primary" href="/manage/login/">{% trans "Sign in" %}</a>
+  <a class="mf-button mf-button--secondary" href="/">{% trans "Go to home" %}</a>
+{% endblock %}

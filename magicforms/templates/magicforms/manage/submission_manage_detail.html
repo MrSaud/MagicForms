@@ -1,0 +1,858 @@
+{% extends "magicforms/manage/base_manage.html" %}
+{% load static_versioned i18n magicforms_i18n static %}
+
+{% block manage_title %}{% trans "Submission" %} {{ submission.reference_token }}{% endblock %}
+
+{% block extrahead %}{{ block.super }}
+{% if print_can_view_pdf and sign_urls %}
+<script defer src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js"></script>
+<script defer src="{% static_v 'magicforms/js/document_sign.js' %}"></script>
+{% endif %}
+{% if dynamic_route_enabled %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/css/tom-select.default.min.css" />
+<script src="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/js/tom-select.complete.min.js" defer></script>
+<script src="{% static_v 'magicforms/js/workflow_assignees_tomselect.js' %}" defer></script>
+{% endif %}
+{% endblock %}
+
+{% block manage_content %}
+<section class="mf-manage-section mf-stack mf-manage-section--sticky-dock">
+  <header class="mf-page-head">
+    <div>
+      <p class="mf-eyebrow">{{ form_obj.title|mf_trans }}</p>
+      <h1 class="mf-page-head__title">{% trans "Submission" %} <code class="mf-code">{{ submission.reference_token }}</code></h1>
+      <p class="mf-page-head__meta">
+        {{ submission.get_workflow_state_display }}
+        {% if submission.workflow_state == "in_progress" and submission.current_step %}
+          · {% trans "step" %} <span class="mf-code">{{ submission.current_step.label|mf_trans }}</span>
+        {% elif submission.workflow_state == "in_progress" %}
+          · {% trans "no step assigned" %}
+        {% endif %}
+      </p>
+    </div>
+    <div class="mf-page-head__actions">
+      <button type="button" class="mf-button mf-button--quiet mf-button--small" data-mf-side-toggle aria-pressed="true" data-label-hide="{% trans 'Hide side panel' %}" data-label-show="{% trans 'Show side panel' %}">{% trans "Show side panel" %}</button>
+    </div>
+  </header>
+
+  <script>
+    /* Side panel is closed by default; apply the remembered choice before the layout paints. */
+    (function () {
+      var shown = false;
+      try { shown = window.localStorage.getItem("mf.submission.side") === "shown"; } catch (e) {}
+      if (!shown) document.documentElement.setAttribute("data-mf-side", "hidden");
+    })();
+  </script>
+  <div class="mf-submission-layout">
+    <div class="mf-submission-layout__main">
+  {% if print_has_templates %}
+  <div class="mf-card mf-card--glass mf-stack mf-read-document-card">
+    <h2 class="mf-heading mf-heading--with-icon">
+      {% include "magicforms/manage/includes/section_heading_icon.html" with icon="document" only %}
+      {% trans "Read document section" %}
+    </h2>
+    {% include "magicforms/manage/includes/submission_merged_document_panel.html" with document_always_open=True %}
+  </div>
+  {% endif %}
+
+  {# Answers only when the form has no print template; with a template the merged PDF is the record. #}
+  {% if not print_has_templates %}
+  <div class="mf-card mf-card--glass mf-stack">
+    <details class="mf-thread-card-details" open>
+      <summary class="mf-thread-card-details__summary">
+        <h2 class="mf-heading mf-thread-card-details__title mf-heading--with-icon">
+      {% include "magicforms/manage/includes/section_heading_icon.html" with icon="answers" only %}
+      {% trans "Answers" %}
+    </h2>
+      </summary>
+      <div class="mf-thread-card-details__body mf-stack">
+    <dl class="mf-dl">
+      {% for v in values %}
+        {% if v.attachment %}
+          <dt>{{ v.field.label|mf_trans }}</dt>
+          <dd>
+            <a class="mf-link" href="{{ v.attachment.url }}" target="_blank" rel="noopener">{{ v.value|default:v.attachment.name }}</a>
+          </dd>
+        {% elif v.value %}
+          {% if not v.value|mf_is_na_placeholder %}
+            <dt>{{ v.field.label|mf_trans }}</dt>
+            <dd>{{ v.value|mf_trans }}</dd>
+          {% endif %}
+        {% else %}
+          <dt>{{ v.field.label|mf_trans }}</dt>
+          <dd><span class="mf-muted">—</span></dd>
+        {% endif %}
+      {% endfor %}
+    </dl>
+    <p class="mf-body-text mf-mt">
+      <strong>{% trans "Respondent" %}:</strong>
+      {% if submission.submitter_email %}
+        {{ submission.submitter_email }}
+      {% elif submission.submitted_by %}
+        <span class="mf-code">{{ submission.submitted_by.get_username }}</span>{% if submission.submitted_by.get_full_name %}
+          <span class="mf-muted">({{ submission.submitted_by.get_full_name }})</span>{% endif %}{% if submission.submitted_by.email %}
+          <span class="mf-muted"> · {{ submission.submitted_by.email }}</span>{% endif %}
+      {% else %}
+        <span class="mf-muted">{% trans "Anonymous (not signed in; no email stored)" %}</span>
+      {% endif %}
+    </p>
+      </div>
+    </details>
+  </div>
+  {% endif %}
+
+
+  <div class="mf-card mf-card--glass mf-stack">
+    <details class="mf-thread-card-details">
+      <summary class="mf-thread-card-details__summary mf-thread-card-details__summary--row">
+        <h2 class="mf-heading mf-thread-card-details__title mf-heading--with-icon">
+          {% include "magicforms/manage/includes/section_heading_icon.html" with icon="attachment" only %}
+          {% trans "Attachment documents" %}
+        </h2>
+        {% if submission_attachment_rows %}
+          <span class="mf-muted mf-thread-card-details__meta">{{ submission_attachment_rows|length }}</span>
+        {% endif %}
+      </summary>
+      <div class="mf-thread-card-details__body mf-stack">
+    <p class="mf-muted">
+      {% blocktrans with max=attachment_max trimmed %}
+        Extra files for this submission (respondent uploads appear on the public track page too). Maximum {{ max }} files, 15 MB each.
+      {% endblocktrans %}
+    </p>
+    {% if submission_attachment_rows %}
+    <ul class="mf-manage-table mf-card mf-card--soft mf-attachment-doc-list">
+      {% for row in submission_attachment_rows %}
+        <li class="mf-manage-row">
+          <div class="mf-manage-row-main mf-stack">
+            <div>
+              <a class="mf-manage-row-title" href="{{ row.doc.file.url }}" target="_blank" rel="noopener">{{ row.doc.title|default:row.doc.file.name }}</a>
+              <span class="mf-muted">{{ row.doc.uploaded_at|date:"M j, Y P" }}{% if row.doc.uploaded_by %} · {{ row.doc.uploaded_by }}{% else %} · {% trans "respondent" %}{% endif %}</span>
+            </div>
+            {% if row.pdf_inline_path %}
+            <details class="mf-submission-doc-details mf-submission-doc-details--attachment mf-mt">
+              <summary class="mf-submission-doc-details__summary mf-button mf-button--secondary mf-button--small">{% trans "View as PDF" %}</summary>
+              <div class="mf-submission-doc-details__body mf-stack mf-mt">
+                <div class="mf-doc-viewer-wrap mf-doc-viewer-wrap--compact">
+                  <div class="mf-doc-viewer-loading" role="status" aria-live="polite" aria-busy="true">
+                    <div class="mf-doc-viewer-loading__track" aria-hidden="true">
+                      <div class="mf-doc-viewer-loading__bar"></div>
+                    </div>
+                    <p class="mf-doc-viewer-loading__text">{% trans "Loading document…" %}</p>
+                  </div>
+                  <iframe
+                    class="mf-doc-viewer"
+                    title="{% trans 'Document preview' %}"
+                    data-pdf-src="{{ row.pdf_inline_path }}"
+                  ></iframe>
+                </div>
+              </div>
+            </details>
+            {% endif %}
+          </div>
+          <div class="mf-manage-row-actions">
+            {% if row.may_delete %}
+            <form method="post" class="mf-inline-form" onsubmit="return confirm('{% trans "Remove this attachment?" %}');">
+              {% csrf_token %}
+              <input type="hidden" name="submission_attachment_action" value="delete" />
+              <input type="hidden" name="attachment_id" value="{{ row.doc.pk }}" />
+              <button type="submit" class="mf-button mf-button--secondary">{% trans "Remove" %}</button>
+            </form>
+            {% endif %}
+          </div>
+        </li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <p class="mf-body-text mf-muted">{% trans "No extra documents yet." %}</p>
+    {% endif %}
+    <form method="post" enctype="multipart/form-data" class="mf-form mf-form--wide mf-stack mf-mt">
+      {% csrf_token %}
+      <input type="hidden" name="submission_attachment_action" value="add" />
+      <div class="mf-field">
+        {{ attachment_form.title.errors }}
+        <label class="mf-label" for="{{ attachment_form.title.id_for_label }}">{{ attachment_form.title.label }} <span class="mf-muted">({% trans "optional" %})</span></label>
+        {{ attachment_form.title }}
+      </div>
+      <div class="mf-field">
+        {{ attachment_form.file.errors }}
+        <label class="mf-label" for="{{ attachment_form.file.id_for_label }}">{{ attachment_form.file.label }}</label>
+        {{ attachment_form.file }}
+        {% if attachment_form.file.help_text %}<p class="mf-hint">{{ attachment_form.file.help_text }}</p>{% endif %}
+      </div>
+      <div class="mf-actions">
+        <button type="submit" class="mf-button mf-button--primary">{% trans "Upload document" %}</button>
+      </div>
+    </form>
+      </div>
+    </details>
+  </div>
+
+    </div>
+    <div class="mf-submission-layout__side">
+  <div class="mf-card mf-card--glass mf-stack mf-submission-workflow-card">
+    <details class="mf-thread-card-details" open>
+      <summary class="mf-thread-card-details__summary">
+        <h2 class="mf-heading mf-thread-card-details__title mf-heading--with-icon">
+      {% include "magicforms/manage/includes/section_heading_icon.html" with icon="workflow" only %}
+      {% trans "Update workflow" %}
+    </h2>
+      </summary>
+      <div class="mf-thread-card-details__body mf-stack">
+    {% if workflow_decision_enabled %}
+      {% if acting_as_delegate %}
+        <p class="mf-hint">{% blocktrans trimmed %}You are using an active <strong>delegation</strong> to approve or reject on behalf of an assignee on this step.{% endblocktrans %}</p>
+      {% endif %}
+      <p class="mf-body-text">{% trans "Approve advances to the next step (or marks the workflow complete). Reject stops the workflow at the current step." %}</p>
+      <form
+        method="post"
+        class="mf-form mf-form--wide mf-stack mf-workflow-decision"
+        data-mf-busy-aria-label="{% trans 'Loading' %}"
+        {% include "magicforms/manage/includes/workflow_approve_undo_hint_attrs.html" %}
+      >
+        {% csrf_token %}
+        <input type="hidden" name="workflow_action_anchor" value="{{ submission.current_step_id|default:0 }}" />
+        <div class="mf-field">
+          <label class="mf-label" for="id_workflow_decision_comment">
+            {% trans "Comment" %}
+            <span class="mf-muted">
+              {% blocktrans trimmed %}Optional when approving; required when rejecting.{% endblocktrans %}
+            </span>
+          </label>
+          <textarea
+            id="id_workflow_decision_comment"
+            name="workflow_decision_comment"
+            class="mf-input mf-input--textarea"
+            rows="3"
+            maxlength="800"
+            required
+            placeholder="{% trans 'Visible on the submission timeline (and public track page for respondents).' %}"
+          ></textarea>
+        </div>
+        <div class="mf-actions mf-stack">
+          <button type="submit" name="workflow_decision" value="approve" class="mf-button mf-button--primary" formnovalidate>{% trans "Approve" %}</button>
+          <button type="submit" name="workflow_decision" value="reject" class="mf-button mf-button--secondary">{% trans "Reject" %}</button>
+        </div>
+      </form>
+    {% elif dynamic_route_enabled %}
+      <p class="mf-body-text">{% trans "Route this to whoever handles it next, mark it complete, or reject it back to the original submitter." %}</p>
+      <form
+        method="post"
+        class="mf-form mf-form--wide mf-stack mf-workflow-decision"
+        data-mf-busy-aria-label="{% trans 'Loading' %}"
+      >
+        {% csrf_token %}
+        <input type="hidden" name="workflow_dynamic_route_submit" value="1" />
+        <div class="mf-field">
+          <label class="mf-label" for="{{ route_form.target_user.id_for_label }}">{% trans "Route to" %}</label>
+          {{ route_form.target_user }}
+          {% if route_form.target_user.errors %}<p class="mf-hint mf-hint--error">{{ route_form.target_user.errors|join:" " }}</p>{% endif %}
+          <p class="mf-hint">{% trans "Search by name or job title." %}</p>
+        </div>
+        <div class="mf-field">
+          <label class="mf-label" for="{{ route_form.stage_label.id_for_label }}">{{ route_form.stage_label.label }}</label>
+          {{ route_form.stage_label }}
+          <p class="mf-hint">{% trans "Shown on the timeline; not required." %}</p>
+        </div>
+        <div class="mf-field">
+          <label class="mf-label" for="{{ route_form.comment.id_for_label }}">
+            {% trans "Note" %}
+            <span class="mf-muted">{% blocktrans trimmed %}Optional, except required when rejecting.{% endblocktrans %}</span>
+          </label>
+          {{ route_form.comment }}
+          {% if route_form.comment.errors %}<p class="mf-hint mf-hint--error">{{ route_form.comment.errors|join:" " }}</p>{% endif %}
+        </div>
+        <div class="mf-actions mf-stack">
+          <button type="submit" name="action" value="route" class="mf-button mf-button--primary" formnovalidate>{% trans "Route to" %}</button>
+          <button type="submit" name="action" value="complete" class="mf-button mf-button--secondary" formnovalidate>{% trans "Mark complete" %}</button>
+          <button type="submit" name="action" value="reject" class="mf-button mf-button--secondary">{% trans "Reject" %}</button>
+        </div>
+      </form>
+    {% else %}
+      {% if submission.workflow_state != "in_progress" %}
+        <p class="mf-body-text mf-muted" role="status">{% trans "This submission is no longer awaiting approval." %}</p>
+      {% elif workflow_dynamic_routing_pending %}
+        {% if submission_current_holder_label %}
+          <p class="mf-body-text mf-muted" role="status">{% blocktrans trimmed with holder=submission_current_holder_label %}This submission is currently with {{ holder }}.{% endblocktrans %}</p>
+        {% else %}
+          <p class="mf-body-text mf-muted" role="status">{% trans "This form is set to dynamic routing, which is still being rolled out. Workflow actions will return once that is ready." %}</p>
+        {% endif %}
+      {% else %}
+        <p class="mf-body-text mf-muted mf-inbox-no-workflow-action" role="status">{% trans "No action required" %}</p>
+      {% endif %}
+    {% endif %}
+    {% if workflow_undo_visible %}
+      <form
+        method="post"
+        class="mf-form mf-stack mf-workflow-decision mf-mt"
+        data-mf-busy-aria-label="{% trans 'Loading' %}"
+      >
+        {% csrf_token %}
+        <input type="hidden" name="workflow_undo_last_approve" value="1" />
+        <input type="hidden" name="workflow_undo_event_id" value="{{ workflow_undo_event_pk }}" />
+        <p class="mf-hint">
+          {% blocktrans trimmed with minutes=workflow_undo_window_minutes %}
+            You can undo your last approval for {{ minutes }} minutes. The submission timeline records the reversal.
+          {% endblocktrans %}
+        </p>
+        <div class="mf-actions">
+          <button type="submit" class="mf-button mf-button--secondary">{% trans "Undo approve" %}</button>
+        </div>
+      </form>
+    {% endif %}
+    {% if submission.current_step %}
+      {% with assignees=submission.current_step.assigned_users.all %}
+        {% if assignees %}
+          <p class="mf-body-text mf-mt">
+            <strong>{% trans "Who receives this submission at this step:" %}</strong>
+            {% for u in assignees %}
+              <span class="mf-code">{{ u.get_username }}</span>{% if u.get_full_name %} ({{ u.get_full_name }}){% endif %}{% if u.email %} · {{ u.email }}{% endif %}{% if not forloop.last %},{% endif %}
+            {% endfor %}
+          </p>
+        {% else %}
+          <p class="mf-muted mf-mt">{% with step_label=submission.current_step.label|mf_trans %}{% blocktrans with step=step_label %}No assignees configured for step “{{ step }}”. Edit the workflow step to add staff.{% endblocktrans %}{% endwith %}</p>
+        {% endif %}
+      {% endwith %}
+    {% endif %}
+      </div>
+    </details>
+  </div>
+
+  <div
+    class="mf-card mf-card--glass mf-stack mf-thread-card"
+    id="submission-thread"
+    data-mf-thread-poll-url="{% url 'manage:submission_thread_messages_poll' pk=form_obj.pk submission_id=submission.pk %}"
+  >
+    <details class="mf-thread-card-details">
+      <summary class="mf-thread-card-details__summary">
+        <h2 class="mf-heading mf-thread-card-details__title mf-heading--with-icon">
+          {% include "magicforms/manage/includes/section_heading_icon.html" with icon="messages" only %}
+          {% trans "Thread messages" %}
+        </h2>
+      </summary>
+      <div class="mf-thread-card-details__body mf-stack">
+        <p class="mf-muted mf-body-text">
+          {% blocktrans trimmed %}
+            Notes and questions for everyone who can open this submission in the workspace—assignees on any step, delegates, and others with access through the inbox or submission search.
+          {% endblocktrans %}
+        </p>
+        <ul class="mf-thread-messages" aria-label="{% trans 'Discussion thread' %}">
+          {% for msg in thread_messages %}
+            <li class="mf-thread-messages__item" data-message-id="{{ msg.pk }}">
+              <div class="mf-thread-messages__meta">
+                <span class="mf-thread-messages__author">{{ msg.author.get_username }}</span>
+                {% if msg.author.get_full_name %}
+                  <span class="mf-muted">({{ msg.author.get_full_name }})</span>
+                {% endif %}
+                <span class="mf-thread-messages__date" title="{{ msg.created_at|date:'c' }}">{{ msg.created_at|date:"M j, Y, P" }}</span>
+              </div>
+              <div class="mf-thread-messages__body">{{ msg.body|linebreaksbr }}</div>
+            </li>
+          {% empty %}
+            <li class="mf-thread-messages__empty mf-body-text mf-muted">{% trans "No messages yet." %}</li>
+          {% endfor %}
+        </ul>
+        <form method="post" class="mf-form mf-form--wide mf-stack mf-mt">
+          {% csrf_token %}
+          <input type="hidden" name="submission_thread_post" value="1" />
+          <div class="mf-field">
+            <label class="mf-label" for="id_thread_message_body">{% trans "Add a message" %}</label>
+            <textarea
+              id="id_thread_message_body"
+              name="thread_message_body"
+              class="mf-input mf-input--textarea"
+              rows="4"
+              maxlength="4000"
+              placeholder="{% trans 'Ask a question or leave a note for others on this submission…' %}"
+            ></textarea>
+          </div>
+          <div class="mf-actions">
+            <button type="submit" class="mf-button mf-button--primary">{% trans "Post message" %}</button>
+          </div>
+        </form>
+      </div>
+    </details>
+  </div>
+
+  <div class="mf-card mf-card--soft mf-stack">
+    <details class="mf-thread-card-details">
+      <summary class="mf-thread-card-details__summary">
+        <h2 class="mf-heading mf-thread-card-details__title mf-heading--with-icon">
+          {% include "magicforms/manage/includes/section_heading_icon.html" with icon="timeline" only %}
+          {% trans "Timeline" %}
+        </h2>
+      </summary>
+      <div class="mf-thread-card-details__body mf-stack">
+        <div class="mf-actions">
+          <a
+            class="mf-button mf-button--secondary mf-button--small"
+            href="{% url 'manage:submission_timeline' form_obj.pk submission.pk %}"
+          >{% trans "Open full timeline" %}</a>
+        </div>
+        <ul class="mf-timeline">
+          {% for ev in events %}
+            <li class="mf-timeline-item">
+              <span class="mf-timeline-date">{{ ev.created_at|date:"M j, Y, P" }}</span>
+              <span class="mf-timeline-title">{{ ev|mf_timeline_kind }}</span>
+              {% if ev.step %}<span class="mf-timeline-step">{{ ev.step|mf_timeline_step }}</span>{% endif %}
+              {% if ev.created_by %}<span class="mf-muted"> · {{ ev.created_by }}</span>{% endif %}
+              {% if ev.message %}<p class="mf-body-text mf-timeline-msg">{{ ev|mf_timeline_message }}</p>{% endif %}
+            </li>
+          {% empty %}
+            <li class="mf-body-text">{% trans "No events." %}</li>
+          {% endfor %}
+        </ul>
+      </div>
+    </details>
+  </div>
+
+  <div class="mf-card mf-card--glass mf-stack mf-applicant-chat-card" id="applicant-chat">
+    <details class="mf-thread-card-details"{% if applicant_chat_messages %} open{% endif %}>
+      <summary class="mf-thread-card-details__summary mf-thread-card-details__summary--row">
+        <h2 class="mf-heading mf-thread-card-details__title mf-heading--with-icon">
+          {% include "magicforms/manage/includes/section_heading_icon.html" with icon="messages" only %}
+          {% trans "Contact applicant" %}
+        </h2>
+        {% if applicant_chat_messages %}
+          <span class="mf-muted mf-thread-card-details__meta">{{ applicant_chat_messages|length }}</span>
+        {% endif %}
+      </summary>
+      <div class="mf-thread-card-details__body mf-stack">
+        <p class="mf-muted mf-body-text">
+          {% blocktrans trimmed %}
+            Chat with the person who submitted this form. They read and reply from their public track page.
+            Each message triggers an email notification.
+          {% endblocktrans %}
+          {% if applicant_chat_recipient %}
+            <span class="mf-applicant-chat-recipient">
+              {% blocktrans with email=applicant_chat_recipient %}Applicant is notified at {{ email }}.{% endblocktrans %}
+            </span>
+          {% else %}
+            <span class="mf-muted">{% trans "No applicant email was found on this submission — they will only see messages when they open their track page." %}</span>
+          {% endif %}
+        </p>
+        <ul class="mf-thread-messages mf-applicant-chat" aria-label="{% trans 'Applicant chat' %}">
+          {% for msg in applicant_chat_messages %}
+            <li class="mf-thread-messages__item{% if msg.is_from_applicant %} mf-applicant-chat__item--applicant{% else %} mf-applicant-chat__item--staff{% endif %}">
+              <div class="mf-thread-messages__meta">
+                {% if msg.is_from_applicant %}
+                  <span class="mf-thread-messages__author">{% trans "Applicant" %}</span>
+                {% elif msg.author %}
+                  <span class="mf-thread-messages__author">{{ msg.author.get_full_name|default:msg.author.get_username }}</span>
+                {% else %}
+                  <span class="mf-thread-messages__author">{% trans "Staff" %}</span>
+                {% endif %}
+                <span class="mf-thread-messages__date" title="{{ msg.created_at|date:'c' }}">{{ msg.created_at|date:"M j, Y, P" }}</span>
+              </div>
+              <div class="mf-thread-messages__body">{{ msg.body|linebreaksbr }}</div>
+            </li>
+          {% empty %}
+            <li class="mf-thread-messages__empty mf-body-text mf-muted">{% trans "No messages yet. Start the conversation below." %}</li>
+          {% endfor %}
+        </ul>
+        <form method="post" class="mf-form mf-form--wide mf-stack mf-mt" action="#applicant-chat">
+          {% csrf_token %}
+          <input type="hidden" name="applicant_chat_post" value="1" />
+          <div class="mf-field">
+            <label class="mf-label" for="id_applicant_chat_body">{% trans "Message to applicant" %}</label>
+            <textarea
+              id="id_applicant_chat_body"
+              name="applicant_chat_body"
+              class="mf-input mf-input--textarea"
+              rows="4"
+              maxlength="4000"
+              required
+              placeholder="{% trans 'Write a message to the applicant…' %}"
+            ></textarea>
+          </div>
+          <div class="mf-actions">
+            <button type="submit" class="mf-button mf-button--primary">{% trans "Send to applicant" %}</button>
+          </div>
+        </form>
+      </div>
+    </details>
+  </div>
+
+  {% if applicant_email_allowed %}
+  <div class="mf-card mf-card--glass mf-stack mf-submission-email-applicant">
+    <details class="mf-thread-card-details">
+      <summary class="mf-thread-card-details__summary">
+        <h2 class="mf-heading mf-thread-card-details__title mf-heading--with-icon">
+      {% include "magicforms/manage/includes/section_heading_icon.html" with icon="email" only %}
+      {% trans "Email applicant" %}
+    </h2>
+      </summary>
+      <div class="mf-thread-card-details__body mf-stack">
+    <p class="mf-actions">
+      <a class="mf-button mf-button--secondary mf-button--small" href="{% url 'manage:entity_email_notifications' entity_obj_for_email.pk %}">{% trans "Email notification templates" %}</a>
+    </p>
+    <p class="mf-muted mf-body-text">
+      {% blocktrans trimmed %}
+        Send a message through this organization's configured mail server. Replies go to your account email and the organization Reply-To when set.
+      {% endblocktrans %}
+      {% if applicant_email_source_hint %}
+        <span class="mf-submission-email-applicant__mapped">
+          {% blocktrans with src=applicant_email_source_hint %}To is filled from {{ src }}.{% endblocktrans %}
+        </span>
+      {% else %}
+        <span class="mf-muted">{% trans "Enter the applicant’s email address (no email field or address found on this submission)." %}</span>
+      {% endif %}
+    </p>
+    <form method="post" class="mf-form mf-form--wide mf-stack">
+      {% csrf_token %}
+      <input type="hidden" name="submission_applicant_email_send" value="1" />
+      <div class="mf-field">
+        {{ applicant_email_form.to_email.errors }}
+        <label class="mf-label" for="{{ applicant_email_form.to_email.id_for_label }}">{{ applicant_email_form.to_email.label }}</label>
+        {{ applicant_email_form.to_email }}
+      </div>
+      <div class="mf-field">
+        {{ applicant_email_form.subject.errors }}
+        <label class="mf-label" for="{{ applicant_email_form.subject.id_for_label }}">{{ applicant_email_form.subject.label }}</label>
+        {{ applicant_email_form.subject }}
+      </div>
+      <div class="mf-field">
+        {{ applicant_email_form.message.errors }}
+        <label class="mf-label" for="{{ applicant_email_form.message.id_for_label }}">{{ applicant_email_form.message.label }}</label>
+        {{ applicant_email_form.message }}
+      </div>
+      <div class="mf-actions mf-actions--wrap">
+        <button type="submit" class="mf-button mf-button--primary">{% trans "Send email" %}</button>
+        {% if applicant_email_form.to_email.value %}
+        <a
+          class="mf-button mf-button--secondary"
+          href="mailto:{{ applicant_email_form.to_email.value }}?subject={{ applicant_email_form.subject.value|urlencode }}"
+        >{% trans "Open in mail app" %}</a>
+        {% endif %}
+      </div>
+    </form>
+      </div>
+    </details>
+  </div>
+  {% endif %}
+
+  {% if forward_form %}
+  <div class="mf-card mf-card--glass mf-stack">
+    <details class="mf-thread-card-details">
+      <summary class="mf-thread-card-details__summary">
+        <h2 class="mf-heading mf-thread-card-details__title mf-heading--with-icon">
+      {% include "magicforms/manage/includes/section_heading_icon.html" with icon="forward" only %}
+      {% trans "Forward submission" %}
+    </h2>
+      </summary>
+      <div class="mf-thread-card-details__body mf-stack">
+    <p class="mf-muted">
+      {% blocktrans trimmed %}
+        Record that this submission was brought to someone else’s attention. This adds a timeline entry and does not change workflow assignees or send email automatically.
+      {% endblocktrans %}
+    </p>
+    <form method="post" class="mf-form mf-form--wide mf-stack">
+      {% csrf_token %}
+      <input type="hidden" name="submission_forward" value="1" />
+      <div class="mf-field">
+        {{ forward_form.target_user.errors }}
+        <label class="mf-label" for="{{ forward_form.target_user.id_for_label }}">{{ forward_form.target_user.label }}</label>
+        {{ forward_form.target_user }}
+      </div>
+      <div class="mf-field">
+        {{ forward_form.note.errors }}
+        <label class="mf-label" for="{{ forward_form.note.id_for_label }}">{{ forward_form.note.label }}</label>
+        {{ forward_form.note }}
+      </div>
+      <div class="mf-actions">
+        <button type="submit" class="mf-button mf-button--primary">{% trans "Forward" %}</button>
+      </div>
+    </form>
+      </div>
+    </details>
+  </div>
+  {% endif %}
+
+  {% if related_instances %}
+  <div class="mf-card mf-card--glass mf-stack">
+    <details class="mf-thread-card-details">
+      <summary class="mf-thread-card-details__summary">
+        <h2 class="mf-heading mf-thread-card-details__title mf-heading--with-icon">
+      {% include "magicforms/manage/includes/section_heading_icon.html" with icon="related" only %}
+      {% trans "Related forms" %}
+    </h2>
+      </summary>
+      <div class="mf-thread-card-details__body mf-stack">
+    <p class="mf-muted">{% trans "Same organization; base workflow does not block on these." %}</p>
+    <ul class="mf-manage-table mf-card mf-card--soft">
+      {% for supp in related_instances %}
+      <li class="mf-manage-row">
+        <div>
+          <span class="mf-manage-row-title">{{ supp.link.child_form.title|mf_trans }}</span>
+          <span class="mf-muted"> · {% trans "Step" %} {{ supp.link.trigger_step.label|mf_trans }}</span>
+          {% if supp.child_submission %}
+            <span class="mf-muted"> · {% trans "Submitted" %}</span>
+          {% else %}
+            <span class="mf-muted"> · {% trans "Not yet submitted" %}</span>
+          {% endif %}
+        </div>
+        <div class="mf-manage-row-actions mf-stack">
+          {% if supp.child_submission %}
+            {% if supp.link.child_form.is_published %}
+            <a class="mf-link" href="{% url 'magicforms:submission_detail' entity_slug=supp.link.child_form.entity.slug slug=supp.link.child_form.slug token=supp.child_submission.reference_token %}" target="_blank" rel="noopener">{% trans "Applicant view" %}</a>
+            {% else %}
+            <a class="mf-link" href="{% url 'manage:submission_manage_detail' supp.link.child_form.pk supp.child_submission.pk %}" target="_blank" rel="noopener">{% trans "Open submission (workspace)" %}</a>
+            {% endif %}
+          {% else %}
+            {% if supp.link.child_form.is_published %}
+            <a class="mf-link" href="{% url 'magicforms:related_form_public' entity_slug=supp.link.child_form.entity.slug slug=supp.link.child_form.slug access_token=supp.access_token %}" target="_blank" rel="noopener">{% trans "Applicant link (token)" %}</a>
+            {% else %}
+            <span class="mf-muted">{% trans "Related form is still a draft; publish it to enable the public applicant link." %}</span>
+            {% endif %}
+          {% endif %}
+        </div>
+      </li>
+      {% endfor %}
+    </ul>
+      </div>
+    </details>
+  </div>
+  {% endif %}
+
+  <div class="mf-card mf-card--glass mf-stack mf-submission-task-card">
+    <details class="mf-thread-card-details">
+      <summary class="mf-thread-card-details__summary mf-thread-card-details__summary--row">
+        <h2 class="mf-heading mf-thread-card-details__title mf-heading--with-icon">
+          {% include "magicforms/manage/includes/section_heading_icon.html" with icon="checklist" only %}
+          {% trans "Your task list" %}
+        </h2>
+        {% if user_submission_task %}
+          {% if user_submission_task.is_done %}
+            <span class="mf-pill mf-pill--inbox-completed mf-thread-card-details__meta">{% trans "Done" %}</span>
+          {% else %}
+            <span class="mf-pill mf-pill--inbox-progress mf-thread-card-details__meta">{% trans "To do" %}</span>
+          {% endif %}
+        {% endif %}
+      </summary>
+      <div class="mf-thread-card-details__body mf-stack">
+    <p class="mf-muted mf-body-text">
+      {% trans "Track this request for yourself. It does not change workflow or assignees." %}
+      <a class="mf-link" href="{% url 'manage:task_list' %}">{% trans "View all tasks" %}</a>
+    </p>
+    {% if user_submission_task %}
+    <p class="mf-body-text">
+      {% if user_submission_task.is_done %}
+        <span class="mf-pill mf-pill--inbox-completed">{% trans "Done" %}</span>
+      {% else %}
+        <span class="mf-pill mf-pill--inbox-progress">{% trans "To do" %}</span>
+      {% endif %}
+      {% if user_submission_task.due_date %}
+        <span class="mf-pill{% if user_submission_task.due_urgency == 'overdue' %} mf-pill--task-overdue{% elif user_submission_task.due_urgency == 'due_soon' %} mf-pill--task-due-soon{% endif %}">
+          {% trans "Deadline" %} {{ user_submission_task.due_date|date:"M j, Y" }}
+        </span>
+      {% endif %}
+      {% if user_submission_task.note %}
+        · <span class="mf-task-list__note-inline">{{ user_submission_task.note }}</span>
+      {% endif %}
+    </p>
+    <form
+      method="post"
+      action="{% url 'manage:submission_task' form_obj.pk submission.pk %}"
+      class="mf-form mf-stack mf-submission-task-due"
+    >
+      {% csrf_token %}
+      <input type="hidden" name="task_action" value="set_due_date" />
+      <div class="mf-field">
+        <label class="mf-label" for="id_task_due_date">{% trans "Deadline" %}</label>
+        <input
+          id="id_task_due_date"
+          type="date"
+          name="task_due_date"
+          class="mf-input"
+          value="{% if user_submission_task.due_date %}{{ user_submission_task.due_date|date:'Y-m-d' }}{% endif %}"
+        />
+        <p class="mf-hint">{% trans "Clear the date and save to remove the deadline." %}</p>
+      </div>
+      <div class="mf-actions">
+        <button type="submit" class="mf-button mf-button--secondary mf-button--small">{% trans "Save deadline" %}</button>
+      </div>
+    </form>
+    <div class="mf-actions mf-actions--wrap">
+      <form
+        method="post"
+        action="{% url 'manage:submission_task' form_obj.pk submission.pk %}"
+        class="mf-inline-form"
+      >
+        {% csrf_token %}
+        <input type="hidden" name="task_action" value="toggle_done" />
+        <button type="submit" class="mf-button mf-button--secondary mf-button--small">
+          {% if user_submission_task.is_done %}{% trans "Mark as to do" %}{% else %}{% trans "Mark as done" %}{% endif %}
+        </button>
+      </form>
+      <form
+        method="post"
+        action="{% url 'manage:submission_task' form_obj.pk submission.pk %}"
+        class="mf-inline-form"
+      >
+        {% csrf_token %}
+        <input type="hidden" name="task_action" value="remove" />
+        <button type="submit" class="mf-button mf-button--secondary mf-button--small">{% trans "Remove from list" %}</button>
+      </form>
+    </div>
+    {% else %}
+    <form
+      method="post"
+      action="{% url 'manage:submission_task' form_obj.pk submission.pk %}"
+      class="mf-form mf-stack"
+    >
+      {% csrf_token %}
+      <input type="hidden" name="task_action" value="add" />
+      <div class="mf-field">
+        <label class="mf-label" for="id_task_note">{% trans "Note (optional)" %}</label>
+        <input
+          id="id_task_note"
+          type="text"
+          name="task_note"
+          class="mf-input"
+          maxlength="500"
+          placeholder="{% trans 'e.g. call applicant Friday' %}"
+        />
+      </div>
+      <div class="mf-field">
+        <label class="mf-label" for="id_task_due_date_add">{% trans "Deadline (optional)" %}</label>
+        <input id="id_task_due_date_add" type="date" name="task_due_date" class="mf-input" />
+      </div>
+      <div class="mf-actions">
+        <button type="submit" class="mf-button mf-button--primary mf-button--small">{% trans "Add to my tasks" %}</button>
+      </div>
+    </form>
+    {% endif %}
+      </div>
+    </details>
+  </div>
+
+  <div class="mf-card mf-card--glass mf-stack">
+    <details class="mf-thread-card-details">
+      <summary class="mf-thread-card-details__summary mf-thread-card-details__summary--row">
+        <h2 class="mf-heading mf-thread-card-details__title mf-heading--with-icon">
+          {% include "magicforms/manage/includes/section_heading_icon.html" with icon="tags" only %}
+          {% trans "Your tags" %}
+        </h2>
+        {% if submission_private_tags %}
+          <span class="mf-muted mf-thread-card-details__meta">{{ submission_private_tags|length }}</span>
+        {% endif %}
+      </summary>
+      <div class="mf-thread-card-details__body mf-stack">
+    <p class="mf-muted mf-body-text">
+      {% blocktrans trimmed %}
+        Only you see these labels. Separate tags with commas or new lines. On the Search page, use the “Your tag” field to list submissions you marked the same way.
+      {% endblocktrans %}
+    </p>
+    {% if submission_private_tags %}
+    <ul class="mf-private-tags-chips" aria-label="{% trans 'Your tags' %}">
+      {% for t in submission_private_tags %}
+      <li class="mf-private-tags-chip-row">
+        <span class="mf-pill mf-pill--private-tag">{{ t.label }}</span>
+        <form method="post" class="mf-inline-form" onsubmit="return confirm('{% trans 'Remove this tag?' %}');">
+          {% csrf_token %}
+          <input type="hidden" name="submission_user_tag_remove" value="1" />
+          <input type="hidden" name="user_tag_id" value="{{ t.pk }}" />
+          <button type="submit" class="mf-button mf-button--secondary mf-button--small" aria-label="{% trans 'Remove tag' %}">×</button>
+        </form>
+      </li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+    <form method="post" class="mf-form mf-form--wide mf-stack mf-mt">
+      {% csrf_token %}
+      <input type="hidden" name="submission_user_tags_save" value="1" />
+      <div class="mf-field">
+        <label class="mf-label" for="id_user_tags_input">{% trans "Edit tags" %}</label>
+        <textarea
+          id="id_user_tags_input"
+          name="user_tags_input"
+          class="mf-input mf-input--textarea"
+          rows="2"
+          maxlength="5000"
+          placeholder="{% trans 'e.g. follow-up, legal, q1-2026' %}"
+        >{{ private_tags_textarea_value }}</textarea>
+      </div>
+      <div class="mf-actions">
+        <button type="submit" class="mf-button mf-button--primary mf-button--small">{% trans "Save tags" %}</button>
+      </div>
+    </form>
+      </div>
+    </details>
+  </div>
+
+    </div>
+  </div>
+
+  <details
+    class="mf-private-sticky-dock{% if private_sticky_note.body %} mf-private-sticky-dock--has-content{% endif %}"
+    aria-label="{% trans 'Your private note' %}"
+    {% if private_sticky_saved_check %}open{% endif %}
+  >
+    <summary class="mf-private-sticky-dock__tab">
+      <span class="mf-private-sticky-dock__tab-inner">
+        <span class="mf-private-sticky-dock__tab-label">{% trans "Private note" %}</span>
+        {% if private_sticky_note.body %}
+          <span class="mf-private-sticky-dock__dot" title="{% trans 'Saved text' %}" aria-hidden="true"></span>
+        {% endif %}
+      </span>
+    </summary>
+    <div class="mf-private-sticky-dock__panel">
+      <form method="post" class="mf-form mf-private-sticky-note mf-stack" data-mf-no-busy="true">
+        {% csrf_token %}
+        <input type="hidden" name="submission_private_sticky_save" value="1" />
+        <div class="mf-private-sticky-note__header">
+          <span class="mf-private-sticky-note__pin" aria-hidden="true"></span>
+          <div>
+            <strong class="mf-private-sticky-note__title">{% trans "Your private sticky note" %}</strong>
+            <p class="mf-muted mf-private-sticky-note__subtitle">{% trans "Only you can see this. It is not shared with assignees or on the timeline." %}</p>
+          </div>
+        </div>
+        <label class="mf-label mf-sr-only" for="id_private_sticky_body">{% trans "Private note" %}</label>
+        <textarea
+          id="id_private_sticky_body"
+          name="private_sticky_body"
+          class="mf-input mf-input--textarea mf-private-sticky-note__textarea"
+          rows="6"
+          maxlength="8000"
+          placeholder="{% trans 'Reminders, follow-ups, personal context…' %}"
+        >{% if private_sticky_note %}{{ private_sticky_note.body }}{% endif %}</textarea>
+        <div class="mf-actions mf-private-sticky-note__actions mf-private-sticky-note__actions--row">
+          <button type="submit" class="mf-button mf-button--primary mf-button--small">{% trans "Save note" %}</button>
+          {% if private_sticky_saved_check %}
+            <span class="mf-sticky-saved-check" title="{% trans 'Saved' %}" aria-label="{% trans 'Saved' %}">✓</span>
+          {% endif %}
+        </div>
+        {% if private_sticky_note %}
+          <p class="mf-hint">{% trans "Last saved" %} {{ private_sticky_note.updated_at|date:"M j, Y, P" }}</p>
+        {% endif %}
+      </form>
+    </div>
+  </details>
+</section>
+{% endblock %}
+
+{% block footer_scripts %}
+{{ block.super }}
+<script src="{% static 'magicforms/js/submission_thread_poll.js' %}" defer></script>
+{% if private_sticky_saved_check %}
+<script>
+(function () {
+  var el = document.querySelector(".mf-sticky-saved-check");
+  function stripSnFromUrl() {
+    try {
+      var u = new URL(window.location.href);
+      if (u.searchParams.get("sn") === "1") {
+        u.searchParams.delete("sn");
+        var q = u.searchParams.toString();
+        window.history.replaceState(null, "", u.pathname + (q ? "?" + q : "") + u.hash);
+      }
+    } catch (e) {}
+  }
+  function hide() {
+    stripSnFromUrl();
+    if (el) el.remove();
+  }
+  window.setTimeout(hide, 3000);
+})();
+</script>
+{% endif %}
+{% endblock %}

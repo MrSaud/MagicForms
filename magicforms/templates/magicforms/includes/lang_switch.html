@@ -1,0 +1,38 @@
+{% load i18n %}
+{% get_current_language as MF_LANG %}
+<div class="mf-lang-switch" role="group" aria-label="{% trans 'Language' %}">
+  <div class="mf-lang-switch__group">
+    <form method="post" action="{{ i18n_set_language_url }}" class="mf-lang-switch__form" data-mf-no-busy="true">
+      {% csrf_token %}
+      <input type="hidden" name="next" value="{{ request.get_full_path }}" />
+      <button
+        type="submit"
+        name="language"
+        value="en"
+        class="mf-lang-switch__option{% if MF_LANG == 'en' %} mf-lang-switch__option--active{% endif %}"
+        aria-label="{% trans 'English' %}"
+        aria-pressed="{% if MF_LANG == 'en' %}true{% else %}false{% endif %}"
+        title="{% trans 'English' %}"
+        {% if MF_LANG == "en" %}disabled{% endif %}
+      >
+        <span class="mf-lang-switch__code" aria-hidden="true">EN</span>
+      </button>
+    </form>
+    <form method="post" action="{{ i18n_set_language_url }}" class="mf-lang-switch__form" data-mf-no-busy="true">
+      {% csrf_token %}
+      <input type="hidden" name="next" value="{{ request.get_full_path }}" />
+      <button
+        type="submit"
+        name="language"
+        value="ar"
+        class="mf-lang-switch__option{% if MF_LANG == 'ar' %} mf-lang-switch__option--active{% endif %}"
+        aria-label="{% trans 'Arabic' %}"
+        aria-pressed="{% if MF_LANG == 'ar' %}true{% else %}false{% endif %}"
+        title="{% trans 'Arabic' %}"
+        {% if MF_LANG == "ar" %}disabled{% endif %}
+      >
+        <span class="mf-lang-switch__code" aria-hidden="true">AR</span>
+      </button>
+    </form>
+  </div>
+</div>

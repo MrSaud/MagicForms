@@ -1,0 +1,45 @@
+{% extends "magicforms/manage/base_manage.html" %}
+{% load i18n magicforms_i18n %}
+
+{% block manage_title %}{% trans "Choose an organization" %}{% endblock %}
+
+{% block manage_content %}
+<section class="mf-manage-section mf-stack mf-org-choice">
+  <header class="mf-page-head">
+    <div>
+      <h1 class="mf-page-head__title">{% trans "Choose an organization" %}</h1>
+      <p class="mf-page-head__meta">{% trans "Pick the organization you want to work in. You can switch later with the Switch link in the top bar." %}</p>
+    </div>
+  </header>
+
+  <form method="get" class="mf-field" role="search">
+    <input type="hidden" name="next" value="{{ next_url }}">
+    <label class="mf-label" for="mf-org-q">{% trans "Search organizations" %}</label>
+    <input class="mf-input" id="mf-org-q" type="search" name="q" value="{{ search_q }}" placeholder="{% trans 'Name or slug' %}" autocomplete="off" autofocus>
+  </form>
+
+  {% if entities %}
+  <ul class="mf-org-choice__grid">
+    {% for ent in entities %}
+    <li>
+      <form method="post" action="{% url 'manage:superuser_entity_scope' %}" data-mf-no-busy="true">
+        {% csrf_token %}
+        <input type="hidden" name="entity_id" value="{{ ent.pk }}">
+        <input type="hidden" name="next" value="{{ next_url }}">
+        <button type="submit" class="mf-org-choice__card" aria-label="{% trans 'Open' %} {{ ent.name|mf_trans }}">
+          <span class="mf-org-choice__name">{{ ent.name|mf_trans }}</span>
+          <span class="mf-org-choice__meta">
+            {{ ent.slug }}
+            · {% blocktrans count counter=ent.forms_count %}{{ counter }} form{% plural %}{{ counter }} forms{% endblocktrans %}
+            {% if not ent.is_active %} · {% trans "Inactive" %}{% endif %}
+          </span>
+        </button>
+      </form>
+    </li>
+    {% endfor %}
+  </ul>
+  {% else %}
+  <div class="mf-empty"><p class="mf-empty__text">{% trans "No organizations match your search." %}</p></div>
+  {% endif %}
+</section>
+{% endblock %}

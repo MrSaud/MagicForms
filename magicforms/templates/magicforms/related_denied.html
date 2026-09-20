@@ -1,0 +1,18 @@
+{% extends "magicforms/base.html" %}
+{% load i18n portal_urls %}
+
+{% block title %}{% trans "Access denied" %} · {{ child_form_def.entity.get_public_display_title }}{% endblock %}
+
+{% block content %}
+<section class="mf-hero mf-hero--compact">
+  <h1 class="mf-display mf-display--small">{% trans "You cannot open this related form" %}</h1>
+  <p class="mf-body-text">
+    {% blocktrans trimmed %}
+      Sign in with the same account you used for the original submission, or open the related form link from your submission tracking page while using the same anonymous browser session.
+    {% endblocktrans %}
+  </p>
+  <p class="mf-muted mf-public-site-local-nav">
+    <a class="mf-link" href="{% portal_url 'magicforms:entity_home' entity_slug=child_form_def.entity.slug %}">← {% trans "Organization home" %}</a>
+  </p>
+</section>
+{% endblock %}

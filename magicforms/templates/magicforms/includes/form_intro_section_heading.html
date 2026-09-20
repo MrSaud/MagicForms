@@ -1,0 +1,6 @@
+<h2 class="mf-form-intro__heading mf-heading mf-heading--compact"{% if heading_id %} id="{{ heading_id }}"{% endif %}>
+  <span class="mf-form-intro__heading-icon" aria-hidden="true">
+    {% include "magicforms/includes/form_intro_icon.html" with icon=icon only %}
+  </span>
+  <span>{{ title }}</span>
+</h2>

@@ -1,0 +1,38 @@
+{% extends "magicforms/manage/base_manage.html" %}
+{% load i18n portal_urls %}
+
+{% block manage_title %}{% trans "Organizations" %}{% endblock %}
+
+{% block manage_content %}
+<section class="mf-manage-section mf-stack">
+  <div class="mf-manage-toolbar">
+    <div>
+      <h1 class="mf-display mf-display--small">{% trans "Organizations" %}</h1>
+      <p class="mf-muted">{% blocktrans trimmed %}Each organization has a branded portal at <code class="mf-code">/e/&lt;slug&gt;/</code>, forms at <code class="mf-code">/e/&lt;slug&gt;/f/…</code>, and workspace-scoped data. Assign users on their profile.{% endblocktrans %}</p>
+    </div>
+    <a class="mf-button mf-button--primary" href="{% url 'manage:entity_add' %}">{% trans "New organization" %}</a>
+  </div>
+
+  {% if entities %}
+  {% include "magicforms/manage/includes/studio_pagination.html" with page_obj=entities %}
+  <ul class="mf-manage-table mf-card mf-card--glass">
+    {% for e in entities %}
+      <li class="mf-manage-row">
+        <div>
+          <span class="mf-manage-row-title">{{ e.name }}</span>
+          <span class="mf-muted">{{ e.slug }}{% if not e.is_active %} · {% trans "inactive" %}{% endif %}</span>
+        </div>
+        <div class="mf-manage-row-actions">
+          <a class="mf-link" href="{% portal_full_url 'magicforms:entity_home' entity_slug=e.slug %}" target="_blank" rel="noopener">{% trans "Public portal" %}</a>
+          <a class="mf-link" href="{% url 'manage:entity_edit' e.pk %}">{% trans "Settings" %}</a>
+          <a class="mf-link" href="{% url 'manage:entity_email_notifications' e.pk %}">{% trans "Email templates" %}</a>
+        </div>
+      </li>
+    {% endfor %}
+  </ul>
+  {% include "magicforms/manage/includes/studio_pagination.html" with page_obj=entities studio_pagination_footer=1 %}
+  {% else %}
+  <p class="mf-body-text">{% trans "No organizations yet." %}</p>
+  {% endif %}
+</section>
+{% endblock %}

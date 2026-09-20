@@ -1,0 +1,56 @@
+{% extends "magicforms/base.html" %}
+{% load i18n magicforms_i18n portal_urls %}
+
+{% block html_dir %}{{ form_def.public_dir }}{% endblock %}
+
+{% block title %}{{ form_def.title|mf_trans }} · {% trans "Closed" %} · {{ form_def.entity.get_public_display_title|mf_trans }}{% endblock %}
+
+{% block content %}
+<p class="mf-hint mf-mb-text mf-public-form-nav">
+  <a class="mf-link" href="{{ studio_inbox_url }}">← {% trans "Inbox" %}</a>
+  <span class="mf-muted" aria-hidden="true"> · </span>
+  <a class="mf-link" href="{% portal_url 'magicforms:entity_home' entity_slug=form_def.entity.slug %}">{{ form_def.entity.get_public_display_title|mf_trans }}</a>
+</p>
+<section class="mf-hero mf-hero--compact">
+  <p class="mf-eyebrow">{{ form_def.title|mf_trans }}</p>
+  <h1 class="mf-display mf-display--small">{% trans "Submissions are closed" %}</h1>
+  {% if form_def.submission_deadline %}
+    {% with dl=form_def.submission_deadline|date:"F j, Y" wl=form_def.submission_deadline|date:"l" %}
+    <p class="mf-lead">
+      {% blocktrans with d=dl w=wl trimmed %}
+        The submission period ended after <strong>{{ d }}</strong> ({{ w }}).
+      {% endblocktrans %}
+    </p>
+    {% endwith %}
+  {% else %}
+    <p class="mf-lead">{% trans "This form is no longer accepting responses." %}</p>
+  {% endif %}
+  {% if form_def.description %}
+    <p class="mf-body-text">{{ form_def.description|mf_trans }}</p>
+  {% endif %}
+  {% with logos=form_def.logos.all %}
+    {% if logos %}
+      <div class="mf-form-logo-row mf-form-logo-row--hero mf-form-logo-row--slots" role="group" aria-label="{% trans 'Form logos' %}">
+        <div class="mf-form-logo-row__slot mf-form-logo-row__slot--start">
+          {% for logo in logos %}{% if logo.header_slot == 0 %}<img class="mf-form-logo" src="{{ logo.image.url }}" alt="" loading="lazy" decoding="async" />{% endif %}{% endfor %}
+        </div>
+        <div class="mf-form-logo-row__slot mf-form-logo-row__slot--center">
+          {% for logo in logos %}{% if logo.header_slot == 1 %}<img class="mf-form-logo" src="{{ logo.image.url }}" alt="" loading="lazy" decoding="async" />{% endif %}{% endfor %}
+        </div>
+        <div class="mf-form-logo-row__slot mf-form-logo-row__slot--end">
+          {% for logo in logos %}{% if logo.header_slot == 2 %}<img class="mf-form-logo" src="{{ logo.image.url }}" alt="" loading="lazy" decoding="async" />{% endif %}{% endfor %}
+        </div>
+      </div>
+    {% endif %}
+  {% endwith %}
+</section>
+
+<div class="mf-card mf-card--glass mf-stack">
+  <p class="mf-body-text">
+    {% blocktrans trimmed %}
+      If you think this is a mistake, contact the form owner. Workspace users can open the
+    {% endblocktrans %}
+    <a class="mf-link" href="{{ studio_inbox_url }}">{% trans "Inbox" %}</a>.
+  </p>
+</div>
+{% endblock %}

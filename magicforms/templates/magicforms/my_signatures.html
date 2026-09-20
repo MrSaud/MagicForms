@@ -1,0 +1,95 @@
+{% extends "magicforms/base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "My signatures" %} · MagicForms{% endblock %}
+
+{% block content %}
+<section class="mf-hero mf-hero--compact">
+  <p class="mf-eyebrow">{% trans "Account" %}</p>
+  <h1 class="mf-display mf-display--small">{% trans "My signatures" %}</h1>
+  <p class="mf-lead">
+    {% blocktrans trimmed %}
+      Upload images of your signature for use in printable documents when you submit a form while signed in. You can add more than one (for example different languages or styles). The first image is used as the main signature in merged documents; use “Set as primary” to choose which image that is.
+    {% endblocktrans %}
+  </p>
+</section>
+
+{% if messages %}
+<ul class="mf-messages">
+  {% for message in messages %}
+    <li class="mf-message mf-message--{{ message.level_tag }}">{{ message }}</li>
+  {% endfor %}
+</ul>
+{% endif %}
+
+<section class="mf-card mf-card--glass mf-stack mf-stack--lg">
+  <h2 class="mf-heading">{% trans "Your signature images" %}</h2>
+  <p class="mf-muted mf-mb-text">
+    {% blocktrans with lim=signature_limit trimmed %}
+      PNG, JPEG, GIF, WebP, or SVG. Up to {{ lim }} images.
+    {% endblocktrans %}
+  </p>
+
+  {% if signatures %}
+  <ul class="mf-signature-list mf-card mf-card--soft">
+    {% for sig in signatures %}
+      <li class="mf-signature-row">
+        <div class="mf-signature-thumb-wrap">
+          {% if sig.image %}
+            <img class="mf-signature-thumb" src="{{ sig.image.url }}" alt="" width="120" height="80" loading="lazy" />
+          {% endif %}
+        </div>
+        <div class="mf-signature-meta">
+          <p class="mf-body-text">
+            <strong>{% if sig.label %}{{ sig.label }}{% else %}{% trans "(no label)" %}{% endif %}</strong>
+            {% if forloop.first %}<span class="mf-badge" role="status">{% trans "Primary" %}</span>{% endif %}
+          </p>
+          <p class="mf-muted">{% trans "Added" %} {{ sig.created_at|date:"M j, Y" }}</p>
+        </div>
+        <div class="mf-signature-actions">
+          {% if not forloop.first %}
+          <form method="post" class="mf-inline-form">
+            {% csrf_token %}
+            <input type="hidden" name="signature_action" value="set_primary" />
+            <input type="hidden" name="signature_id" value="{{ sig.pk }}" />
+            <button type="submit" class="mf-button mf-button--secondary">{% trans "Set as primary" %}</button>
+          </form>
+          {% endif %}
+          <form method="post" class="mf-inline-form" onsubmit="return confirm('{% trans "Remove this signature image?" %}');">
+            {% csrf_token %}
+            <input type="hidden" name="signature_action" value="delete" />
+            <input type="hidden" name="signature_id" value="{{ sig.pk }}" />
+            <button type="submit" class="mf-button mf-button--secondary">{% trans "Remove" %}</button>
+          </form>
+        </div>
+      </li>
+    {% endfor %}
+  </ul>
+  {% else %}
+  <p class="mf-body-text mf-muted">{% trans "No signature images yet." %}</p>
+  {% endif %}
+
+  <div class="mf-card mf-card--glass mf-stack mf-mt-section">
+    <h3 class="mf-heading mf-heading--section">{% trans "Add signature image" %}</h3>
+    <form method="post" enctype="multipart/form-data" class="mf-form mf-form--wide mf-stack">
+      {% csrf_token %}
+      <input type="hidden" name="signature_action" value="add" />
+      <div class="mf-field">
+        {{ signature_add_form.label.errors }}
+        <label class="mf-label" for="{{ signature_add_form.label.id_for_label }}">{{ signature_add_form.label.label }}</label>
+        {{ signature_add_form.label }}
+      </div>
+      <div class="mf-field">
+        {{ signature_add_form.image.errors }}
+        <label class="mf-label" for="{{ signature_add_form.image.id_for_label }}">{{ signature_add_form.image.label }}</label>
+        {{ signature_add_form.image }}
+        {% if signature_add_form.image.help_text %}<p class="mf-hint">{{ signature_add_form.image.help_text }}</p>{% endif %}
+      </div>
+      <div class="mf-actions">
+        <button type="submit" class="mf-button mf-button--primary">{% trans "Upload signature" %}</button>
+      </div>
+      <p class="mf-hint mf-mt mf-public-site-local-nav"><a class="mf-link" href="{{ portal_home_url }}">{% trans "Back to home" %}</a></p>
+    </form>
+  </div>
+</section>
+{% endblock %}

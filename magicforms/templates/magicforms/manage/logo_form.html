@@ -1,0 +1,38 @@
+{% extends "magicforms/manage/base_manage.html" %}
+{% load i18n %}
+
+{% block manage_title %}
+  {% if editing_logo %}{% trans "Edit logo" %}{% else %}{% trans "Add logo" %}{% endif %} · {{ form_obj.title }}
+{% endblock %}
+
+{% block manage_content %}
+<section class="mf-manage-section mf-stack">
+  <h1 class="mf-display mf-display--small">
+    {% if editing_logo %}{% trans "Edit logo" %}{% else %}{% trans "Add logo" %}{% endif %}
+  </h1>
+  <p class="mf-muted">
+    {% trans "PNG, JPEG, GIF, WebP, or SVG. Maximum three logos per form (one per position)." %}
+  </p>
+
+  <form method="post" class="mf-form mf-form--wide" enctype="multipart/form-data">
+    {% csrf_token %}
+    {% if form.non_field_errors %}<div class="mf-alert mf-alert--error">{{ form.non_field_errors }}</div>{% endif %}
+    <div class="mf-field">
+      {{ form.image.errors }}
+      <label class="mf-label" for="{{ form.image.id_for_label }}">{{ form.image.label }}</label>
+      {{ form.image }}
+      {% if form.image.help_text %}<p class="mf-hint">{{ form.image.help_text }}</p>{% endif %}
+    </div>
+    <div class="mf-field">
+      {{ form.header_slot.errors }}
+      <label class="mf-label" for="{{ form.header_slot.id_for_label }}">{{ form.header_slot.label }}</label>
+      {{ form.header_slot }}
+      {% if form.header_slot.help_text %}<p class="mf-hint">{{ form.header_slot.help_text }}</p>{% endif %}
+    </div>
+    <div class="mf-actions">
+      <button type="submit" class="mf-button mf-button--primary">{% if editing_logo %}{% trans "Save" %}{% else %}{% trans "Upload" %}{% endif %}</button>
+      <a class="mf-link mf-link--muted" href="{% url 'manage:logo_list' form_obj.pk %}">{% trans "Cancel" %}</a>
+    </div>
+  </form>
+</section>
+{% endblock %}

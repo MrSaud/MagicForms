@@ -1,0 +1,24 @@
+<a
+  class="mf-brand-logo-link{% if brand_link_extra_class %} {{ brand_link_extra_class }}{% endif %}"
+  href="{% if brand_logo_href %}{{ brand_logo_href }}{% elif portal_short_urls %}{{ portal_home_url }}{% else %}{{ apex_public_home_url }}{% endif %}"
+>
+  {% if brand_wordmark_only %}
+    <span class="mf-brand-wordmark" aria-label="SwapForms" translate="no"><span class="mf-brand-wordmark__swap">swap</span><span class="mf-brand-wordmark__forms">forms</span></span>
+  {% elif form_obj and form_obj.entity.page_logo %}
+    <img
+      class="mf-brand-logo-img mf-brand-logo-img--entity"
+      src="{{ form_obj.entity.page_logo.url }}"
+      alt="{{ form_obj.entity.name }}"
+      decoding="async"
+    />
+  {% elif banner_logo_url %}
+    <img
+      class="mf-brand-logo-img mf-brand-logo-img--entity"
+      src="{{ banner_logo_url }}"
+      alt="{{ banner_logo_alt }}"
+      decoding="async"
+    />
+  {% else %}
+    <span class="mf-brand-wordmark" aria-label="SwapForms" translate="no"><span class="mf-brand-wordmark__swap">swap</span><span class="mf-brand-wordmark__forms">forms</span></span>
+  {% endif %}
+</a>

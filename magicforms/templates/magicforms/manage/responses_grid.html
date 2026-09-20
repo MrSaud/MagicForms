@@ -1,0 +1,588 @@
+{% extends "magicforms/manage/base_manage.html" %}
+{% load opaque_ids i18n magicforms_i18n static %}
+
+{% block shell_class %}{{ block.super }} mf-shell--wide{% endblock %}
+
+{% block manage_title %}{% trans "Responses grid" %}{% endblock %}
+
+{% block manage_content %}
+<section class="mf-manage-section mf-stack mf-responses-grid">
+  <header class="mf-page-head">
+    <div>
+      <h1 class="mf-page-head__title">{% trans "Responses grid" %}</h1>
+      <p class="mf-page-head__meta">{% trans "Choose a form to see each applicant’s answers." %}</p>
+    </div>
+  </header>
+
+  {% if not selected_form and forms_for_select %}
+    {% include "magicforms/manage/includes/responses_grid_picker.html" %}
+  {% endif %}
+
+  {% if not forms_for_select %}
+    <div class="mf-empty"><p class="mf-empty__text">{% trans "No forms with submitted answers are available in your workspace scope." %}</p></div>
+  {% elif selected_form %}
+    <div class="mf-responses-grid__toolbar mf-manage-toolbar">
+      <p class="mf-responses-grid__toolbar-text mf-muted mf-body-text">
+        {% trans "Showing answers for" %}
+        <strong>{{ selected_form.title|mf_trans }}</strong>.
+        {% if responses_submitted_from or responses_submitted_to %}
+          {% trans "Filtered by submit date" %}
+          {% if responses_submitted_from %}<span class="mf-responses-grid__date-filter">{% trans "from" %} {{ responses_submitted_from }}</span>{% endif %}
+          {% if responses_submitted_to %}<span class="mf-responses-grid__date-filter">{% trans "to" %} {{ responses_submitted_to }}</span>{% endif %}.
+        {% endif %}
+        {% if responses_search_q and submissions_page %}
+          {% blocktrans count counter=submissions_page.paginator.count with q=responses_search_q trimmed %}
+            {{ counter }} submission matches “{{ q }}”.
+          {% plural %}
+            {{ counter }} submissions match “{{ q }}”.
+          {% endblocktrans %}
+        {% endif %}
+        {% trans "The table below is paginated. Click a column heading to sort." %}
+      </p>
+    </div>
+
+    {% if grid_stats %}
+    <section class="mf-responses-stats mf-stack" aria-label="{% trans 'Response statistics' %}">
+      <h2 class="mf-heading mf-heading--section">{% trans "Statistics" %}</h2>
+      <div class="mf-responses-stats__cards">
+        <article class="mf-responses-stats__card mf-card mf-card--glass">
+          <p class="mf-responses-stats__card-value">{{ grid_stats.total }}</p>
+          <p class="mf-responses-stats__card-label">{% trans "Total submissions" %}</p>
+        </article>
+        <article class="mf-responses-stats__card mf-card mf-card--glass">
+          <p class="mf-responses-stats__card-value">{{ grid_stats.last_30d }}</p>
+          <p class="mf-responses-stats__card-label">{% trans "Submitted in last 30 days" %}</p>
+        </article>
+        <article class="mf-responses-stats__card mf-card mf-card--glass">
+          <p class="mf-responses-stats__card-value">{{ grid_stats.unique_accounts }}</p>
+          <p class="mf-responses-stats__card-label">{% trans "Unique signed-in accounts" %}</p>
+        </article>
+        <article class="mf-responses-stats__card mf-card mf-card--glass">
+          <p class="mf-responses-stats__card-value">{{ grid_stats.fields_count }}</p>
+          <p class="mf-responses-stats__card-label">{% trans "Form fields" %}</p>
+        </article>
+      </div>
+
+      <div class="mf-responses-stats__charts mf-stack">
+        <div class="mf-responses-stats__panel mf-card mf-card--glass mf-stack">
+          <h3 class="mf-responses-stats__panel-title">{% trans "Submissions by day (last 30 days)" %}</h3>
+          <div class="mf-responses-stats__spark" role="img" aria-label="{% trans 'Daily submission counts' %}">
+            {% for b in grid_stats.daily_bars %}
+            <div class="mf-responses-stats__spark-col">
+              <span class="mf-responses-stats__spark-bar-wrap" title="{{ b.label }}: {{ b.count }}">
+                <span class="mf-responses-stats__spark-bar" style="height: {{ b.pct_height }}%;"></span>
+              </span>
+              {% if forloop.first or forloop.counter0|divisibleby:7 or forloop.last %}
+              <span class="mf-responses-stats__spark-tick">{{ b.label }}</span>
+              {% else %}
+              <span class="mf-responses-stats__spark-tick mf-responses-stats__spark-tick--muted" aria-hidden="true">·</span>
+              {% endif %}
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+
+        <div class="mf-responses-stats__split">
+          <div class="mf-responses-stats__panel mf-card mf-card--glass mf-stack">
+            <h3 class="mf-responses-stats__panel-title">{% trans "By workflow state" %}</h3>
+            <ul class="mf-responses-stats__bar-list">
+              {% for b in grid_stats.workflow_bars %}
+              <li class="mf-responses-stats__bar-row mf-responses-stats__bar-row--{{ b.key }}">
+                <span class="mf-responses-stats__bar-label">{{ b.label }}</span>
+                <span class="mf-responses-stats__bar-track" role="presentation">
+                  <span class="mf-responses-stats__bar-fill" style="width: {{ b.pct }}%;"></span>
+                </span>
+                <span class="mf-responses-stats__bar-count">{{ b.count }}</span>
+              </li>
+              {% endfor %}
+            </ul>
+          </div>
+          <div class="mf-responses-stats__panel mf-card mf-card--glass mf-stack">
+            <h3 class="mf-responses-stats__panel-title">{% trans "By current workflow step" %}</h3>
+            {% if grid_stats.step_bars %}
+            <ul class="mf-responses-stats__bar-list">
+              {% for b in grid_stats.step_bars %}
+              <li class="mf-responses-stats__bar-row">
+                <span class="mf-responses-stats__bar-label">{{ b.label|mf_trans }}</span>
+                <span class="mf-responses-stats__bar-track" role="presentation">
+                  <span class="mf-responses-stats__bar-fill mf-responses-stats__bar-fill--step" style="width: {{ b.pct_width }}%;"></span>
+                </span>
+                <span class="mf-responses-stats__bar-count">{{ b.count }}</span>
+              </li>
+              {% endfor %}
+            </ul>
+            {% else %}
+            <p class="mf-muted mf-body-text">{% trans "No step data." %}</p>
+            {% endif %}
+          </div>
+        </div>
+
+        {% if grid_stats.field_value_charts %}
+        {{ grid_stats.field_value_charts|json_script:"mf-responses-field-charts-data" }}
+        <details class="mf-responses-stats__field-charts-details mf-card mf-card--glass" id="mf-responses-field-charts-details">
+          <summary class="mf-responses-stats__field-charts-summary">
+            <span class="mf-responses-stats__panel-title">{% trans "Field answer charts" %}</span>
+            <span class="mf-muted mf-responses-stats__field-charts-meta">
+              {% blocktrans count counter=grid_stats.field_value_charts|length trimmed %}
+                %(counter)s field
+              {% plural %}
+                %(counter)s fields
+              {% endblocktrans %}
+            </span>
+          </summary>
+          <div class="mf-responses-stats__field-charts-body mf-stack">
+            <p class="mf-muted mf-body-text mf-responses-stats__field-chart-intro">
+              {% trans "One chart per form field: value distributions where possible, otherwise with vs. no answer." %}
+            </p>
+            <div class="mf-responses-stats__field-chart-grid">
+              {% for ch in grid_stats.field_value_charts %}
+              <div class="mf-responses-stats__field-chart-cell mf-stack">
+                <h4 class="mf-responses-stats__field-chart-heading">{{ ch.title|mf_trans }}</h4>
+                <div class="mf-responses-stats__field-chart-wrap" data-mf-chart-kind="{{ ch.kind }}">
+                  <canvas
+                    id="{{ ch.canvas_id }}"
+                    width="400"
+                    height="220"
+                    aria-label="{% trans 'Answer distribution' %} — {{ ch.title|mf_trans }}"
+                  ></canvas>
+                </div>
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+        </details>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+        <script>
+        (function () {
+          var el = document.getElementById("mf-responses-field-charts-data");
+          var details = document.getElementById("mf-responses-field-charts-details");
+          if (!el || !details || typeof Chart === "undefined") return;
+          var specs;
+          try {
+            specs = JSON.parse(el.textContent);
+          } catch (e) {
+            return;
+          }
+          if (!specs || !specs.length) return;
+
+          var accent = "rgb(59, 95, 143)";
+          var accentSoft = "rgba(59, 95, 143, 0.78)";
+          var accentPale = "rgba(59, 95, 143, 0.35)";
+          var grid = "rgba(0, 0, 0, 0.06)";
+          var tick = "rgba(29, 29, 31, 0.55)";
+          var doughnutColors = [
+            "rgba(59, 95, 143, 0.85)",
+            "rgba(52, 199, 89, 0.85)",
+            "rgba(255, 149, 0, 0.82)",
+            "rgba(175, 82, 222, 0.8)",
+          ];
+
+          function renderFieldCharts() {
+            if (details.dataset.chartsReady === "1") return;
+            details.dataset.chartsReady = "1";
+
+          specs.forEach(function (spec) {
+            var canvas = document.getElementById(spec.canvas_id);
+            if (!canvas || !spec.labels || !spec.counts) return;
+            var wrap = canvas.closest(".mf-responses-stats__field-chart-wrap");
+            if (wrap && spec.kind === "bar_h") {
+              var n = Math.max(spec.labels.length, 1);
+              wrap.style.height = Math.min(520, Math.max(160, 22 * n + 48)) + "px";
+            } else if (wrap && spec.kind === "bar_v") {
+              wrap.style.height = "240px";
+            } else if (wrap && spec.kind === "doughnut") {
+              wrap.style.height = "260px";
+            }
+
+            if (spec.kind === "doughnut") {
+              new Chart(canvas, {
+                type: "doughnut",
+                data: {
+                  labels: spec.labels,
+                  datasets: [
+                    {
+                      data: spec.counts,
+                      backgroundColor: spec.labels.map(function (_, i) {
+                        return doughnutColors[i % doughnutColors.length];
+                      }),
+                      borderWidth: 0,
+                    },
+                  ],
+                },
+                options: {
+                  responsive: true,
+                  maintainAspectRatio: false,
+                  cutout: "58%",
+                  plugins: {
+                    legend: {
+                      position: "bottom",
+                      labels: { color: tick, boxWidth: 12, padding: 12 },
+                    },
+                  },
+                },
+              });
+              return;
+            }
+
+            var horizontal = spec.kind === "bar_h";
+            new Chart(canvas, {
+              type: "bar",
+              data: {
+                labels: spec.labels,
+                datasets: [
+                  {
+                    label: "",
+                    data: spec.counts,
+                    backgroundColor: horizontal ? accentPale : accentSoft,
+                    borderColor: accent,
+                    borderWidth: horizontal ? 0 : 0,
+                    borderRadius: 4,
+                    maxBarThickness: horizontal ? 18 : 32,
+                  },
+                ],
+              },
+              options: {
+                indexAxis: horizontal ? "y" : "x",
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: horizontal
+                  ? {
+                      x: {
+                        beginAtZero: true,
+                        ticks: { precision: 0, color: tick },
+                        grid: { color: grid },
+                      },
+                      y: {
+                        ticks: { color: tick, autoSkip: true, maxTicksLimit: 16 },
+                        grid: { display: false },
+                      },
+                    }
+                  : {
+                      x: {
+                        ticks: { color: tick, maxRotation: 45, minRotation: 0 },
+                        grid: { color: grid },
+                      },
+                      y: {
+                        beginAtZero: true,
+                        ticks: { precision: 0, color: tick },
+                        grid: { color: grid },
+                      },
+                    },
+              },
+            });
+          });
+          }
+
+          if (details.open) {
+            renderFieldCharts();
+          } else {
+            details.addEventListener("toggle", function () {
+              if (details.open) renderFieldCharts();
+            });
+          }
+        })();
+        </script>
+        {% endif %}
+      </div>
+    </section>
+    {% endif %}
+
+    {% include "magicforms/manage/includes/responses_grid_picker.html" %}
+
+    {% if not grid_fields %}
+      <p class="mf-body-text">{% trans "This form has no fields yet." %}</p>
+    {% elif not submissions_page.object_list %}
+      {% include "magicforms/manage/includes/responses_grid_columns_panel.html" %}
+      <p class="mf-body-text">
+        {% if responses_submitted_from or responses_submitted_to %}
+          {% trans "No submissions in this date range." %}
+        {% else %}
+          {% trans "No submissions yet." %}
+        {% endif %}
+      </p>
+    {% else %}
+      {% include "magicforms/manage/includes/responses_grid_columns_panel.html" %}
+
+      {% include "magicforms/manage/includes/studio_pagination.html" with page_obj=submissions_page pagination_anchor="mf-responses-grid-table" %}
+
+      <div class="mf-responses-grid__table-toolbar mf-manage-toolbar">
+        <p class="mf-hint mf-responses-grid__hint mf-responses-grid__table-toolbar-hint">
+          {% blocktrans trimmed %}
+            Export uses the visible columns above (at most 5,000 submissions, newest first). PDF uses a compact landscape table.
+          {% endblocktrans %}
+        </p>
+        <div class="mf-manage-toolbar-actions mf-responses-grid__toolbar-actions">
+          <a class="mf-button mf-button--secondary" href="{% url 'manage:responses_grid_export' %}?form={{ selected_form.pk|oid }}&amp;fmt=xlsx{% if active_grid_view %}&amp;view={{ active_grid_view.pk|oid }}{% elif active_column_keys_csv %}&amp;cols={{ active_column_keys_csv|urlencode }}{% endif %}{{ grid_sort_query }}{% if responses_submitted_from %}&amp;submitted_from={{ responses_submitted_from }}{% endif %}{% if responses_submitted_to %}&amp;submitted_to={{ responses_submitted_to }}{% endif %}">{% trans "Export Excel" %}</a>
+          <a class="mf-button mf-button--secondary" href="{% url 'manage:responses_grid_export' %}?form={{ selected_form.pk|oid }}&amp;fmt=pdf{% if active_grid_view %}&amp;view={{ active_grid_view.pk|oid }}{% elif active_column_keys_csv %}&amp;cols={{ active_column_keys_csv|urlencode }}{% endif %}{{ grid_sort_query }}{% if responses_submitted_from %}&amp;submitted_from={{ responses_submitted_from }}{% endif %}{% if responses_submitted_to %}&amp;submitted_to={{ responses_submitted_to }}{% endif %}">{% trans "Export PDF" %}</a>
+        </div>
+      </div>
+
+      {% if grid_has_email_field %}
+      <form
+        id="mf-grid-bulk-email-form"
+        method="post"
+        action="{% url 'manage:responses_grid_bulk_email' %}"
+        class="mf-card mf-card--glass mf-grid-bulk-bar"
+        data-grid-bulk-bar
+        data-confirm-send="{% trans 'Send this email to all selected submissions?' %}"
+        hidden
+      >
+        {% csrf_token %}
+        <input type="hidden" name="form" value="{{ selected_form.pk|oid }}" />
+        <input type="hidden" name="next" value="{{ request.get_full_path }}" />
+        <div class="mf-grid-bulk-bar__row">
+          <label class="mf-inbox-batch-selectall">
+            <input type="checkbox" data-grid-bulk-all aria-label="{% trans 'Select all on this page' %}" />
+            <span>{% trans "Select all on this page" %}</span>
+          </label>
+          <span class="mf-muted mf-inbox-batch-count" role="status">
+            <span data-grid-bulk-count>0</span> {% trans "selected" %}
+          </span>
+        </div>
+        <div class="mf-grid-bulk-bar__fields">
+          <label class="mf-sr-only" for="mf-grid-bulk-subject">{% trans "Email subject" %}</label>
+          <input
+            id="mf-grid-bulk-subject"
+            type="text"
+            name="subject"
+            class="mf-input"
+            maxlength="200"
+            autocomplete="off"
+            required
+            placeholder="{% trans 'Subject' %}"
+          />
+          <label class="mf-sr-only" for="mf-grid-bulk-body">{% trans "Email message" %}</label>
+          <textarea
+            id="mf-grid-bulk-body"
+            name="body"
+            class="mf-input"
+            rows="3"
+            maxlength="5000"
+            required
+            placeholder="{% trans 'Message to the applicants…' %}"
+          ></textarea>
+        </div>
+        <div class="mf-grid-bulk-bar__actions">
+          <button type="submit" class="mf-button mf-button--primary mf-button--small" data-grid-bulk-send disabled>
+            {% trans "Send email to selected" %}
+          </button>
+          <p class="mf-muted mf-grid-bulk-bar__hint">
+            {% trans "Each selected submission receives the message at the email address from its form answers." %}
+          </p>
+        </div>
+      </form>
+      {% endif %}
+
+      <div id="mf-responses-grid-table" class="mf-responses-grid__table-panel mf-card mf-card--glass" aria-label="{% trans 'Responses table' %}">
+        <div class="mf-responses-grid__scroll">
+          <table class="mf-responses-table">
+            <thead>
+              <tr>
+                {% for hcell in grid_header_cells %}
+                  <th
+                    scope="col"
+                    class="mf-responses-table__th {% if hcell.is_ref %}mf-responses-table__col--ref mf-responses-table__th--sticky{% elif hcell.is_meta %}mf-responses-table__col--meta{% else %}mf-responses-table__col--field{% if hcell.is_field_first %} mf-responses-table__col--field-first{% endif %}{% endif %}{% if hcell.sort_active %} mf-responses-table__th--sorted{% endif %}"
+                    {% if hcell.sort_active %}aria-sort="{% if hcell.sort_desc %}descending{% else %}ascending{% endif %}"{% endif %}
+                  >
+                    <a
+                      href="{{ hcell.sort_url }}"
+                      class="mf-responses-table__sort-link{% if hcell.sort_active %} mf-responses-table__sort-link--active{% endif %}"
+                    >
+                      <span class="mf-responses-table__sort-label">{{ hcell.value|mf_trans }}</span>
+                      {% if hcell.sort_active %}
+                      <span class="mf-responses-table__sort-indicator" aria-hidden="true">{% if hcell.sort_desc %}▼{% else %}▲{% endif %}</span>
+                      {% endif %}
+                    </a>
+                  </th>
+                {% endfor %}
+              </tr>
+            </thead>
+            <tbody data-grid-hl-url="{% url 'manage:responses_grid_highlight' %}">
+              {% for row in grid_table_rows %}
+              <tr class="mf-responses-table__row{% if row.highlight %} mf-responses-table__row--hl-{{ row.highlight }}{% endif %}" data-grid-hl-row data-submission-id="{{ row.submission_pk }}">
+                {% for cell in row.cells %}
+                  <td
+                    class="mf-responses-table__td {% if cell.is_ref %}mf-responses-table__col--ref mf-responses-table__td--sticky{% elif cell.is_meta %}mf-responses-table__col--meta{% else %}mf-responses-table__col--field{% if cell.is_field_first %} mf-responses-table__col--field-first{% endif %}{% endif %}"
+                  >
+                    {% if forloop.first %}
+                    {% if grid_has_email_field %}
+                    <input
+                      type="checkbox"
+                      class="mf-grid-bulk-check"
+                      name="submission_ids"
+                      value="{{ row.submission_pk }}"
+                      form="mf-grid-bulk-email-form"
+                      data-grid-bulk-check
+                      aria-label="{% trans 'Select this submission for bulk email' %}"
+                    />
+                    {% endif %}
+                    {% endif %}
+                    {% if cell.is_ref %}
+                    <span class="mf-ref-chip" title="{{ cell.value }}">
+                      {% if cell.value|length > 4 %}<span class="mf-ref-chip__prefix">{{ cell.value|slice:":-4" }}</span>{% endif %}
+                      <span class="mf-ref-chip__tail">{{ cell.value|slice:"-4:" }}</span>
+                    </span>
+                    {% elif cell.is_file %}
+                    <a
+                      class="mf-grid-file-link"
+                      href="{{ cell.file_url }}"
+                      target="_blank"
+                      rel="noopener"
+                      title="{% trans 'Open file' %}"
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><path d="M14 2v6h6" /><path d="M10 13h4" /><path d="M10 17h7" /></svg>
+                      <span class="mf-grid-file-link__name">{{ cell.value }}</span>
+                    </a>
+                    {% else %}{{ cell.value }}{% endif %}
+                    {% if forloop.last %}
+                    <span class="mf-grid-row-actions">
+                      <span class="mf-inbox-highlight mf-grid-highlight mf-grid-highlight--end" data-grid-hl>
+                        <button
+                          type="button"
+                          class="mf-inbox-highlight__toggle"
+                          data-grid-hl-toggle
+                          aria-expanded="false"
+                          aria-haspopup="true"
+                          aria-label="{% trans 'Highlight row color' %}"
+                          title="{% trans 'Highlight row color' %}"
+                        >
+                          <span class="mf-inbox-highlight__dot{% if row.highlight %} mf-inbox-highlight__dot--{{ row.highlight }}{% endif %}" data-grid-hl-dot aria-hidden="true"></span>
+                        </button>
+                        <span class="mf-inbox-highlight__palette" data-grid-hl-palette hidden>
+                          {% for key, label in grid_highlight_colors %}
+                          <button
+                            type="button"
+                            class="mf-inbox-highlight__swatch mf-inbox-highlight__swatch--{{ key }}"
+                            data-grid-hl-color="{{ key }}"
+                            aria-label="{{ label }}"
+                            title="{{ label }}"
+                          ></button>
+                          {% endfor %}
+                          <button
+                            type="button"
+                            class="mf-inbox-highlight__swatch mf-inbox-highlight__swatch--clear"
+                            data-grid-hl-color=""
+                            aria-label="{% trans 'Clear highlight' %}"
+                            title="{% trans 'Clear highlight' %}"
+                          >&times;</button>
+                        </span>
+                      </span>
+                      <a
+                        class="mf-grid-open-link"
+                        href="{% url 'manage:submission_manage_detail' pk=selected_form.pk submission_id=row.submission_pk %}"
+                        title="{% trans 'Open submission details' %}"
+                        aria-label="{% trans 'Open submission details' %}"
+                      ><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7" /><path d="M9 7h8v8" /></svg></a>
+                    </span>
+                    {% endif %}
+                  </td>
+                {% endfor %}
+              </tr>
+              {% endfor %}
+            </tbody>
+            {% if grid_total_cells %}
+            <tfoot>
+              <tr class="mf-responses-table__row mf-responses-table__row--totals">
+                {% for cell in grid_total_cells %}
+                  <td
+                    class="mf-responses-table__td {% if cell.is_ref %}mf-responses-table__col--ref mf-responses-table__td--sticky{% elif cell.is_meta %}mf-responses-table__col--meta{% else %}mf-responses-table__col--field{% if cell.is_field_first %} mf-responses-table__col--field-first{% endif %}{% endif %}"
+                    {% if forloop.first %}title="{% trans 'Totals are calculated over all submissions matching the current filters, not only this page.' %}"{% endif %}
+                  >{{ cell.value }}</td>
+                {% endfor %}
+              </tr>
+            </tfoot>
+            {% endif %}
+          </table>
+        </div>
+      </div>
+
+      <div class="mf-responses-grid__cards" role="region" aria-label="{% trans 'Responses (card view)' %}">
+        {% for card in response_cards %}
+        <article class="mf-response-card mf-card mf-card--glass">
+          <header class="mf-response-card__head">
+            <p class="mf-response-card__eyebrow">{% trans "Submission" %}</p>
+            <p class="mf-response-card__ref">
+              <span class="mf-ref-chip" title="{{ card.reference }}">
+                {% if card.reference|length > 4 %}<span class="mf-ref-chip__prefix">{{ card.reference|slice:":-4" }}</span>{% endif %}
+                <span class="mf-ref-chip__tail">{{ card.reference|slice:"-4:" }}</span>
+              </span>
+            </p>
+            {% if card.applicant %}
+            <p class="mf-response-card__applicant">{{ card.applicant }}</p>
+            {% endif %}
+            <p class="mf-response-card__when">{{ card.meta_line }}</p>
+          </header>
+          <dl class="mf-response-card__dl">
+            {% for pair in card.pairs %}
+            <div class="mf-response-card__pair">
+              <dt class="mf-response-card__dt">{{ pair.label|mf_trans }}</dt>
+              <dd class="mf-response-card__dd">
+                {% if pair.file_url %}
+                <a class="mf-grid-file-link" href="{{ pair.file_url }}" target="_blank" rel="noopener">{{ pair.value }}</a>
+                {% else %}
+                {{ pair.value }}
+                {% endif %}
+              </dd>
+            </div>
+            {% endfor %}
+          </dl>
+        </article>
+        {% endfor %}
+      </div>
+
+      {% include "magicforms/manage/includes/studio_pagination.html" with page_obj=submissions_page studio_pagination_footer=1 pagination_anchor="mf-responses-grid-table" %}
+    {% endif %}
+  {% endif %}
+</section>
+{% if selected_form %}
+<script src="{% static 'magicforms/js/responses_grid_views.js' %}" defer></script>
+{% if submissions_page and submissions_page.object_list %}
+<script src="{% static 'magicforms/js/responses_grid_scroll.js' %}" defer></script>
+<script src="{% static 'magicforms/js/responses_grid_highlight.js' %}" defer></script>
+{% if grid_has_email_field %}
+<script>
+(function () {
+  "use strict";
+  var bar = document.querySelector("[data-grid-bulk-bar]");
+  if (!bar) return;
+  var checks = Array.prototype.slice.call(document.querySelectorAll("[data-grid-bulk-check]"));
+  if (!checks.length) return;
+  var all = bar.querySelector("[data-grid-bulk-all]");
+  var count = bar.querySelector("[data-grid-bulk-count]");
+  var send = bar.querySelector("[data-grid-bulk-send]");
+
+  function refresh() {
+    var n = checks.filter(function (c) { return c.checked; }).length;
+    if (count) count.textContent = String(n);
+    bar.hidden = n === 0;
+    if (send) send.disabled = n === 0;
+    if (all) {
+      all.checked = n > 0 && n === checks.length;
+      all.indeterminate = n > 0 && n < checks.length;
+    }
+  }
+
+  checks.forEach(function (c) { c.addEventListener("change", refresh); });
+  if (all) {
+    all.addEventListener("change", function () {
+      checks.forEach(function (c) { c.checked = all.checked; });
+      refresh();
+    });
+  }
+  bar.addEventListener("submit", function (e) {
+    var msg = bar.getAttribute("data-confirm-send") || "";
+    if (msg && !window.confirm(msg)) e.preventDefault();
+  });
+  refresh();
+})();
+</script>
+{% endif %}
+{% endif %}
+{% endif %}
+{% if share_grid_view %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/css/tom-select.default.min.css" />
+<script src="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/js/tom-select.complete.min.js" defer></script>
+<script src="{% static 'magicforms/js/workflow_assignees_tomselect.js' %}" defer></script>
+{% endif %}
+{% endblock %}

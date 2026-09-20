@@ -1,0 +1,57 @@
+{% load static i18n %}
+<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE|default:'en' }}" dir="{% if LANGUAGE_BIDI %}rtl{% else %}ltr{% endif %}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>{% block error_title %}{% trans "Error" %} · MagicForms{% endblock %}</title>
+  <link rel="stylesheet" href="{% static 'magicforms/css/theme.css' %}">
+  <style>
+    .mf-error-page {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 1.25rem;
+    }
+    .mf-error-card {
+      max-width: 32rem;
+      width: 100%;
+      text-align: center;
+    }
+    .mf-error-code {
+      font-size: clamp(3.5rem, 12vw, 5.5rem);
+      font-weight: 700;
+      letter-spacing: -0.04em;
+      line-height: 1;
+      margin: 0 0 0.5rem;
+      color: var(--mf-accent);
+      opacity: 0.92;
+    }
+    .mf-error-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      justify-content: center;
+      margin-top: 1.5rem;
+    }
+  </style>
+</head>
+<body class="mf-body mf-public-site">
+  <div class="mf-ambient" aria-hidden="true"></div>
+  <div class="mf-error-page">
+    <article class="mf-card mf-card--glass mf-error-card mf-stack" role="alert">
+      <p class="mf-eyebrow">MagicForms</p>
+      <p class="mf-error-code" aria-hidden="true">{% block error_code %}—{% endblock %}</p>
+      <h1 class="mf-display mf-display--small">{% block error_heading %}{% trans "Something went wrong" %}{% endblock %}</h1>
+      <p class="mf-body-text mf-muted">{% block error_message %}{% endblock %}</p>
+      <div class="mf-error-actions">
+        {% block error_actions %}
+        <a class="mf-button mf-button--primary" href="/">{% trans "Go to home" %}</a>
+        {% endblock %}
+      </div>
+    </article>
+  </div>
+</body>
+</html>

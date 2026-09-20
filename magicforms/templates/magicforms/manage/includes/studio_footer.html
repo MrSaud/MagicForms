@@ -1,0 +1,13 @@
+{% load i18n %}
+{% now "Y" as footer_year %}
+<footer class="mf-studio-footer" role="contentinfo">
+  <p class="mf-studio-footer__brand">
+    <span class="mf-brand-wordmark mf-brand-wordmark--small" translate="no"><span class="mf-brand-wordmark__swap">swap</span><span class="mf-brand-wordmark__forms">forms</span></span>
+    <span class="mf-studio-footer__copy">&copy; {{ footer_year }} <a href="https://swapkuwait.com/" rel="noopener noreferrer" target="_blank">swapkuwait.com</a></span>
+  </p>
+  <nav class="mf-studio-footer__links" aria-label="{% trans 'Footer links' %}">
+    <a href="https://support.swapkuwait.com/" rel="noopener noreferrer" target="_blank">{% trans "Support" %}</a>
+    {% if studio_available %}<a href="{% url 'manage:studio_help' %}">{% trans "Help" %}</a>{% endif %}
+    <a href="{{ landing_page_url }}">{% trans "Landing page" %}</a>
+  </nav>
+</footer>

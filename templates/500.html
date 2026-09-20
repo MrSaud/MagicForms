@@ -1,0 +1,9 @@
+{% extends "errors/base_error.html" %}
+{% load i18n %}
+
+{% block error_title %}{% trans "Server error" %} · MagicForms{% endblock %}
+{% block error_code %}500{% endblock %}
+{% block error_heading %}{% trans "Something went wrong" %}{% endblock %}
+{% block error_message %}
+  {% trans "We could not complete your request. Our team has been notified. Please try again in a few minutes." %}
+{% endblock %}

@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="SwapForms">
+  <rect width="64" height="64" rx="14" fill="#3b5f8f"/>
+  <rect x="16" y="19" width="32" height="6" rx="3" fill="#fbfbfa"/>
+  <rect x="16" y="29" width="22" height="6" rx="3" fill="#fbfbfa" fill-opacity="0.85"/>
+  <rect x="16" y="39" width="28" height="6" rx="3" fill="#fbfbfa" fill-opacity="0.7"/>
+</svg>

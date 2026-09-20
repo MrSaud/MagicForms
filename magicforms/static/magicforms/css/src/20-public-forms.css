@@ -1,0 +1,2094 @@
+/* Forms & submission tracking */
+
+.mf-hero--compact {
+  margin-bottom: 2rem;
+}
+
+.mf-display--small {
+  font-size: clamp(1.65rem, 3.5vw, 2.15rem);
+}
+
+.mf-lead--mono {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.95rem;
+  letter-spacing: -0.02em;
+}
+
+/* Public submission track number (shown to guests after submit) and /track/ lookup. */
+.mf-track-number {
+  margin: 0;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 2.2rem;
+  font-weight: 700;
+  letter-spacing: 0.35em;
+  color: var(--mf-accent);
+}
+
+.mf-track-lookup-fields {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.85rem 1rem;
+}
+
+.mf-track-lookup-field {
+  flex: 1 1 16rem;
+  min-width: 0;
+}
+
+.mf-track-lookup-field--code {
+  flex: 0 1 10rem;
+}
+
+.mf-track-code-input {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  letter-spacing: 0.25em;
+}
+
+.mf-heading--section {
+  font-size: 1.35rem;
+  margin-bottom: 0.75rem;
+}
+
+.mf-form {
+  max-width: min(40rem, 100%);
+  display: flex;
+  flex-direction: column;
+  gap: 1.15rem;
+  min-height: min-content;
+}
+
+/* Breadcrumb-style nav on public form pages (outside centered column) */
+.mf-public-form-nav {
+  text-align: center;
+}
+
+/* Public submit / announcement pages: top nav and form column share one width.
+   Widen the page shell too, otherwise .mf-shell (80rem) would clip the column. */
+.mf-public-form-page {
+  --mf-shell-max-width: min(1600px, 96vw);
+  --mf-public-form-column-width: min(92rem, 100%);
+}
+
+.mf-public-form-page .mf-public-topnav {
+  max-width: var(--mf-public-form-column-width);
+  margin-inline: auto;
+  width: 100%;
+}
+
+/* Public live form — breadcrumb + single main card within .mf-shell */
+.mf-public-form-layout {
+  max-width: var(--mf-public-form-column-width, min(72rem, 100%));
+  margin-inline: auto;
+  width: 100%;
+  text-align: start;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.mf-breadcrumb-nav {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem 0.5rem;
+  margin-bottom: 1rem;
+  font-size: 0.88rem;
+  line-height: 1.35;
+}
+
+.mf-breadcrumb-nav__link {
+  color: var(--mf-text-secondary);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.mf-breadcrumb-nav__link:hover {
+  color: var(--mf-accent);
+  text-decoration: underline;
+}
+
+.mf-breadcrumb-nav__sep {
+  color: var(--mf-text-secondary);
+  opacity: 0.55;
+  user-select: none;
+}
+
+/* Public form information page (before apply) */
+.mf-form-intro {
+  padding: clamp(1.25rem, 3.5vw, 1.75rem) clamp(1.35rem, 4vw, 2rem);
+  text-align: start;
+}
+
+.mf-form-intro__header {
+  text-align: center;
+  padding-bottom: 0.25rem;
+  border-bottom: 1px solid var(--mf-stroke-soft);
+}
+
+.mf-form-intro-slideshow {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  margin: 0;
+}
+
+.mf-form-intro-slideshow__viewport {
+  position: relative;
+  width: 100%;
+  border-radius: var(--mf-radius-md, 0.65rem);
+  overflow: hidden;
+  background: var(--mf-bg0);
+  border: 1px solid var(--mf-stroke-soft);
+}
+
+.mf-form-intro-slideshow__track {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  min-height: min(16rem, 50vw);
+  max-height: min(32rem, 72vh);
+  margin: 0;
+  background: var(--mf-bg0);
+}
+
+.mf-form-intro-slideshow__slide {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  overflow: hidden;
+  background: var(--mf-bg0);
+}
+
+.mf-form-intro-slideshow__slide[hidden] {
+  display: none;
+}
+
+.mf-form-intro-slideshow__media {
+  position: absolute;
+  inset: 0;
+  display: block;
+  overflow: hidden;
+}
+
+.mf-form-intro-slideshow__media img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center center;
+  border: 0;
+  outline: none;
+}
+
+.mf-form-intro-slideshow__caption {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 2;
+  margin: 0;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.88rem;
+  line-height: 1.4;
+  text-align: center;
+  color: var(--mf-paper);
+  background: linear-gradient(transparent, var(--mf-ink-a50));
+}
+
+.mf-form-intro-slideshow__controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem 0.75rem;
+  flex-wrap: wrap;
+}
+
+.mf-form-intro-slideshow__nav {
+  flex-shrink: 0;
+  min-width: 2.5rem;
+  min-height: 2.5rem;
+  border-radius: 999px;
+  border: 1px solid var(--mf-stroke-soft);
+  background: var(--mf-paper-a92);
+  color: var(--mf-text);
+  font-size: 1.25rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.mf-form-intro-slideshow__nav:hover:not(:disabled) {
+  border-color: var(--mf-stroke);
+  background: var(--mf-paper);
+}
+
+.mf-form-intro-slideshow__nav:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.mf-form-intro-slideshow__dots {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  justify-content: center;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.mf-form-intro-slideshow__dot {
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 999px;
+  border: 0;
+  padding: 0;
+  background: var(--mf-stroke-soft);
+  cursor: pointer;
+}
+
+.mf-form-intro-slideshow__dot:hover {
+  background: var(--mf-stroke);
+}
+
+.mf-form-intro-slideshow__dot.is-active {
+  background: var(--mf-text);
+  transform: scale(1.1);
+}
+
+.mf-form-intro__message,
+.mf-form-intro__description {
+  max-width: 52rem;
+}
+
+.mf-form-intro__rich p {
+  margin: 0 0 0.65rem;
+}
+
+.mf-form-intro__rich p:last-child {
+  margin-bottom: 0;
+}
+
+.mf-form-intro__rich strong,
+.mf-form-intro__rich b {
+  font-weight: 600;
+}
+
+.mf-form-intro__rich a {
+  color: var(--mf-accent);
+  text-decoration: underline;
+}
+
+.mf-form-intro__rich ul,
+.mf-form-intro__rich ol {
+  margin: 0.5rem 0;
+  padding-inline-start: 1.35rem;
+}
+
+.mf-form-intro__rich h1,
+.mf-form-intro__rich h2,
+.mf-form-intro__rich h3 {
+  margin: 0.75rem 0 0.35rem;
+  line-height: 1.25;
+}
+
+.mf-form-intro__rich blockquote {
+  margin: 0.5rem 0;
+  padding-inline-start: 1rem;
+  border-inline-start: 3px solid var(--mf-stroke-soft);
+  color: var(--mf-text-secondary);
+}
+
+.mf-form-intro-video {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: var(--mf-radius-md, 0.65rem);
+  overflow: hidden;
+  background: var(--mf-gray-900);
+}
+
+.mf-form-intro-video iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+.mf-form-intro-video__link {
+  margin: 0.35rem 0 0;
+  text-align: center;
+}
+
+.mf-form-intro__meta .mf-heading {
+  margin-bottom: 0.35rem;
+}
+
+.mf-form-intro__heading {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin: 0 0 0.65rem;
+}
+
+.mf-form-intro__summary-row {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.mf-form-intro__share-details > .mf-entity-form-details__summary {
+  padding: 0.65rem 1rem 0.55rem;
+}
+
+.mf-form-intro__share-details[open] > .mf-entity-form-details__summary {
+  padding-bottom: 0.65rem;
+}
+
+.mf-form-intro__share-details > .mf-entity-form-details__body {
+  padding: 0 1rem 1rem;
+}
+
+.mf-form-intro__heading-icon {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 0.55rem;
+  background: color-mix(in srgb, var(--mf-accent) 14%, transparent);
+  color: var(--mf-accent);
+}
+
+.mf-form-intro-icon {
+  width: 1.2rem;
+  height: 1.2rem;
+  display: block;
+}
+
+.mf-form-intro__block {
+  padding: 1rem 1.15rem;
+  border-radius: var(--mf-radius-md, 0.65rem);
+  border: 1px solid var(--mf-stroke-soft);
+  background: color-mix(in srgb, var(--mf-surface-raised, var(--mf-paper)) 55%, transparent);
+}
+
+.mf-form-intro__block--inline {
+  padding: 0.65rem 1rem;
+}
+
+.mf-form-intro__block .mf-form-intro-slideshow {
+  margin-top: 0;
+}
+
+.mf-form-intro__map-link {
+  margin: 0.35rem 0 0;
+}
+
+.mf-form-intro__dates {
+  display: grid;
+  gap: 0.5rem 1.25rem;
+  margin: 0;
+}
+
+.mf-form-intro__date-row {
+  display: grid;
+  grid-template-columns: minmax(4.5rem, auto) 1fr;
+  gap: 0.35rem 0.75rem;
+  align-items: baseline;
+}
+
+.mf-form-intro__date-row dt {
+  margin: 0;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--mf-text-secondary);
+}
+
+.mf-form-intro__date-row dd {
+  margin: 0;
+}
+
+.mf-form-intro__list {
+  margin: 0;
+  padding-inline-start: 1.35rem;
+  display: grid;
+  gap: 0.45rem;
+}
+
+.mf-form-intro__list li {
+  line-height: 1.45;
+}
+
+.mf-form-intro__attachment {
+  margin: 0;
+}
+
+.mf-form-intro__share-layout {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1.25rem 1.5rem;
+}
+
+.mf-form-intro__share-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.5rem;
+  flex: 1 1 12rem;
+}
+
+.mf-form-intro__qr {
+  margin: 0;
+  flex: 0 0 auto;
+  text-align: center;
+}
+
+.mf-form-intro__qr img {
+  display: block;
+  width: 200px;
+  height: 200px;
+  max-width: 100%;
+  border-radius: var(--mf-radius-md, 0.65rem);
+  border: 1px solid var(--mf-stroke-soft);
+  background: var(--mf-paper);
+}
+
+.mf-form-intro__qr figcaption {
+  margin-top: 0.4rem;
+}
+
+.mf-form-intro__share-url {
+  margin: 0;
+  word-break: break-all;
+}
+
+.mf-form-intro__share-url .mf-link {
+  font-size: 0.88rem;
+}
+
+.mf-form-intro__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1rem;
+  align-items: center;
+  justify-content: center;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--mf-stroke-soft);
+}
+
+.mf-public-form-layout__notice {
+  margin-bottom: 1rem;
+  text-align: start;
+}
+
+.mf-public-form-layout__card.mf-card {
+  padding: 0;
+  overflow: visible;
+  /* Flex column + flex child body was shrinking / mis-sizing vs long <details> + checklists in WebKit. */
+  display: flow-root;
+  min-height: min-content;
+}
+
+/* backdrop-filter creates a compositor layer that often clips tall content in Safari/WebKit. */
+.mf-public-form-layout__card.mf-card.mf-card--glass {
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  background: var(--mf-paper-a92);
+}
+
+.mf-public-form-layout__card-head {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: clamp(1.1rem, 3vw, 1.5rem) clamp(1.25rem, 3.5vw, 1.65rem);
+  text-align: center;
+  border-bottom: 1px solid var(--mf-stroke-soft);
+  background: linear-gradient(180deg, var(--mf-paper-a42) 0%, transparent 72%);
+}
+
+.mf-public-form-layout__card-head .mf-form-logo-strip {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+/* Logo / title row: keep physical left–center–right regardless of page RTL (language switch). */
+.mf-public-form-layout__card-head .mf-form-logo-strip,
+.mf-public-form-layout__card-head .mf-public-form-layout__title-stack {
+  direction: ltr;
+}
+
+.mf-public-form-layout__title-stack {
+  max-width: 48rem;
+  margin-inline: auto;
+}
+
+.mf-public-form-layout__eyebrow {
+  margin: 0 0 0.45rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--mf-text-secondary);
+}
+
+.mf-public-form-layout__form-title {
+  margin: 0;
+  font-size: clamp(1.35rem, 3.8vw, 1.85rem);
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  line-height: 1.2;
+  color: var(--mf-text);
+}
+
+.mf-public-form-layout__intro {
+  margin: 0 auto;
+  max-width: 52rem;
+  font-size: clamp(0.98rem, 2vw, 1.08rem);
+  line-height: 1.55;
+  color: var(--mf-text-secondary);
+  text-wrap: pretty;
+}
+
+.mf-public-form-layout__deadline {
+  margin: 0 auto;
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.25rem 0.35rem;
+  padding: 0.4rem 0.85rem;
+  border-radius: 999px;
+  font-size: 0.84rem;
+  font-weight: 500;
+  background: var(--mf-warning-a11);
+  color: var(--mf-orange-800);
+  border: 1px solid var(--mf-warning-a28);
+}
+
+.mf-public-form-layout__card-body {
+  padding: clamp(1.15rem, 3vw, 1.5rem) clamp(1.25rem, 3.5vw, 1.65rem) clamp(1.35rem, 3vw, 1.65rem);
+  overflow: visible;
+  min-height: min-content;
+  min-width: 0;
+  display: block;
+}
+
+/* White card + form: height must grow with every checklist row (option count), never a fixed cap. */
+#mf-public-form-main,
+#mf-public-form,
+.mf-public-form-layout__card-body {
+  height: auto;
+  max-height: none;
+  min-height: min-content;
+}
+
+/* Block flow (not grid/flex): every direct child contributes to card height — no engine quirks with <details>. */
+.mf-public-form-layout .mf-form {
+  max-width: none;
+  text-align: start;
+  border: none;
+  padding: 0;
+  box-shadow: none;
+  min-height: min-content;
+  min-width: 0;
+  width: 100%;
+  display: block;
+}
+
+.mf-public-form-layout .mf-form > * + * {
+  margin-top: 1.15rem;
+}
+
+.mf-public-form-layout .mf-section-panel {
+  display: block;
+}
+
+/* [hidden] must win over .mf-section-panel { display: flex/block } or collapse never hides. */
+.mf-section-panel[hidden] {
+  display: none !important;
+}
+
+.mf-public-form-layout .mf-section-inner {
+  display: block;
+  flex: unset;
+  align-self: stretch;
+}
+
+.mf-public-form-layout .mf-section-inner > * + * {
+  margin-top: 1rem;
+}
+
+/* Public checklist — vertical only: block list for intrinsic height. Horizontal keeps flex row. */
+.mf-public-form-layout .mf-checklist-group {
+  display: block;
+  min-height: min-content;
+  height: auto;
+  max-height: none;
+}
+
+.mf-public-form-layout .mf-field--checklist.mf-choice-layout--vertical ul,
+.mf-public-form-layout .mf-field--checklist.mf-choice-layout--vertical .mf-checklist-choices {
+  display: block;
+  min-height: min-content;
+  height: auto;
+  max-height: none;
+}
+
+.mf-public-form-layout .mf-field--checklist.mf-choice-layout--vertical ul > li,
+.mf-public-form-layout .mf-field--checklist.mf-choice-layout--vertical .mf-checklist-choices > div {
+  min-height: min-content;
+}
+
+.mf-public-form-layout .mf-field--checklist.mf-choice-layout--vertical ul > li + li,
+.mf-public-form-layout .mf-field--checklist.mf-choice-layout--vertical .mf-checklist-choices > div + div {
+  margin-top: 0.45rem;
+}
+
+.mf-public-form-layout .mf-field--checklist.mf-choice-layout--horizontal ul,
+.mf-public-form-layout .mf-field--checklist.mf-choice-layout--horizontal .mf-checklist-choices {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 0.55rem 1.35rem;
+  min-height: min-content;
+  height: auto;
+  max-height: none;
+}
+
+.mf-public-form-layout .mf-field--checklist.mf-choice-layout--horizontal ul > li + li,
+.mf-public-form-layout .mf-field--checklist.mf-choice-layout--horizontal .mf-checklist-choices > div + div {
+  margin-top: 0;
+}
+
+.mf-public-form-layout .mf-form-logo-row {
+  max-width: none;
+  margin-inline: 0;
+  padding-inline: 0;
+}
+
+.mf-public-form-layout .mf-section,
+.mf-public-form-layout .mf-field-wrap {
+  text-align: start;
+}
+
+/* Public inline groups: flex row so multiple fields share one visual line (see FormField.inline). */
+.mf-public-form-layout .mf-inline-row {
+  text-align: start;
+  display: flex;
+  flex-flow: row wrap;
+  align-items: flex-start;
+  gap: 1rem 1.25rem;
+  width: 100%;
+  min-width: 0;
+}
+
+.mf-public-form-layout .mf-field-wrap,
+.mf-public-form-layout section.mf-section {
+  min-height: min-content;
+}
+
+.mf-public-form-layout .mf-public-form-layout__actions {
+  text-align: center;
+  width: 100%;
+}
+
+.mf-form--submitting {
+  pointer-events: none;
+}
+
+.mf-form--submitting .mf-public-form-layout__submit {
+  cursor: wait;
+  opacity: 0.9;
+}
+
+@keyframes mf-submit-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.mf-submit-progress {
+  display: inline-block;
+  width: 1.05em;
+  height: 1.05em;
+  margin-inline-end: 0.45em;
+  border: 2px solid var(--mf-paper-a35);
+  border-top-color: var(--mf-paper-a95);
+  border-radius: 50%;
+  flex-shrink: 0;
+  vertical-align: middle;
+  animation: mf-submit-spin 0.65s linear infinite;
+}
+
+.mf-submit-progress__text {
+  vertical-align: middle;
+}
+
+/* Equal-width columns that can shrink (min-width:0) — avoids one field forcing full row width. */
+.mf-inline-row > .mf-field-wrap {
+  box-sizing: border-box;
+  flex: 1 1 0;
+  min-width: min(100%, 11rem);
+  max-width: 100%;
+}
+
+/* Checklist on its own full-width row only when the inline group mixes checklists with
+   other field types. Rows that are checklist-only can place multiple checklists on one line. */
+.mf-inline-row:has(.mf-field-wrap:not(:has(.mf-field--checklist)))
+  > .mf-field-wrap:has(.mf-field--checklist) {
+  flex: 1 1 100%;
+  min-width: 100%;
+}
+
+.mf-inline-row > .mf-field-wrap > .mf-field {
+  min-width: 0;
+}
+
+.mf-inline-row .mf-label,
+.mf-inline-row .mf-checklist-group__heading {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.mf-inline-row .mf-radio-group {
+  margin-top: 0.35rem;
+}
+
+.mf-inline-row .mf-input,
+.mf-inline-row .mf-input--select,
+.mf-inline-row textarea.mf-input {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.mf-field-wrap--conditional[hidden] {
+  display: none !important;
+}
+
+.mf-field-wrap {
+  min-width: 0;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+#mf-choices-wrap.is-hidden,
+#mf-options-layout-wrap.is-hidden {
+  display: none !important;
+}
+
+.mf-manage-toolbar-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+/* Wrapper keeps predictable block sizing around the section. */
+.mf-section-host {
+  display: flow-root;
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  min-height: min-content;
+}
+
+/* Public form sections: <section> + button (not native <details>) — avoids WebKit/Chromium
+   where <details> / ::details-content used height does not include long checklists vs border. */
+section.mf-section {
+  display: block;
+  margin-bottom: 0;
+  border-radius: var(--mf-radius-lg);
+  border: 1px solid var(--mf-stroke-soft);
+  background: var(--mf-paper-a90);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  overflow: visible;
+  min-height: min-content;
+}
+
+.mf-section-panel {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  min-height: min-content;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  overflow: visible;
+}
+
+button.mf-section-summary {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0.65rem;
+  width: 100%;
+  margin: 0;
+  text-align: start;
+  font: inherit;
+  color: inherit;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.mf-section-summary__label {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+/* Down = collapsed (expand); up = open (collapse). */
+.mf-section-summary__chevron {
+  display: inline-block;
+  width: 0;
+  height: 0;
+  flex-shrink: 0;
+  margin-inline-start: auto;
+  border-inline-start: 0.38em solid transparent;
+  border-inline-end: 0.38em solid transparent;
+  border-top: 0.48em solid var(--mf-ink-a42);
+  border-bottom: none;
+  transition: border var(--mf-motion) ease;
+}
+
+.mf-section--open .mf-section-summary__chevron {
+  border-top: none;
+  border-bottom: 0.48em solid var(--mf-ink-a42);
+}
+
+.mf-section-summary {
+  cursor: pointer;
+  list-style: none;
+  font-size: 1.05rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  padding: 0.85rem 1rem;
+  outline: none;
+}
+
+.mf-section--open .mf-section-summary {
+  border-bottom: 1px solid var(--mf-stroke-soft);
+}
+
+.mf-section-summary:focus-visible {
+  box-shadow: inset 0 0 0 2px var(--mf-accent-a35);
+}
+
+.mf-section-desc {
+  margin: 0;
+  padding: 0.5rem 1rem 0;
+  font-size: 0.92rem;
+  color: var(--mf-text-secondary);
+  line-height: 1.45;
+}
+
+.mf-section-inner {
+  padding: 0.75rem 1rem clamp(1rem, 2.5vw, 1.35rem);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  min-width: 0;
+  min-height: min-content;
+  flex: 0 1 auto;
+  align-self: stretch;
+  overflow: visible;
+}
+
+.mf-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  min-width: 0;
+  max-width: 100%;
+}
+
+/* Inline row cell: column flex inside flex item — keeps multi fields per row without inline-block width quirks. */
+.mf-field.mf-field--inline {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.4rem;
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.mf-label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.mf-hint {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--mf-text-secondary);
+}
+
+.mf-hint--deadline {
+  margin-top: 0.75rem;
+  max-width: 38rem;
+}
+
+.mf-hint--under-label {
+  margin: 0.2rem 0 0.5rem;
+}
+
+.mf-field--hint-only {
+  padding: 0.9rem 1.05rem;
+  border-radius: var(--mf-radius-md, 16px);
+  background: linear-gradient(
+    165deg,
+    var(--mf-hint-surface) 0%,
+    color-mix(in srgb, var(--mf-hint-accent-tint) 35%, var(--mf-glass-strong, var(--mf-paper))) 100%
+  );
+  border: 1px solid var(--mf-hint-border);
+  box-shadow:
+    var(--mf-shadow-inset),
+    0 1px 2px var(--mf-ink-a04);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.mf-field-hint-only__title {
+  margin: 0 0 0.35rem;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--mf-hint-title);
+}
+
+.mf-field-hint-only__body {
+  margin: 0;
+  font-size: 0.875rem;
+  color: var(--mf-hint-body);
+  line-height: 1.47;
+  letter-spacing: -0.01em;
+}
+
+.mf-field--label-only {
+  margin: 0.15rem 0 0.35rem;
+}
+
+.mf-field-label-only__text {
+  margin: 0;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--mf-text, var(--mf-gray-900b));
+  line-height: 1.45;
+}
+
+.mf-field-label-only__sub {
+  margin: 0.35rem 0 0;
+  font-size: 0.875rem;
+  color: var(--mf-muted, var(--mf-gray-700b));
+  line-height: 1.47;
+}
+
+.mf-public-form-layout .mf-field-wrap--break {
+  margin: 0;
+  padding: 0;
+  min-height: 0;
+}
+
+.mf-public-form-layout .mf-field--break-host {
+  margin: 0;
+  padding: 0;
+}
+
+.mf-field--break {
+  display: block;
+  height: 0.65rem;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.mf-public-form-layout .mf-inline-row .mf-field--label-only--inline {
+  width: 100%;
+  min-height: 100%;
+}
+
+.mf-public-form-layout .mf-inline-row > .mf-field-wrap:has(.mf-field--label-only--inline) {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Hint blocks in an inline row (studio: Inline checkbox on hint fields). */
+.mf-public-form-layout .mf-inline-row .mf-field--hint-only--inline {
+  width: 100%;
+  min-height: 100%;
+  padding: 0.75rem 0.9rem;
+}
+
+.mf-public-form-layout .mf-inline-row > .mf-field-wrap:has(.mf-field--hint-only--inline) {
+  display: flex;
+  flex-direction: column;
+}
+
+.mf-form-logo-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem 1.5rem;
+  margin: 0 auto 1.75rem;
+  max-width: var(--mf-shell-max-width);
+  padding: 0 clamp(1.25rem, 4vw, 2rem);
+}
+
+/* Public form headers: pin first/last logo to opposite ends (RTL: mirrored) */
+.mf-form-logo-row--corners {
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.75rem 1rem;
+}
+
+/* Three header positions (left / center / right) for closed & one-time pages */
+.mf-form-logo-row--slots {
+  width: 100%;
+  max-width: min(48rem, 100%);
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.75rem 1rem;
+}
+
+.mf-form-logo-row__slot {
+  flex: 1 1 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-width: 0;
+}
+
+.mf-form-logo-row__slot--start {
+  justify-content: flex-start;
+}
+
+.mf-form-logo-row__slot--end {
+  justify-content: flex-end;
+}
+
+.mf-form-logo-row--hero {
+  margin-top: 1rem;
+  margin-bottom: 0;
+  padding-inline-start: 0;
+  padding-inline-end: 0;
+}
+
+.mf-form-logo {
+  max-height: 3rem;
+  width: auto;
+  max-width: min(9.5rem, 34vw);
+  object-fit: contain;
+  border-radius: 5px;
+  display: block;
+}
+
+/* Live public form — header logos larger; width capped to column so corners stay sharp */
+.mf-public-form-layout .mf-form-logo {
+  max-height: 3.75rem;
+  width: auto;
+  max-width: 100%;
+  height: auto;
+}
+
+@media (min-width: 720px) {
+  .mf-public-form-layout .mf-form-logo {
+    max-height: 4.75rem;
+  }
+}
+
+/*
+ * Live form: title centered — flex so outer columns absorb space and logos sit on
+ * true left/right corners (grid + huge max-width vw let images hug the title).
+ */
+.mf-form-logo-strip {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem 1rem;
+  width: 100%;
+}
+
+.mf-form-logo-strip__side {
+  display: flex;
+  flex: 1 1 0;
+  flex-wrap: wrap;
+  gap: 0.5rem 0.65rem;
+  align-items: center;
+  min-width: 0;
+}
+
+.mf-form-logo-strip__side--start {
+  justify-content: start;
+}
+
+.mf-form-logo-strip__side--end {
+  justify-content: end;
+}
+
+.mf-form-logo-strip__center {
+  flex: 0 1 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.45rem;
+  text-align: center;
+  min-width: 0;
+  max-width: min(32rem, 70%);
+}
+
+.mf-form-logo-strip__above-title {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  width: 100%;
+}
+
+.mf-form-logo-strip__above-title:empty {
+  display: none;
+}
+
+.mf-form-logo-strip__title {
+  margin: 0;
+  font-size: clamp(1.1rem, 2.6vw, 1.42rem);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  color: var(--mf-text);
+}
+
+.mf-form-logo-strip__subtitle {
+  display: block;
+  margin-top: 0.3rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--mf-text-secondary);
+}
+
+/* logical start/end — no extra RTL overrides */
+
+.mf-logo-manage-row {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 1rem;
+}
+
+.mf-logo-manage-preview img {
+  display: block;
+  max-height: 3rem;
+  width: auto;
+  max-width: 8rem;
+  object-fit: contain;
+}
+
+.mf-input--assignees {
+  min-height: 12rem;
+  width: 100%;
+  max-width: min(48rem, 100%);
+}
+
+/* Tom Select (workflow assignees) */
+.mf-form .ts-wrapper {
+  width: 100%;
+  max-width: min(48rem, 100%);
+}
+
+.mf-form .ts-control {
+  border-radius: 12px;
+  border: 1px solid var(--mf-stroke-soft);
+  background: var(--mf-paper-a75);
+  min-height: 2.35rem;
+  padding: 0.28rem 0.45rem;
+}
+
+.mf-form .ts-dropdown .option,
+.mf-form .ts-dropdown .create {
+  padding: 0.35rem 0.65rem;
+  font-size: 0.9rem;
+  line-height: 1.35;
+}
+
+.mf-form .ts-dropdown .optgroup-header {
+  padding: 0.35rem 0.65rem 0.25rem;
+  font-size: 0.78rem;
+}
+
+.mf-workflow-assignees {
+  display: block;
+  margin-top: 0.35rem;
+  line-height: 1.45;
+}
+
+.mf-input,
+.mf-input--select,
+.mf-input--textarea,
+.mf-input--file {
+  width: 100%;
+  max-width: 100%;
+  padding: 0.65rem 0.85rem;
+  font: inherit;
+  font-size: 1rem;
+  border-radius: 12px;
+  border: 1px solid var(--mf-stroke-soft);
+  background: var(--mf-paper-a75);
+  box-shadow: var(--mf-shadow-inset);
+}
+
+.mf-input--file {
+  padding: 0.5rem 0.75rem;
+  cursor: pointer;
+}
+
+.mf-input--textarea {
+  min-height: 6rem;
+  resize: vertical;
+}
+
+.mf-radio-group {
+  list-style: none;
+  margin: 0.25rem 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 0.55rem 1.35rem;
+}
+
+.mf-choice-layout--vertical .mf-radio-group {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.45rem;
+}
+
+.mf-choice-layout--horizontal .mf-radio-group {
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.mf-radio-group li {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+input.mf-checkbox[type="checkbox"] {
+  width: 1.1rem;
+  height: 1.1rem;
+  accent-color: var(--mf-accent);
+}
+
+.mf-check-label {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.55rem;
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  letter-spacing: -0.01em;
+}
+
+.mf-check-label span {
+  padding-top: 0.1rem;
+}
+
+/* Checklist: use div role="group" (not fieldset) — WebKit + RTL often clip long lists inside fieldset/legend. */
+.mf-checklist-group {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  margin: 0;
+  padding: 0;
+  min-width: 0;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow: visible;
+}
+
+.mf-checklist-group__heading {
+  margin: 0 0 0.35rem;
+}
+
+/* Checklist: Django 5+ CheckboxSelectMultiple wraps options in div.mf-checklist-choices (not <ul>). */
+.mf-field--checklist ul,
+.mf-field--checklist .mf-checklist-choices {
+  list-style: none;
+  margin: 0.35rem 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  min-width: 0;
+}
+
+.mf-field--checklist.mf-choice-layout--horizontal ul,
+.mf-field--checklist.mf-choice-layout--horizontal .mf-checklist-choices {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 0.55rem 1.35rem;
+}
+
+.mf-field--checklist ul li,
+.mf-field--checklist .mf-checklist-choices > div {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  min-width: 0;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.mf-field--checklist.mf-choice-layout--horizontal ul li,
+.mf-field--checklist.mf-choice-layout--horizontal .mf-checklist-choices > div {
+  flex: 0 1 auto;
+}
+
+.mf-field--checklist ul label,
+.mf-field--checklist .mf-checklist-choices label {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.55rem;
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  letter-spacing: -0.01em;
+  min-width: 0;
+  flex: 1 1 auto;
+  overflow-wrap: break-word;
+  word-break: normal;
+}
+
+.mf-field--checklist .mf-checklist-choices input[type="checkbox"] {
+  width: 1.1rem;
+  height: 1.1rem;
+  margin-top: 0.12rem;
+  accent-color: var(--mf-accent);
+  flex-shrink: 0;
+}
+
+.mf-field--inline-checklist {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.mf-actions {
+  margin-top: 0.5rem;
+}
+
+.mf-share-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.mf-share-secure-enable-form {
+  max-width: 100%;
+}
+
+.mf-share-secure-enable-hint {
+  margin: 0 0 0.5rem;
+}
+
+.mf-share-secure-enable-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.45rem 0.65rem;
+}
+
+.mf-share-secure-enable-label {
+  margin: 0;
+  flex-shrink: 0;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.mf-share-secure-enable-input {
+  flex: 1 1 9rem;
+  min-width: 0;
+  max-width: 16rem;
+}
+
+.mf-share-secure-enable-submit {
+  flex-shrink: 0;
+}
+
+@media (max-width: 520px) {
+  .mf-share-secure-enable-submit {
+    flex: 1 1 100%;
+    justify-content: center;
+  }
+}
+
+.mf-share-secure-enable-error {
+  margin: 0.5rem 0 0;
+}
+
+/*
+ * Buttons. Three intents — primary (the one action that matters on a page), secondary (default),
+ * quiet (in-line, borderless) — with --small as the only size modifier. Legacy aliases: --ghost and
+ * --duplicate render as secondary; --active marks a pressed toggle.
+ */
+.mf-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  min-height: 2.375rem;
+  padding: 0.5rem 1rem;
+  font: inherit;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  line-height: 1.25;
+  color: var(--mf-text-primary);
+  background: var(--mf-surface);
+  border: 1px solid var(--mf-border);
+  border-radius: var(--mf-radius-sm);
+  cursor: pointer;
+  letter-spacing: -0.01em;
+  text-decoration: none;
+  transition:
+    background-color var(--mf-motion) var(--mf-ease),
+    border-color var(--mf-motion) var(--mf-ease),
+    color var(--mf-motion) var(--mf-ease);
+}
+
+.mf-button:hover {
+  background: var(--mf-surface-muted);
+  border-color: var(--mf-border-strong);
+}
+
+.mf-button:focus-visible {
+  outline: none;
+  box-shadow: var(--mf-focus-ring);
+}
+
+.mf-button:disabled,
+.mf-button[aria-disabled="true"] {
+  opacity: 0.55;
+  cursor: default;
+}
+
+.mf-button--primary {
+  color: var(--mf-on-accent);
+  background: var(--mf-color-primary);
+  border-color: var(--mf-color-primary);
+}
+
+.mf-button--primary:hover {
+  background: var(--mf-accent-hover);
+  border-color: var(--mf-accent-hover);
+}
+
+.mf-button--secondary,
+.mf-button--ghost,
+.mf-button.mf-button--duplicate {
+  color: var(--mf-text-primary);
+  background: var(--mf-surface);
+  border-color: var(--mf-border);
+  box-shadow: none;
+}
+
+.mf-button--secondary:hover,
+.mf-button--ghost:hover,
+.mf-button.mf-button--duplicate:hover {
+  background: var(--mf-surface-muted);
+  border-color: var(--mf-border-strong);
+  filter: none;
+}
+
+.mf-button--quiet {
+  background: transparent;
+  border-color: transparent;
+  color: var(--mf-text-muted);
+}
+
+.mf-button--quiet:hover {
+  background: var(--mf-surface-muted);
+  border-color: transparent;
+  color: var(--mf-text-primary);
+}
+
+/* Danger stays quiet until hovered: red text on a plain border, tinted only on hover. */
+.mf-button--danger {
+  color: var(--mf-danger);
+  border-color: var(--mf-border);
+  background: var(--mf-surface);
+}
+
+.mf-button--danger:hover {
+  background: var(--mf-danger-a08);
+  border-color: var(--mf-danger-a25, var(--mf-border));
+}
+
+.mf-button--active,
+.mf-button[aria-pressed="true"] {
+  background: var(--mf-surface-muted);
+  border-color: var(--mf-border-strong);
+  font-weight: 600;
+}
+
+/* .mf-alert and its variants live in 15-components.css. */
+
+/*
+ * Live public form — lightweight Apple-style validation (soft tint, system-like caption).
+ */
+.mf-public-form-layout .mf-live-error {
+  box-sizing: border-box;
+}
+
+.mf-public-form-layout .mf-live-error ul.errorlist {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.mf-public-form-layout .mf-live-error ul.errorlist li {
+  margin: 0.25rem 0 0;
+  padding: 0;
+}
+
+.mf-public-form-layout .mf-live-error ul.errorlist li:first-child {
+  margin-top: 0;
+}
+
+/* Summary message at top of form */
+.mf-public-form-layout .mf-live-error--banner {
+  margin: 0 0 1rem;
+  padding: 0.55rem 0.72rem;
+  border-radius: 10px;
+  background: var(--mf-red-500-a06);
+  border: 1px solid var(--mf-red-500-a13);
+  color: var(--mf-gray-800-a92);
+  font-size: 0.8125rem;
+  font-weight: 400;
+  line-height: 1.42;
+  letter-spacing: -0.012em;
+}
+
+.mf-public-form-layout .mf-live-error--banner ul.errorlist li {
+  color: var(--mf-gray-800-a92);
+}
+
+/* Per-field: caption under control, minimal chrome */
+.mf-public-form-layout .mf-live-error--field {
+  margin: 0.05rem 0 0;
+  padding: 0;
+  border: none;
+  background: none;
+}
+
+.mf-public-form-layout .mf-live-error--field ul.errorlist li {
+  color: var(--mf-red-500-a95);
+  font-size: 0.8125rem;
+  font-weight: 400;
+  line-height: 1.35;
+  letter-spacing: -0.01em;
+}
+
+.mf-public-form-layout .mf-field--inline .mf-live-error--field {
+  flex: 1 1 100%;
+  width: 100%;
+}
+
+.mf-public-form-layout .mf-inline-row .mf-field--inline:first-child .mf-live-error--field {
+  margin-top: 0;
+}
+
+.mf-stack {
+  margin-bottom: 1.25rem;
+}
+
+.mf-stack--lg {
+  margin-bottom: 2.5rem;
+}
+
+.mf-form-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.mf-form-link {
+  display: inline-block;
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: var(--mf-accent);
+  text-decoration: none;
+  letter-spacing: -0.02em;
+}
+
+.mf-form-link:hover {
+  text-decoration: underline;
+}
+
+.mf-form-list-due {
+  margin: 0.2rem 0 0;
+  margin-bottom: 0;
+  font-size: 0.88rem;
+  line-height: 1.35;
+  color: var(--mf-text-secondary);
+  font-weight: 400;
+}
+
+.mf-form-list-workflow {
+  margin: 0.35rem 0 0;
+  font-size: 0.8125rem;
+  line-height: 1.45;
+  color: var(--mf-text-secondary);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.2rem;
+  max-width: 100%;
+  min-width: 0;
+}
+
+.mf-form-list-workflow-label {
+  font-weight: 600;
+  color: var(--mf-text-secondary);
+  opacity: 0.88;
+  flex-shrink: 0;
+}
+
+.mf-form-list-workflow-path {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.25rem 0.35rem;
+  row-gap: 0.3rem;
+  line-height: 1.55;
+}
+
+.mf-form-list-workflow-segment {
+  display: inline-flex;
+  align-items: baseline;
+  max-width: 100%;
+  min-width: 0;
+}
+
+.mf-form-list-workflow-step-text {
+  min-width: 0;
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+
+.mf-form-list-workflow-sep {
+  margin: 0 0.1rem 0 0;
+  opacity: 0.45;
+  user-select: none;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.mf-form-list-workflow-empty {
+  font-style: italic;
+  opacity: 0.75;
+}
+
+.mf-muted {
+  display: block;
+  margin-top: 0.2rem;
+  font-size: 0.88rem;
+  color: var(--mf-text-secondary);
+  font-weight: 400;
+}
+
+.mf-status {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 0.25rem 0 0;
+  letter-spacing: -0.02em;
+}
+
+.mf-dl {
+  margin: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
+  gap: 0.5rem 1.25rem;
+  font-size: 0.98rem;
+}
+
+.mf-dl dt {
+  color: var(--mf-text-secondary);
+  font-weight: 500;
+}
+
+.mf-dl dd {
+  margin: 0;
+}
+
+.mf-mt {
+  margin-top: 1rem;
+}
+
+.mf-timeline {
+  list-style: none;
+  margin: 0.5rem 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.mf-timeline-item {
+  padding-inline-start: 0.75rem;
+  border-inline-start: 2px solid var(--mf-accent-a25);
+}
+
+.mf-timeline-date {
+  display: block;
+  font-size: 0.78rem;
+  color: var(--mf-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.mf-timeline-title {
+  display: block;
+  font-weight: 600;
+  margin-top: 0.2rem;
+}
+
+.mf-timeline-step {
+  display: inline-block;
+  margin-top: 0.15rem;
+  font-size: 0.88rem;
+  color: var(--mf-text-secondary);
+}
+
+.mf-timeline-msg {
+  margin: 0.35rem 0 0;
+}
+
+.mf-thread-messages {
+  list-style: none;
+  margin: 0.75rem 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.mf-thread-messages__item {
+  padding: 0.65rem 0.85rem;
+  border-radius: var(--mf-radius-md, 10px);
+  background: var(--mf-ink-a03);
+  border: 1px solid var(--mf-stroke-soft, var(--mf-ink-a08));
+}
+
+/* Applicant chat (Contact applicant in studio / Messages on public track page). */
+.mf-applicant-chat .mf-applicant-chat__item--staff {
+  background: var(--mf-blue-500-a07);
+  border-color: var(--mf-blue-500-a18);
+  margin-inline-end: 1.5rem;
+}
+
+.mf-applicant-chat .mf-applicant-chat__item--applicant {
+  background: var(--mf-success-bright-a08);
+  border-color: var(--mf-success-bright-a20);
+  margin-inline-start: 1.5rem;
+}
+
+.mf-applicant-chat-recipient {
+  font-weight: 500;
+}
+
+/* Public form drafts. */
+.mf-draft-saved-notice {
+  margin-bottom: 1rem;
+}
+
+.mf-draft-missing-list {
+  font-weight: 600;
+}
+
+.mf-draft-resume-link {
+  word-break: break-all;
+}
+
+.mf-thread-messages__meta {
+  font-size: 0.82rem;
+  color: var(--mf-text-secondary);
+  margin-bottom: 0.35rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.25rem 0.5rem;
+}
+
+.mf-thread-messages__author {
+  font-weight: 600;
+  color: var(--mf-text-primary, inherit);
+}
+
+.mf-thread-messages__date {
+  margin-inline-start: auto;
+  font-variant-numeric: tabular-nums;
+}
+
+.mf-thread-messages__body {
+  font-size: 0.95rem;
+  line-height: 1.45;
+  word-break: break-word;
+}
+
+/* Submission manage — collapsible sections on submission detail (thread, timeline) */
+.mf-thread-card-details {
+  width: 100%;
+}
+
+.mf-thread-card-details__summary {
+  list-style: none;
+  user-select: none;
+  width: fit-content;
+  max-width: 100%;
+  cursor: pointer;
+}
+
+.mf-thread-card-details__summary--row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem 0.65rem;
+  width: 100%;
+}
+
+.mf-thread-card-details__meta {
+  font-size: 0.88rem;
+  font-weight: 500;
+}
+
+.mf-thread-card-details__summary--row .mf-pill.mf-thread-card-details__meta {
+  font-size: 0.78rem;
+}
+
+.mf-thread-card-details__summary::-webkit-details-marker {
+  display: none;
+}
+
+.mf-thread-card-details__title {
+  margin: 0;
+  display: inline-block;
+}
+
+.mf-heading--with-icon {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  vertical-align: middle;
+}
+
+.mf-card > .mf-heading.mf-heading--with-icon,
+.mf-card--soft > .mf-heading.mf-heading--with-icon {
+  display: flex;
+}
+
+.mf-heading__icon {
+  flex-shrink: 0;
+  color: var(--mf-accent, var(--mf-accent));
+  opacity: 0.92;
+}
+
+.mf-thread-card-details__summary:hover .mf-thread-card-details__title {
+  color: var(--mf-accent, var(--mf-accent));
+}
+
+.mf-thread-card-details[open] > .mf-thread-card-details__summary {
+  margin-bottom: 0.35rem;
+}
+
+.mf-thread-card-details__body {
+  margin-top: 0.35rem;
+}
+
+/* Private sticky note: fixed right dock, collapsed by default (<details>) */
+.mf-manage-section--sticky-dock {
+  padding-inline-end: 2.85rem;
+}
+
+@media (min-width: 48rem) {
+  .mf-manage-section--sticky-dock {
+    padding-inline-end: 3rem;
+  }
+}
+
+.mf-private-sticky-dock {
+  position: fixed;
+  right: 0;
+  top: clamp(5.25rem, 16vh, 8.5rem);
+  bottom: max(0.75rem, env(safe-area-inset-bottom, 0));
+  z-index: 85;
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: stretch;
+  max-height: calc(100dvh - 5.5rem);
+  pointer-events: none;
+}
+
+.mf-private-sticky-dock > summary,
+.mf-private-sticky-dock > .mf-private-sticky-dock__panel {
+  pointer-events: auto;
+}
+
+.mf-private-sticky-dock__tab {
+  list-style: none;
+  cursor: pointer;
+  width: 2.35rem;
+  flex-shrink: 0;
+  margin: 0;
+  padding: 0.5rem 0.15rem;
+  align-self: flex-start;
+  border-radius: 10px 0 0 10px;
+  border: 1px solid var(--mf-orange-600-a40);
+  border-inline-end: none;
+  background: linear-gradient(180deg, var(--mf-yellow-200) 0%, var(--mf-yellow-200b) 100%);
+  box-shadow:
+    0 1px 0 var(--mf-paper-a85) inset,
+    -4px 8px 20px var(--mf-ink-a10);
+  color: var(--mf-text-primary, inherit);
+}
+
+.mf-private-sticky-dock__tab::-webkit-details-marker {
+  display: none;
+}
+
+.mf-private-sticky-dock__tab::marker {
+  content: "";
+}
+
+.mf-private-sticky-dock__tab:hover {
+  filter: brightness(1.03);
+}
+
+.mf-private-sticky-dock[open] .mf-private-sticky-dock__tab {
+  box-shadow:
+    0 1px 0 var(--mf-paper-a85) inset,
+    -2px 4px 14px var(--mf-ink-a08);
+}
+
+.mf-private-sticky-dock__tab-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  min-height: 6.5rem;
+}
+
+.mf-private-sticky-dock__tab-label {
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  font-size: 0.68rem;
+  font-weight: 650;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  line-height: 1.2;
+}
+
+.mf-private-sticky-dock__dot {
+  display: block;
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: 50%;
+  background: var(--mf-accent);
+  box-shadow: 0 0 0 2px var(--mf-accent-a20);
+}
+
+.mf-private-sticky-dock__panel {
+  width: min(20rem, calc(100vw - 2.85rem));
+  max-height: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  border-radius: 10px 0 0 10px;
+  margin-inline-end: -1px;
+}
+
+.mf-private-sticky-dock:not([open]) .mf-private-sticky-dock__panel {
+  display: none;
+}
+
+.mf-private-sticky-dock[open] .mf-private-sticky-dock__panel {
+  box-shadow: -8px 0 28px var(--mf-ink-a12);
+}
+
+.mf-private-sticky-note {
+  padding: 0.9rem 1rem 1rem;
+  border-radius: 10px 0 0 10px;
+  background: linear-gradient(145deg, var(--mf-yellow-50) 0%, var(--mf-yellow-200) 100%);
+  border: 1px solid var(--mf-orange-600-a35);
+  border-inline-end: none;
+  box-shadow: 0 1px 0 var(--mf-paper-a90) inset;
+}
+
+.mf-private-sticky-note__header {
+  display: flex;
+  gap: 0.6rem;
+  align-items: flex-start;
+  margin-bottom: 0.65rem;
+}
+
+.mf-private-sticky-note__pin {
+  flex-shrink: 0;
+  width: 0.65rem;
+  height: 0.65rem;
+  margin-top: 0.35rem;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, var(--mf-red-400b), var(--mf-red-600c));
+  box-shadow: 0 1px 2px var(--mf-ink-a25);
+}
+
+.mf-private-sticky-note__title {
+  display: block;
+  font-size: 0.95rem;
+}
+
+.mf-private-sticky-note__subtitle {
+  margin: 0.15rem 0 0;
+  font-size: 0.8rem;
+  line-height: 1.35;
+}
+
+.mf-private-sticky-note__textarea {
+  background: var(--mf-glass);
+  border-color: var(--mf-orange-600-a28);
+}
+
+.mf-private-sticky-note__actions {
+  margin-top: 0.35rem;
+}

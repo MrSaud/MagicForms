@@ -1,0 +1,374 @@
+{% extends "magicforms/base.html" %}
+{% load i18n magicforms_i18n portal_urls %}
+
+{% block html_dir %}{{ form_def.public_dir }}{% endblock %}
+
+{% block title %}{% trans "Submission" %} · {{ form_def.title|mf_trans }} · {{ form_def.entity.get_public_display_title|mf_trans }}{% endblock %}
+
+{% block content %}
+<nav class="mf-breadcrumb-nav mf-mb-text" aria-label="{% trans 'You are here' %}">
+  <a class="mf-breadcrumb-nav__link" href="{{ studio_inbox_url }}">{% trans "Inbox" %}</a>
+  <span class="mf-breadcrumb-nav__sep" aria-hidden="true">/</span>
+  <a class="mf-breadcrumb-nav__link" href="{% portal_url 'magicforms:entity_home' entity_slug=form_def.entity.slug %}">{{ form_def.entity.get_public_display_title|mf_trans }}</a>
+</nav>
+{% if messages %}
+<ul class="mf-messages">
+  {% for message in messages %}
+    <li class="mf-message mf-message--{{ message.level_tag }}">{{ message }}</li>
+  {% endfor %}
+</ul>
+{% endif %}
+<section class="mf-hero mf-hero--compact">
+  <p class="mf-eyebrow">{{ form_def.title|mf_trans }}</p>
+  <h1 class="mf-display mf-display--small">{% trans "Track your submission" %}</h1>
+  <p class="mf-lead mf-lead--mono">{% trans "Reference" %}: {{ submission.reference_token }}</p>
+  <p class="mf-actions mf-mt">
+    <a class="mf-button mf-button--secondary" href="{{ studio_dashboard_url }}">{% trans "Dashboard" %}</a>
+  </p>
+</section>
+
+{% if not submission.submitted_by and submission.track_code %}
+<div class="mf-card mf-card--glass mf-stack mf-track-number-card">
+  <h2 class="mf-heading">{% trans "Your track number" %}</h2>
+  <p class="mf-track-number" aria-label="{% trans 'Track number' %}">{{ submission.track_code }}</p>
+  <p class="mf-body-text">
+    {% blocktrans trimmed %}
+      Save this number. To check your request later, open the
+    {% endblocktrans %}
+    <a class="mf-link" href="{% portal_url 'magicforms:submission_track' %}">{% trans "track page" %}</a>
+    {% blocktrans trimmed %}
+      and enter it together with the email you used on the form.
+    {% endblocktrans %}
+  </p>
+</div>
+{% endif %}
+
+<div class="mf-card mf-card--glass mf-stack">
+  <h2 class="mf-heading">{% trans "Current status" %}</h2>
+  {% if submission.workflow_state == "completed" %}
+    <p class="mf-status">{% trans "Completed" %}</p>
+    <p class="mf-body-text">{% trans "All workflow steps are done. Thank you." %}</p>
+  {% elif submission.workflow_state == "rejected" %}
+    <p class="mf-status">{% trans "Not approved" %}</p>
+    <p class="mf-body-text">{% trans "This submission was not approved and will not move further in the workflow." %}</p>
+    {% if submission.current_step %}
+      <p class="mf-muted">{% trans "Last step" %}: {{ submission.current_step.label|mf_trans }}</p>
+    {% endif %}
+  {% elif submission.current_step %}
+    <p class="mf-status">{{ submission.current_step.label|mf_trans }}</p>
+    {% if submission.current_step.description %}
+      <p class="mf-body-text">{{ submission.current_step.description|mf_trans }}</p>
+    {% endif %}
+  {% else %}
+    <p class="mf-body-text">{% trans "No workflow step is assigned yet." %}</p>
+  {% endif %}
+</div>
+
+<div class="mf-card mf-card--glass mf-stack">
+  <h2 class="mf-heading">{% trans "Your answers" %}</h2>
+  <dl class="mf-dl">
+    {% for v in values %}
+      {% if v.attachment %}
+        <dt>{{ v.field.label|mf_trans }}</dt>
+        <dd>
+          <a class="mf-link" href="{{ v.attachment.url }}" target="_blank" rel="noopener">{{ v.value|default:v.attachment.name }}</a>
+        </dd>
+      {% elif v.value %}
+        {% if not v.value|mf_is_na_placeholder %}
+          <dt>{{ v.field.label|mf_trans }}</dt>
+          <dd>{{ v.value|mf_trans }}</dd>
+        {% endif %}
+      {% else %}
+        <dt>{{ v.field.label|mf_trans }}</dt>
+        <dd><span class="mf-muted">—</span></dd>
+      {% endif %}
+    {% endfor %}
+  </dl>
+  <p class="mf-body-text mf-mt">
+    <strong>{% trans "Your submission" %}:</strong>
+    {% if submission.submitter_email %}
+      {% trans "Email on file" %}: {{ submission.submitter_email }}
+    {% elif submission.submitted_by %}
+      {% trans "Signed in when you submitted" %} (<span class="mf-code">{{ submission.submitted_by.get_username }}</span>).
+    {% else %}
+      <span class="mf-muted">{% trans "Anonymous — no account or email was stored." %}</span>
+    {% endif %}
+  </p>
+</div>
+
+<div class="mf-card mf-card--glass mf-stack mf-applicant-chat-card" id="messages">
+  <h2 class="mf-heading">{% trans "Messages" %}</h2>
+  <p class="mf-muted mf-body-text">
+    {% blocktrans trimmed %}
+      Questions about your request? Write to the team here. You will receive an email when they answer,
+      and their replies appear on this page.
+    {% endblocktrans %}
+  </p>
+  <ul class="mf-thread-messages mf-applicant-chat" aria-label="{% trans 'Messages' %}">
+    {% for msg in applicant_chat_messages %}
+      <li class="mf-thread-messages__item{% if msg.is_from_applicant %} mf-applicant-chat__item--applicant{% else %} mf-applicant-chat__item--staff{% endif %}">
+        <div class="mf-thread-messages__meta">
+          {% if msg.is_from_applicant %}
+            <span class="mf-thread-messages__author">{% trans "You" %}</span>
+          {% else %}
+            <span class="mf-thread-messages__author">{{ form_def.entity.get_public_display_title|mf_trans }}</span>
+          {% endif %}
+          <span class="mf-thread-messages__date" title="{{ msg.created_at|date:'c' }}">{{ msg.created_at|date:"M j, Y, P" }}</span>
+        </div>
+        <div class="mf-thread-messages__body">{{ msg.body|linebreaksbr }}</div>
+      </li>
+    {% empty %}
+      <li class="mf-thread-messages__empty mf-body-text mf-muted">{% trans "No messages yet." %}</li>
+    {% endfor %}
+  </ul>
+  <form method="post" class="mf-form mf-form--wide mf-stack mf-mt" action="#messages">
+    {% csrf_token %}
+    <input type="hidden" name="applicant_chat_reply" value="1" />
+    <div class="mf-field">
+      <label class="mf-label" for="id_applicant_chat_body">{% trans "Your message" %}</label>
+      <textarea
+        id="id_applicant_chat_body"
+        name="applicant_chat_body"
+        class="mf-input mf-input--textarea"
+        rows="4"
+        maxlength="4000"
+        required
+        placeholder="{% trans 'Ask a question or reply to the team…' %}"
+      ></textarea>
+    </div>
+    <p class="mf-actions">
+      <button type="submit" class="mf-button mf-button--primary">{% trans "Send message" %}</button>
+    </p>
+  </form>
+</div>
+
+{% if submission_print.has_merge_output %}
+<div class="mf-card mf-card--glass mf-stack">
+  <h2 class="mf-heading">{% trans "Filled form document" %}</h2>
+  <p class="mf-muted mf-mb-text">
+    {% blocktrans trimmed %}
+      Your answers merged into this form’s print template. Anyone with this tracking link can download these files — keep the link private.
+    {% endblocktrans %}
+  </p>
+  {% if submission_print.merged_pdf_available %}
+  <details class="mf-submission-doc-details mf-submission-doc-details--merged">
+    <summary class="mf-submission-doc-details__summary mf-submission-doc-details__summary--thumb">
+      <div class="mf-doc-thumb">
+        <div class="mf-doc-thumb__frame-wrap" aria-hidden="true">
+          <iframe
+            class="mf-doc-thumb-iframe"
+            data-pdf-src="{{ submission_print.pdf_inline_path }}"
+            title=""
+            tabindex="-1"
+          ></iframe>
+        </div>
+        <span class="mf-doc-thumb__label">{% trans "View full document" %}</span>
+      </div>
+      <span class="mf-doc-thumb__collapse-label">{% trans "Collapse document" %}</span>
+    </summary>
+    <div class="mf-submission-doc-details__body mf-stack mf-mt">
+      <div class="mf-doc-viewer-wrap">
+        <div class="mf-doc-viewer-loading" role="status" aria-live="polite" aria-busy="true">
+          <div class="mf-doc-viewer-loading__track" aria-hidden="true">
+            <div class="mf-doc-viewer-loading__bar"></div>
+          </div>
+          <p class="mf-doc-viewer-loading__text">{% trans "Loading document…" %}</p>
+        </div>
+        <iframe
+          class="mf-doc-viewer"
+          title="{% trans 'Merged PDF' %}"
+          data-pdf-src="{{ submission_print.pdf_inline_path }}"
+        ></iframe>
+      </div>
+    </div>
+  </details>
+  {% elif submission_print.show_docx_download or submission_print.show_odt_download %}
+  <p class="mf-body-text mf-muted">
+    {% blocktrans trimmed %}
+      A PDF preview is not available (LibreOffice is not installed on the server). Use a download button below if shown.
+    {% endblocktrans %}
+  </p>
+  {% endif %}
+  <div class="mf-actions mf-mt">
+    {% if submission_print.merged_pdf_available %}
+      <a class="mf-button mf-button--secondary mf-button--small" href="{% portal_url 'magicforms:submission_merged_document' entity_slug=form_def.entity.slug slug=form_def.slug token=submission.reference_token fmt='pdf' %}">{% trans "Download PDF" %}</a>
+    {% endif %}
+    {% if submission_print.print_is_docx %}
+      <a class="mf-button mf-button--secondary mf-button--small" href="{% portal_url 'magicforms:submission_merged_document' entity_slug=form_def.entity.slug slug=form_def.slug token=submission.reference_token fmt='docx' %}">{% trans "Download DOCX" %}</a>
+    {% endif %}
+    {% if submission_print.has_odt_secondary %}
+      <a class="mf-button mf-button--secondary mf-button--small" href="{% portal_url 'magicforms:submission_merged_document' entity_slug=form_def.entity.slug slug=form_def.slug token=submission.reference_token fmt='odt' %}">{% trans "Download ODT" %}</a>
+    {% endif %}
+  </div>
+</div>
+{% endif %}
+
+<div class="mf-card mf-card--glass mf-stack">
+  <h2 class="mf-heading">{% trans "Your documents" %}</h2>
+  {% if track_respondent_upload_open %}
+  <p class="mf-muted">
+    {% blocktrans with max=attachment_max trimmed %}
+      Upload supporting files for this submission (e.g. PDF, Word, images). Anyone with this page link can add files — keep the link private. Maximum {{ max }} files, 15 MB each.
+    {% endblocktrans %}
+  </p>
+  {% endif %}
+  {% if submission_attachment_rows %}
+  <ul class="mf-manage-table mf-card mf-card--soft mf-attachment-doc-list">
+    {% for row in submission_attachment_rows %}
+      <li class="mf-manage-row">
+        <div class="mf-manage-row-main mf-stack">
+          <div>
+            <a class="mf-manage-row-title" href="{{ row.doc.file.url }}" target="_blank" rel="noopener">{{ row.doc.title|default:row.doc.file.name }}</a>
+            <span class="mf-muted">{{ row.doc.uploaded_at|date:"M j, Y P" }}{% if row.doc.uploaded_by %} · {% trans "staff" %}: {{ row.doc.uploaded_by }}{% else %} · {% trans "Respondent" %}{% endif %}</span>
+          </div>
+          {% if row.pdf_inline_path %}
+          <details class="mf-submission-doc-details mf-submission-doc-details--attachment mf-mt">
+            <summary class="mf-submission-doc-details__summary mf-button mf-button--secondary mf-button--small">{% trans "View as PDF" %}</summary>
+            <div class="mf-submission-doc-details__body mf-stack mf-mt">
+              <div class="mf-doc-viewer-wrap mf-doc-viewer-wrap--compact">
+                <div class="mf-doc-viewer-loading" role="status" aria-live="polite" aria-busy="true">
+                  <div class="mf-doc-viewer-loading__track" aria-hidden="true">
+                    <div class="mf-doc-viewer-loading__bar"></div>
+                  </div>
+                  <p class="mf-doc-viewer-loading__text">{% trans "Loading document…" %}</p>
+                </div>
+                <iframe
+                  class="mf-doc-viewer"
+                  title="{% trans 'Document preview' %}"
+                  data-pdf-src="{{ row.pdf_inline_path }}"
+                ></iframe>
+              </div>
+            </div>
+          </details>
+          {% endif %}
+        </div>
+        <div class="mf-manage-row-actions">
+          {% if row.may_delete %}
+          <form method="post" class="mf-inline-form" onsubmit="return confirm('{% trans "Remove this attachment?" %}');">
+            {% csrf_token %}
+            <input type="hidden" name="submission_attachment_action" value="delete" />
+            <input type="hidden" name="attachment_id" value="{{ row.doc.pk }}" />
+            <button type="submit" class="mf-button mf-button--secondary">{% trans "Remove" %}</button>
+          </form>
+          {% endif %}
+        </div>
+      </li>
+    {% endfor %}
+  </ul>
+  {% else %}
+  {% if track_respondent_upload_open %}
+  <p class="mf-body-text mf-muted">{% trans "No extra documents uploaded yet." %}</p>
+  {% else %}
+  <p class="mf-body-text mf-muted">{% trans "No additional documents." %}</p>
+  {% endif %}
+  {% endif %}
+  {% if attachment_form %}
+  <form method="post" enctype="multipart/form-data" class="mf-form mf-form--wide mf-stack mf-mt">
+    {% csrf_token %}
+    <input type="hidden" name="submission_attachment_action" value="add" />
+    <div class="mf-field">
+      {{ attachment_form.title.errors }}
+      <label class="mf-label" for="{{ attachment_form.title.id_for_label }}">{{ attachment_form.title.label }} <span class="mf-muted">({% trans "optional" %})</span></label>
+      {{ attachment_form.title }}
+    </div>
+    <div class="mf-field">
+      {{ attachment_form.file.errors }}
+      <label class="mf-label" for="{{ attachment_form.file.id_for_label }}">{{ attachment_form.file.label }}</label>
+      {{ attachment_form.file }}
+      {% if attachment_form.file.help_text %}<p class="mf-hint">{{ attachment_form.file.help_text }}</p>{% endif %}
+    </div>
+    <div class="mf-actions">
+      <button type="submit" class="mf-button mf-button--primary">{% trans "Upload document" %}</button>
+    </div>
+  </form>
+  {% endif %}
+</div>
+
+{% if respondent_forward_form %}
+<div class="mf-card mf-card--glass mf-stack">
+  <h2 class="mf-heading">{% trans "Forward submission" %}</h2>
+  <p class="mf-muted">
+    {% blocktrans trimmed %}
+      Record that this submission was brought to someone else’s attention (same organization). This adds an entry on the timeline below; it does not change workflow or send email automatically.
+    {% endblocktrans %}
+  </p>
+  <form method="post" class="mf-form mf-form--wide mf-stack">
+    {% csrf_token %}
+    <input type="hidden" name="submission_forward" value="1" />
+    <div class="mf-field">
+      {{ respondent_forward_form.target_user.errors }}
+      <label class="mf-label" for="{{ respondent_forward_form.target_user.id_for_label }}">{{ respondent_forward_form.target_user.label }}</label>
+      {{ respondent_forward_form.target_user }}
+    </div>
+    <div class="mf-field">
+      {{ respondent_forward_form.note.errors }}
+      <label class="mf-label" for="{{ respondent_forward_form.note.id_for_label }}">{{ respondent_forward_form.note.label }}</label>
+      {{ respondent_forward_form.note }}
+    </div>
+    <div class="mf-actions">
+      <button type="submit" class="mf-button mf-button--primary">{% trans "Forward" %}</button>
+    </div>
+  </form>
+</div>
+{% elif form_def.allow_submission_forward and submission.submitted_by and not user.is_authenticated %}
+<p class="mf-hint mf-mb-text">
+  {% blocktrans trimmed %}
+    Sign in with the same account you used when you submitted to forward this submission to someone in the organization.
+  {% endblocktrans %}
+</p>
+{% elif form_def.allow_submission_forward and not submission.submitted_by %}
+<p class="mf-hint mf-mb-text">
+  {% blocktrans trimmed %}
+    Forwarding is enabled for this form, but only when you submitted while signed in. Anonymous submissions cannot use this option.
+  {% endblocktrans %}
+</p>
+{% endif %}
+
+{% if related_instances %}
+<div class="mf-card mf-card--glass mf-stack">
+  <h2 class="mf-heading">{% trans "Related forms" %}</h2>
+  {% for supp in related_instances %}
+    <div class="mf-stack{% if not forloop.first %} mf-mt{% endif %}">
+      <p class="mf-body-text">
+        <strong>{{ supp.link.child_form.title|mf_trans }}</strong>
+        {% if supp.child_submission %}
+          <span class="mf-muted">· {% trans "Submitted" %}</span>
+        {% else %}
+          <span class="mf-muted">· {% trans "Waiting for your response" %}</span>
+        {% endif %}
+      </p>
+      {% if supp.child_submission %}
+        <p class="mf-body-text">
+          <a class="mf-link" href="{% portal_url 'magicforms:submission_detail' entity_slug=supp.link.child_form.entity.slug slug=supp.link.child_form.slug token=supp.child_submission.reference_token %}">
+            {% trans "View related answers" %}
+          </a>
+        </p>
+      {% else %}
+        <p class="mf-actions">
+          <a class="mf-button mf-button--primary" href="{% portal_url 'magicforms:related_form_public' entity_slug=supp.link.child_form.entity.slug slug=supp.link.child_form.slug access_token=supp.access_token %}">
+            {% trans "Complete related form" %}
+          </a>
+        </p>
+      {% endif %}
+    </div>
+  {% endfor %}
+</div>
+{% endif %}
+
+<div class="mf-card mf-card--soft mf-stack">
+  <h2 class="mf-heading">{% trans "Timeline" %}</h2>
+  <ul class="mf-timeline">
+    {% for ev in events %}
+      <li class="mf-timeline-item">
+        <span class="mf-timeline-date">{{ ev.created_at|date:"M j, Y, P" }}</span>
+        <span class="mf-timeline-title">{{ ev|mf_timeline_kind }}</span>
+        {% if ev.step %}<span class="mf-timeline-step">{{ ev.step|mf_timeline_step }}</span>{% endif %}
+        {% if ev.created_by %}<span class="mf-muted"> · {{ ev.created_by }}</span>{% endif %}
+        {% if ev.message %}<p class="mf-body-text mf-timeline-msg">{{ ev|mf_timeline_message }}</p>{% endif %}
+      </li>
+    {% empty %}
+      <li class="mf-body-text">{% trans "No events yet." %}</li>
+    {% endfor %}
+  </ul>
+</div>
+{% endblock %}

@@ -1,0 +1,465 @@
+/*
+ * Landing page (/): nav, hero with an inbox still, three steps, feature grid, closing call to action.
+ * Uses the Graphite tokens only; the still is pure CSS so it stays crisp in both themes.
+ */
+
+.mf-landing-page .mf-shell {
+  padding-top: clamp(1.25rem, 3vw, 2rem);
+}
+
+/* ---------------------------------------------------------------- nav */
+.mf-landing-nav {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--mf-space-3);
+  margin-bottom: clamp(2.5rem, 7vw, 5rem);
+}
+
+.mf-landing-nav__links {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--mf-space-4);
+}
+
+.mf-landing-nav__link {
+  color: var(--mf-text-muted);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.mf-landing-nav__link:hover {
+  color: var(--mf-text-primary);
+}
+
+.mf-landing-nav .mf-lang-switch {
+  margin: 0;
+}
+
+/* ---------------------------------------------------------------- hero */
+.mf-landing-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(2rem, 5vw, 4rem);
+  margin-bottom: clamp(4rem, 10vw, 7rem);
+}
+
+@media (min-width: 900px) {
+  .mf-landing-hero {
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+  }
+}
+
+.mf-landing-hero__title {
+  margin: 0 0 var(--mf-space-4);
+  font-size: clamp(2.2rem, 5.2vw, 3.6rem);
+  font-weight: 600;
+  line-height: 1.04;
+  letter-spacing: -0.035em;
+  text-wrap: balance;
+}
+
+.mf-landing-hero__lead {
+  margin: 0 0 var(--mf-space-5);
+  max-width: 34rem;
+  font-size: clamp(1.05rem, 1.8vw, 1.2rem);
+  line-height: 1.5;
+  color: var(--mf-text-muted);
+}
+
+.mf-landing-hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--mf-space-2);
+}
+
+.mf-landing-hero__note {
+  margin: var(--mf-space-4) 0 0;
+  font-size: var(--mf-font-caption);
+  color: var(--mf-text-muted);
+}
+
+/* ---------------------------------------------------------------- the still (an inbox drawn in CSS) */
+.mf-landing-still {
+  padding: var(--mf-space-4);
+  border: 1px solid var(--mf-border);
+  border-radius: var(--mf-radius-md);
+  background: var(--mf-surface);
+  font-size: var(--mf-font-caption);
+  user-select: none;
+}
+
+.mf-landing-still__head {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-bottom: var(--mf-space-3);
+}
+
+.mf-landing-still__title {
+  font-size: var(--mf-font-heading);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+.mf-landing-still__meta {
+  color: var(--mf-text-muted);
+}
+
+.mf-landing-still__row {
+  display: flex;
+  align-items: center;
+  gap: var(--mf-space-2);
+  padding: var(--mf-space-2) var(--mf-space-3);
+  border-top: 1px solid var(--mf-border);
+}
+
+.mf-landing-still__row--hl {
+  background: var(--mf-success-bright-a12);
+  box-shadow: inset 3px 0 0 var(--mf-success);
+  border-radius: 0 var(--mf-radius-sm) var(--mf-radius-sm) 0;
+}
+
+.mf-landing-still__check {
+  width: 12px;
+  height: 12px;
+  border: 1.5px solid var(--mf-border-strong);
+  border-radius: 3px;
+  flex: none;
+}
+
+.mf-landing-still__name {
+  font-weight: 600;
+  color: var(--mf-color-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+}
+
+.mf-landing-still__pill {
+  padding: 1px 7px;
+  border-radius: 999px;
+  background: var(--mf-surface-muted);
+  color: var(--mf-text-muted);
+  font-weight: 600;
+  font-size: 0.72rem;
+  white-space: nowrap;
+}
+
+.mf-landing-still__pill--done {
+  color: var(--mf-green-700);
+  background: var(--mf-success-bright-a12);
+}
+
+.mf-landing-still__actions {
+  margin-inline-start: auto;
+  display: inline-flex;
+  gap: var(--mf-space-1);
+}
+
+.mf-landing-still__btn {
+  padding: 3px 9px;
+  border: 1px solid var(--mf-border);
+  border-radius: 6px;
+  background: var(--mf-surface);
+  color: var(--mf-text-primary);
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.mf-landing-still__btn--primary {
+  background: var(--mf-color-primary);
+  border-color: var(--mf-color-primary);
+  color: var(--mf-on-accent);
+}
+
+.mf-landing-still__timeline {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--mf-space-1) var(--mf-space-2);
+  margin-top: var(--mf-space-3);
+  padding-top: var(--mf-space-3);
+  border-top: 1px solid var(--mf-border);
+  color: var(--mf-text-muted);
+}
+
+.mf-landing-still__timeline span:not(.mf-landing-still__dot) {
+  margin-inline-end: var(--mf-space-2);
+}
+
+.mf-landing-still__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: 1.5px solid var(--mf-border-strong);
+  background: var(--mf-surface);
+}
+
+.mf-landing-still__dot--done {
+  background: var(--mf-success);
+  border-color: var(--mf-success);
+}
+
+/* ---------------------------------------------------------------- sections */
+.mf-landing-h2 {
+  margin: 0 0 var(--mf-space-5);
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  text-wrap: balance;
+}
+
+.mf-landing-steps {
+  margin-bottom: clamp(4rem, 10vw, 7rem);
+}
+
+.mf-landing-steps__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--mf-space-5);
+  counter-reset: none;
+}
+
+@media (min-width: 720px) {
+  .mf-landing-steps__list {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.mf-landing-steps__list li {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  grid-template-rows: auto auto;
+  column-gap: var(--mf-space-3);
+  row-gap: var(--mf-space-1);
+  padding-top: var(--mf-space-4);
+  border-top: 1px solid var(--mf-border);
+}
+
+.mf-landing-steps__num {
+  grid-row: 1 / span 2;
+  width: 2rem;
+  height: 2rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--mf-color-primary);
+  color: var(--mf-on-accent);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.mf-landing-steps__list h3,
+.mf-landing-features__grid h3 {
+  margin: 0;
+  font-size: var(--mf-font-heading);
+  font-weight: 600;
+  letter-spacing: -0.015em;
+}
+
+.mf-landing-steps__list p,
+.mf-landing-features__grid p {
+  margin: 0;
+  color: var(--mf-text-muted);
+  line-height: 1.5;
+}
+
+.mf-landing-features {
+  margin-bottom: clamp(4rem, 10vw, 7rem);
+}
+
+.mf-landing-features__grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--mf-space-3);
+}
+
+@media (min-width: 640px) {
+  .mf-landing-features__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1000px) {
+  .mf-landing-features__grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.mf-landing-features__grid li {
+  display: flex;
+  flex-direction: column;
+  gap: var(--mf-space-2);
+  padding: var(--mf-space-4);
+  border: 1px solid var(--mf-border);
+  border-radius: var(--mf-radius-md);
+  background: var(--mf-surface);
+}
+
+/* ---------------------------------------------------------------- plans */
+.mf-landing-plans {
+  margin-bottom: clamp(4rem, 10vw, 7rem);
+  scroll-margin-top: var(--mf-space-6);
+}
+
+.mf-landing-plans .mf-landing-h2 {
+  margin-bottom: var(--mf-space-2);
+}
+
+.mf-landing-plans__lead {
+  margin: 0 0 var(--mf-space-5);
+  color: var(--mf-text-muted);
+}
+
+.mf-landing-plans__grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--mf-space-3);
+  align-items: stretch;
+}
+
+@media (min-width: 760px) {
+  .mf-landing-plans__grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.mf-landing-plan {
+  display: flex;
+  flex-direction: column;
+  gap: var(--mf-space-2);
+  padding: var(--mf-space-5) var(--mf-space-4);
+  border: 1px solid var(--mf-border);
+  border-radius: var(--mf-radius-md);
+  background: var(--mf-surface);
+}
+
+.mf-landing-plan--featured {
+  border-color: var(--mf-color-primary);
+  box-shadow: 0 0 0 1px var(--mf-color-primary);
+}
+
+.mf-landing-plan__name {
+  margin: 0;
+  font-size: var(--mf-font-heading);
+  font-weight: 600;
+  letter-spacing: -0.015em;
+}
+
+.mf-landing-plan__price {
+  margin: 0;
+  font-size: clamp(1.4rem, 2.4vw, 1.75rem);
+  font-weight: 600;
+  letter-spacing: -0.03em;
+}
+
+.mf-landing-plan__price {
+  direction: ltr;
+  unicode-bidi: isolate;
+  font-variant-numeric: tabular-nums;
+}
+
+.mf-landing-plan__period {
+  font-size: var(--mf-font-caption);
+  font-weight: 500;
+  letter-spacing: 0;
+  color: var(--mf-text-muted);
+}
+
+.mf-landing-plan__for {
+  margin: 0 0 var(--mf-space-2);
+  color: var(--mf-text-muted);
+}
+
+.mf-landing-plan__list {
+  list-style: none;
+  margin: 0 0 var(--mf-space-4);
+  padding: var(--mf-space-3) 0 0;
+  border-top: 1px solid var(--mf-border);
+  display: flex;
+  flex-direction: column;
+  gap: var(--mf-space-2);
+  flex: 1 1 auto;
+}
+
+.mf-landing-plan__list li {
+  display: flex;
+  align-items: center;
+  gap: var(--mf-space-2);
+}
+
+.mf-landing-plan__list li::before {
+  content: "";
+  flex: none;
+  width: 1.1rem;
+  height: 1.1rem;
+  border-radius: 50%;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 0.65rem;
+}
+
+.mf-landing-plan__list li.is-on::before {
+  background-color: var(--mf-success-bright-a12);
+  background-image: var(--mf-plan-check);
+}
+
+.mf-landing-plan__list li.is-off {
+  color: var(--mf-text-muted);
+}
+
+.mf-landing-plan__list li.is-off::before {
+  background-color: var(--mf-surface-muted);
+  background-image: var(--mf-plan-dash);
+}
+
+.mf-landing-plan .mf-button {
+  align-self: flex-start;
+}
+
+.mf-landing-cta {
+  padding: clamp(2rem, 5vw, 3rem);
+  border-radius: var(--mf-radius-lg);
+  background: var(--mf-surface);
+  border: 1px solid var(--mf-border);
+  text-align: center;
+}
+
+.mf-landing-cta .mf-landing-h2 {
+  margin-bottom: var(--mf-space-2);
+}
+
+.mf-landing-cta p {
+  margin: 0 0 var(--mf-space-4);
+  color: var(--mf-text-muted);
+}
+
+.mf-landing-cta .mf-landing-hero__actions {
+  justify-content: center;
+}
+
+/* Phones: the still keeps one action per row and lets titles truncate instead of overflowing the card. */
+@media (max-width: 520px) {
+  .mf-landing-still__btn:not(.mf-landing-still__btn--primary) {
+    display: none;
+  }
+
+  .mf-landing-still__row .mf-landing-still__pill {
+    display: none;
+  }
+}

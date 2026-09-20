@@ -1,0 +1,399 @@
+{% extends "magicforms/manage/studio_submission_list_page.html" %}
+{% load opaque_ids i18n static magicforms_i18n %}
+
+{% block manage_title %}{% trans "Inbox" %}{% endblock %}
+
+{% block studio_list_heading %}{% trans "Inbox" %}{% endblock %}
+
+{% block studio_list_lead %}
+  {% blocktrans count counter=inbox_total_count trimmed %}{{ counter }} submission waiting for your action.{% plural %}{{ counter }} submissions waiting for your action.{% endblocktrans %}
+  {% if inbox_filtered_count is not None and inbox_filtered_count != inbox_total_count %}· {% blocktrans with m=inbox_filtered_count trimmed %}{{ m }} match your filters{% endblocktrans %}{% endif %}
+{% endblock %}
+
+{% block studio_list_filters %}
+  <form method="get" class="mf-toolbar mf-inbox-toolbar" role="search">
+    <input type="hidden" name="per_page" value="{{ per_page }}" />
+    <label class="mf-toolbar__search">
+      <span class="mf-visually-hidden">{% trans "Keywords" %}</span>
+      <input id="id_inbox_search_q" class="mf-input" type="search" name="q" value="{{ search_q }}" maxlength="200" placeholder="{% trans 'Search title, reference, email' %}" autocomplete="off" />
+    </label>
+    <select id="id_inbox_form" name="form" class="mf-input mf-input--select mf-toolbar__select" aria-label="{% trans 'Form' %}">
+      <option value="">{% trans "All forms" %}</option>
+            {% for f in forms_for_filter %}
+              <option value="{{ f.pk|oid }}" {% if form_filter_id == f.pk %}selected{% endif %}>{{ f.entity.name|mf_trans }} — {{ f.title|mf_trans }}</option>
+            {% endfor %}
+    </select>
+    <select id="id_inbox_step" name="step" class="mf-input mf-input--select mf-toolbar__select" aria-label="{% trans 'Step' %}">
+      <option value="">{% trans "All steps" %}</option>
+            {% for st in steps_for_filter %}
+              <option value="{{ st.pk|oid }}" {% if step_filter_id == st.pk %}selected{% endif %}>{{ st.form.title|mf_trans }} — {{ st.label|mf_trans }}</option>
+            {% endfor %}
+    </select>
+    <select id="id_inbox_highlight" name="highlight" class="mf-input mf-input--select mf-toolbar__select mf-toolbar__select--narrow" aria-label="{% trans 'Highlight' %}">
+      <option value="">{% trans "All rows" %}</option>
+            <option value="any" {% if highlight_filter == "any" %}selected{% endif %}>{% trans "Any color" %}</option>
+            <option value="none" {% if highlight_filter == "none" %}selected{% endif %}>{% trans "No highlight" %}</option>
+            {% for key, label in highlight_colors %}
+              <option value="{{ key }}" {% if highlight_filter == key %}selected{% endif %}>{{ label }}</option>
+            {% endfor %}
+    </select>
+    <select id="id_inbox_sort" name="sort" class="mf-input mf-input--select mf-toolbar__select" aria-label="{% trans 'Sort by' %}">
+      <option value="submitted_at_desc" {% if sort_key == "submitted_at_desc" %}selected{% endif %}>{% trans "Submitted (newest)" %}</option>
+            <option value="submitted_at_asc" {% if sort_key == "submitted_at_asc" %}selected{% endif %}>{% trans "Submitted (oldest)" %}</option>
+            <option value="updated_at_desc" {% if sort_key == "updated_at_desc" %}selected{% endif %}>{% trans "Updated (newest)" %}</option>
+            <option value="updated_at_asc" {% if sort_key == "updated_at_asc" %}selected{% endif %}>{% trans "Updated (oldest)" %}</option>
+            <option value="form_title" {% if sort_key == "form_title" %}selected{% endif %}>{% trans "Form title (A–Z)" %}</option>
+            <option value="form_title_desc" {% if sort_key == "form_title_desc" %}selected{% endif %}>{% trans "Form title (Z–A)" %}</option>
+    </select>
+    <button type="submit" class="mf-button mf-button--secondary">{% trans "Apply" %}</button>
+  </form>
+
+  {% if ai_features_enabled %}
+  <details
+    id="mf-inbox-ai"
+    class="mf-inbox-ai mf-inbox-ai-details mf-card mf-card--glass mf-stack"
+    data-chat-url="{% url 'manage:inbox_ai_chat' %}"
+    data-label-searching="{% trans 'Searching your inbox…' %}"
+    data-label-error="{% trans 'Could not run the inbox assistant. Try again.' %}"
+    data-label-step="{% trans 'Step' %}"
+    data-label-open="{% trans 'Open' %}"
+    data-label-view-all="{% trans 'Open matching list in submission search' %}"
+    data-label-unread="{% trans 'New thread message' %}"
+    data-label-completed="{% trans 'Completed' %}"
+    data-label-rejected="{% trans 'Rejected' %}"
+    data-label-progress="{% trans 'In progress' %}"
+    data-label-no-results="{% trans 'No submissions matched. Try different words or use the filters above.' %}"
+    data-label-count="{% trans '%(shown)s shown · %(total)s total matches' %}"
+  >
+    <summary class="mf-inbox-ai-details__summary">
+      <span class="mf-inbox-ai-details__title-row">
+        <span class="mf-inbox-ai-details__title-icon" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 8V4H8" />
+            <rect width="16" height="12" x="4" y="8" rx="2" />
+            <path d="M2 14h2" />
+            <path d="M20 14h2" />
+            <path d="M15 13v2" />
+            <path d="M9 13v2" />
+          </svg>
+        </span>
+        <span class="mf-inbox-ai__title">{% trans "Inbox assistant" %}</span>
+        <span class="mf-inbox-ai-details__chevron" aria-hidden="true"></span>
+      </span>
+      <span class="mf-muted mf-inbox-ai-details__hint">
+        {% trans "Search submissions you applied to or worked on" %}
+      </span>
+    </summary>
+    <div class="mf-inbox-ai-details__body mf-stack">
+      <p class="mf-muted mf-body-text mf-inbox-ai__lead">
+        {% if inbox_ai_available %}
+          {% trans "Search answers, field names, status, dates, categories, your tags, email, or reference — across every submission connected to you." %}
+        {% else %}
+          {% trans "Search field answers, status, dates, tags, and more. Set OPENAI_API_KEY for smarter matching on field and form names." %}
+        {% endif %}
+      </p>
+      <div class="mf-inbox-ai__compose">
+        <form class="mf-inbox-ai__form" data-inbox-ai-form data-mf-no-busy="true">
+          {% csrf_token %}
+          <label class="mf-sr-only" for="id_inbox_ai_question">{% trans "Question" %}</label>
+          <textarea
+            id="id_inbox_ai_question"
+            class="mf-input mf-inbox-ai__input"
+            data-inbox-ai-input
+            name="question"
+            rows="2"
+            maxlength="500"
+            placeholder="{% trans 'e.g. pending TOEFL registrations from last week' %}"
+          ></textarea>
+          <button
+            type="submit"
+            class="mf-button mf-button--primary mf-inbox-ai__submit"
+            data-inbox-ai-submit
+            aria-label="{% trans 'Send question to inbox assistant' %}"
+            title="{% trans 'Send question to inbox assistant' %}"
+          >
+            <svg class="mf-inbox-ai__submit-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M12 8V4H8" />
+              <rect width="16" height="12" x="4" y="8" rx="2" />
+              <path d="M2 14h2" />
+              <path d="M20 14h2" />
+              <path d="M15 13v2" />
+              <path d="M9 13v2" />
+            </svg>
+          </button>
+        </form>
+        <div class="mf-inbox-ai__chat" data-inbox-ai-chat>
+          <div class="mf-inbox-ai__loading" data-inbox-ai-loading hidden role="status" aria-live="polite">
+            <span class="mf-inbox-ai__spinner" aria-hidden="true"></span>
+            <span class="mf-inbox-ai__loading-text" data-inbox-ai-loading-text>{% trans "Searching your inbox…" %}</span>
+          </div>
+          <p class="mf-inbox-ai__openai-notice mf-body-text" data-inbox-ai-openai hidden role="alert"></p>
+          <p class="mf-inbox-ai__error mf-body-text" data-inbox-ai-error hidden role="alert"></p>
+          <p class="mf-muted mf-inbox-ai__count" data-inbox-ai-count hidden></p>
+          <p class="mf-body-text mf-inbox-ai__reply" data-inbox-ai-reply hidden></p>
+          <p class="mf-inbox-ai__apply-wrap">
+            <a class="mf-link" data-inbox-ai-apply href="{% url 'manage:submission_search' %}?relation=any" hidden>{% trans "Open matching list in submission search" %}</a>
+          </p>
+          <div data-inbox-ai-results class="mf-inbox-ai__results"></div>
+        </div>
+      </div>
+    </div>
+  </details>
+  {% endif %}
+{% endblock %}
+
+{% block footer_scripts %}
+<script>
+(function () {
+  // Reject: first click reveals the reason field; the same button then submits (reason is required).
+  document.querySelectorAll("[data-inbox-reject-form]").forEach(function (form) {
+    var reason = form.querySelector("[data-inbox-reject-reason]");
+    var input = reason && reason.querySelector("input[type=text]");
+    var cancel = form.querySelector("[data-inbox-reject-cancel]");
+    if (!reason || !input) return;
+    // The input stays disabled while hidden so browser validation lets the first click through.
+    function arm(on) {
+      reason.hidden = !on;
+      input.disabled = !on;
+      form.classList.toggle("is-armed", on);
+      if (on) input.focus();
+      else input.value = "";
+    }
+    form.addEventListener("submit", function (ev) {
+      if (reason.hidden) {
+        ev.preventDefault();
+        ev.stopImmediatePropagation();
+        arm(true);
+      }
+    });
+    if (cancel) cancel.addEventListener("click", function () { arm(false); });
+    input.addEventListener("keydown", function (ev) {
+      if (ev.key === "Escape") { ev.preventDefault(); arm(false); }
+    });
+  });
+})();
+</script>
+{{ block.super }}
+{% if ai_features_enabled %}<script src="{% static 'magicforms/js/inbox_ai_chat.js' %}" defer></script>{% endif %}
+<script>
+(function () {
+  var form = document.querySelector("[data-inbox-batch-bar]");
+  if (!form) return;
+  var checks = Array.prototype.slice.call(document.querySelectorAll("[data-inbox-batch-check]"));
+  if (!checks.length) return;
+  var selectAllRow = document.querySelector("[data-inbox-selectall-row]");
+  if (selectAllRow) selectAllRow.hidden = false;
+
+  var allBox = document.querySelector("[data-inbox-batch-all]");
+  var countEl = form.querySelector("[data-inbox-batch-count]");
+  var buttons = form.querySelectorAll("[data-inbox-batch-submit]");
+  var commentInput = form.querySelector("#mf-inbox-batch-comment");
+
+  function selectedCount() {
+    return checks.filter(function (c) { return c.checked; }).length;
+  }
+
+  function refresh() {
+    form.hidden = selectedCount() === 0;
+    var n = selectedCount();
+    if (countEl) countEl.textContent = String(n);
+    buttons.forEach(function (b) { b.disabled = n === 0; });
+    if (allBox) {
+      allBox.checked = n === checks.length;
+      allBox.indeterminate = n > 0 && n < checks.length;
+    }
+  }
+
+  checks.forEach(function (c) { c.addEventListener("change", refresh); });
+  if (allBox) {
+    allBox.addEventListener("change", function () {
+      checks.forEach(function (c) { c.checked = allBox.checked; });
+      refresh();
+    });
+  }
+
+  form.addEventListener("submit", function (e) {
+    var submitter = e.submitter;
+    var decision = submitter ? submitter.getAttribute("data-inbox-batch-submit") : "";
+    if (!selectedCount()) {
+      e.preventDefault();
+      return;
+    }
+    if (decision === "reject" && commentInput && !commentInput.value.trim()) {
+      e.preventDefault();
+      commentInput.required = true;
+      if (commentInput.reportValidity) commentInput.reportValidity();
+      commentInput.focus();
+      return;
+    }
+    if (commentInput) commentInput.required = false;
+    var msg = decision === "reject" ? form.dataset.confirmReject : form.dataset.confirmApprove;
+    if (msg && !window.confirm(msg)) e.preventDefault();
+  });
+
+  refresh();
+})();
+(function () {
+  var roots = Array.prototype.slice.call(document.querySelectorAll("[data-inbox-highlight]"));
+  if (!roots.length) return;
+  var url = "{% url 'manage:inbox_highlight' %}";
+  var COLORS = ["yellow", "green", "blue", "red", "purple", "orange", "gray"];
+
+  function csrfToken() {
+    var m = document.cookie.match(/(?:^|; )csrftoken=([^;]*)/);
+    if (m) return decodeURIComponent(m[1]);
+    var input = document.querySelector('input[name="csrfmiddlewaretoken"]');
+    return input ? input.value : "";
+  }
+
+  function closeAll(except) {
+    roots.forEach(function (root) {
+      if (root === except) return;
+      var pal = root.querySelector("[data-inbox-highlight-palette]");
+      var tog = root.querySelector("[data-inbox-highlight-toggle]");
+      if (pal) pal.hidden = true;
+      if (tog) tog.setAttribute("aria-expanded", "false");
+    });
+  }
+
+  document.addEventListener("click", function (e) {
+    if (!e.target.closest("[data-inbox-highlight]")) closeAll(null);
+  });
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape") closeAll(null);
+  });
+
+  roots.forEach(function (root) {
+    var toggle = root.querySelector("[data-inbox-highlight-toggle]");
+    var palette = root.querySelector("[data-inbox-highlight-palette]");
+    var dot = root.querySelector("[data-inbox-highlight-dot]");
+    var row = root.closest(".mf-manage-row");
+    if (!toggle || !palette) return;
+
+    toggle.addEventListener("click", function () {
+      var willOpen = palette.hidden;
+      closeAll(root);
+      palette.hidden = !willOpen;
+      toggle.setAttribute("aria-expanded", willOpen ? "true" : "false");
+    });
+
+    palette.querySelectorAll("[data-inbox-highlight-color]").forEach(function (sw) {
+      sw.addEventListener("click", function () {
+        if (root.classList.contains("mf-inbox-highlight--busy")) return;
+        var color = sw.getAttribute("data-inbox-highlight-color") || "";
+        var body = new FormData();
+        body.append("submission_id", root.getAttribute("data-submission-id") || "");
+        body.append("color", color);
+        root.classList.add("mf-inbox-highlight--busy");
+        fetch(url, {
+          method: "POST",
+          headers: { "X-CSRFToken": csrfToken() },
+          credentials: "same-origin",
+          body: body,
+        })
+          .then(function (r) { return r.json(); })
+          .then(function (data) {
+            if (!data || !data.ok) return;
+            COLORS.forEach(function (c) {
+              if (row) row.classList.remove("mf-manage-row--hl-" + c);
+              if (dot) dot.classList.remove("mf-inbox-highlight__dot--" + c);
+            });
+            if (color) {
+              if (row) row.classList.add("mf-manage-row--hl-" + color);
+              if (dot) dot.classList.add("mf-inbox-highlight__dot--" + color);
+            }
+            palette.hidden = true;
+            toggle.setAttribute("aria-expanded", "false");
+          })
+          .catch(function () {})
+          .finally(function () {
+            root.classList.remove("mf-inbox-highlight--busy");
+          });
+      });
+    });
+  });
+})();
+</script>
+{% endblock %}
+
+{% block studio_list_summary %}{% endblock %}
+
+{% block studio_list_body %}
+  {% if submissions.paginator.count %}
+    <form
+      id="mf-inbox-batch-form"
+      method="post"
+      action="{% url 'manage:inbox_batch_action' %}"
+      class="mf-inbox-batch-bar"
+      data-inbox-batch-bar
+      data-confirm-approve="{% trans 'Approve the selected submissions?' %}"
+      data-confirm-reject="{% trans 'Reject the selected submissions?' %}"
+      data-label-selected="{% trans 'selected' %}"
+      hidden
+    >
+      {% csrf_token %}
+      <input type="hidden" name="next" value="{{ request.get_full_path }}" />
+      <span class="mf-muted mf-inbox-batch-count" role="status">
+        <span data-inbox-batch-count>0</span> {% trans "selected" %}
+      </span>
+      <div class="mf-inbox-batch-actions">
+        <label class="mf-sr-only" for="mf-inbox-batch-comment">{% trans "Rejection reason" %}</label>
+        <input
+          id="mf-inbox-batch-comment"
+          type="text"
+          name="batch_comment"
+          class="mf-input mf-inbox-batch-comment"
+          maxlength="800"
+          autocomplete="off"
+          placeholder="{% trans 'Rejection reason (required for Reject)' %}"
+        />
+        <button
+          type="submit"
+          name="batch_decision"
+          value="approve"
+          class="mf-button mf-button--primary mf-button--small"
+          data-inbox-batch-submit="approve"
+          disabled
+        >{% trans "Approve selected" %}</button>
+        <button
+          type="submit"
+          name="batch_decision"
+          value="reject"
+          class="mf-button mf-button--secondary mf-button--small"
+          data-inbox-batch-submit="reject"
+          disabled
+        >{% trans "Reject selected" %}</button>
+      </div>
+    </form>
+    <div class="mf-inbox-list-head">
+      <label class="mf-inbox-batch-selectall mf-muted" data-inbox-selectall-row hidden>
+        <input type="checkbox" data-inbox-batch-all aria-label="{% trans 'Select all on this page' %}" />
+        <span>{% trans "Select all" %}</span>
+      </label>
+      {% if submissions.paginator.num_pages > 1 %}{% include "magicforms/manage/includes/studio_pagination.html" with page_obj=submissions %}{% endif %}
+    </div>
+    {% include "magicforms/manage/includes/studio_submission_list_ul.html" with list_mode="inbox" %}
+    {% include "magicforms/manage/includes/studio_pagination.html" with page_obj=submissions studio_pagination_footer=1 %}
+  {% elif inbox_total_count and inbox_has_filters %}
+    <div class="mf-card mf-card--soft mf-stack">
+      <div class="mf-empty"><p class="mf-empty__title">{% trans "No submissions match your filters" %}</p></div>
+      <p class="mf-body-text"><a class="mf-link" href="{% url 'manage:inbox' %}">{% trans "Clear filters" %}</a></p>
+    </div>
+  {% else %}
+    <div class="mf-card mf-card--soft mf-stack">
+      <p class="mf-body-text">
+        {% blocktrans trimmed %}
+          When a workflow step includes you under <strong>Assignees</strong>, new and existing submissions
+          that sit on that step appear here.
+        {% endblocktrans %}
+      </p>
+      <p class="mf-body-text mf-muted">
+        {% blocktrans trimmed %}
+          Edit a form’s workflow steps under <em>Workflow</em> on the form detail page to add assignees.
+        {% endblocktrans %}
+      </p>
+    </div>
+  {% endif %}
+{% endblock %}
+
+{% block studio_list_footer %}{% endblock %}

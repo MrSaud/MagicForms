@@ -1,0 +1,61 @@
+{% load static i18n %}
+{% now "Y" as footer_year %}
+<footer class="mf-site-footer" role="contentinfo">
+  <div class="mf-site-footer-inner">
+    <div class="mf-site-footer-brand">
+      <p class="mf-site-footer-title"><span class="mf-brand-wordmark" translate="no"><span class="mf-brand-wordmark__swap">swap</span><span class="mf-brand-wordmark__forms">forms</span></span></p>
+      <p class="mf-site-footer-tagline">
+        {% blocktrans trimmed %}
+          Forms, approvals and documents for organizations, with a calm experience for staff and applicants.
+        {% endblocktrans %}
+      </p>
+    </div>
+
+    <nav class="mf-site-footer-nav" aria-label="{% trans 'Footer links' %}">
+      <p class="mf-site-footer-heading">{% trans "Product" %}</p>
+      <ul class="mf-site-footer-links">
+        <li><a class="mf-link" href="{{ landing_page_url }}">{% trans "Landing page" %}</a></li>
+        <li><a class="mf-link" href="{% url 'magicforms:submission_track' %}">{% trans "Track a submission" %}</a></li>
+        <li><a class="mf-link" href="https://support.swapkuwait.com/" rel="noopener noreferrer" target="_blank">{% trans "Support" %}</a></li>
+        {% if not user.is_authenticated %}
+          <li><a class="mf-link" href="{% url 'manage:login' %}">{% trans "Workspace sign-in" %}</a></li>
+        {% endif %}
+      </ul>
+    </nav>
+
+    <div class="mf-site-footer-partners">
+      <p class="mf-site-footer-heading">{% trans "Partners & infrastructure" %}</p>
+      <ul class="mf-site-footer-logos" aria-label="{% trans 'Partners' %}">
+        <li>
+          <a class="mf-site-footer-logo-link" href="https://aws.amazon.com/" rel="noopener noreferrer" target="_blank">
+            <img class="mf-site-footer-logo mf-site-footer-logo--aws" src="{% static 'magicforms/img/aws-logo-smile.svg' %}" width="304" height="182" alt="{% trans 'Amazon Web Services' %}" loading="lazy" decoding="async" />
+          </a>
+        </li>
+        <li>
+          <a class="mf-site-footer-logo-link" href="https://www.google.com/" rel="noopener noreferrer" target="_blank">
+            <img class="mf-site-footer-logo mf-site-footer-logo--google" src="{% static 'magicforms/img/google-wordmark.svg' %}" width="272" height="92" alt="Google" loading="lazy" decoding="async" />
+          </a>
+        </li>
+        <li>
+          <a class="mf-site-footer-logo-link" href="https://www.paypal.com/" rel="noopener noreferrer" target="_blank">
+            <img class="mf-site-footer-logo mf-site-footer-logo--paypal" src="{% static 'magicforms/img/paypal-wordmark.svg' %}" width="124" height="33" alt="PayPal" loading="lazy" decoding="async" />
+          </a>
+        </li>
+      </ul>
+      <p class="mf-site-footer-partner-note"><a class="mf-site-footer-swap" href="https://swapkuwait.com/" rel="noopener noreferrer" target="_blank">swapkuwait.com</a></p>
+    </div>
+  </div>
+
+  <div class="mf-site-footer-meta">
+    <p class="mf-site-footer-copy">
+      {% blocktrans trimmed with year=footer_year %}
+        © {{ year }} SwapForms. All rights reserved.
+      {% endblocktrans %}
+    </p>
+    <p class="mf-site-footer-legal">
+      {% blocktrans trimmed %}
+        swapkuwait.com is a Swap Kuwait initiative. Amazon Web Services, Google and PayPal are trademarks of their respective owners.
+      {% endblocktrans %}
+    </p>
+  </div>
+</footer>

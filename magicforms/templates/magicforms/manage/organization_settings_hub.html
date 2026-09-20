@@ -1,0 +1,22 @@
+{% extends "magicforms/manage/base_manage.html" %}
+{% load i18n magicforms_i18n %}
+
+{% block manage_title %}{% trans "Organization settings" %}{% endblock %}
+
+{% block manage_content %}
+<section class="mf-manage-section mf-stack">
+  <p class="mf-eyebrow">{% trans "Settings" %}</p>
+  <h1 class="mf-display mf-display--small">{{ entity.name|mf_trans }}</h1>
+  <p class="mf-muted">{% trans "Manage this organization’s profile and notifications." %}</p>
+  <ul class="mf-list-plain mf-stack mf-body-text" >
+    <li>
+      <a class="mf-button mf-button--secondary" href="{% url 'manage:organization_settings_general' entity.pk %}">{% trans "General settings" %}</a>
+      <span class="mf-muted">{% trans "Name, branding, SMTP, portal options" %}</span>
+    </li>
+    <li>
+      <a class="mf-button mf-button--secondary" href="{% url 'manage:entity_email_notifications' entity.pk %}">{% trans "Email notification templates" %}</a>
+    </li>
+  </ul>
+  <p><a class="mf-link mf-link--muted" href="{% url 'manage:dashboard' %}">{% trans "Back to Home" %}</a></p>
+</section>
+{% endblock %}

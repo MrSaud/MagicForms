@@ -1,0 +1,134 @@
+{% load i18n %}
+{% comment %}
+Merged-PDF signature widget (public post-submit page and studio "Read document" panel).
+Expects: pdf_inline_path, sign_urls (place, remove_template), sign_lock_reason (None|"workflow"|"identity"|"permission"),
+signature_placements, sign_i18n. Needs pdf.js + document_sign.js on the page (see extrahead of the callers).
+{% endcomment %}
+  <div
+  class="mf-pdfsign"
+  data-pdfsign
+  data-pdf-url="{{ pdf_inline_path }}"
+  data-place-url="{{ sign_urls.place }}"
+  data-remove-url-template="{{ sign_urls.remove_template }}"
+  data-worker-src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.worker.min.js"
+  data-can-sign="{% if sign_lock_reason %}0{% else %}1{% endif %}"
+  data-signature-update-url="{% url 'magicforms:my_signature_replace' %}"
+  {% if sign_saved_signature_id %}data-saved-signature-id="{{ sign_saved_signature_id }}"{% endif %}
+  {% if workflow_decision_enabled and sign_urls %}data-decision-after-sign="1"{% endif %}
+  >
+  <form hidden aria-hidden="true">{% csrf_token %}</form>
+  {% if sign_lock_reason == "workflow" %}
+    <div class="mf-alert mf-alert--info mf-pdfsign__notice" role="status"><svg class="mf-alert__icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg><span>{% trans "This document is locked because it is already being processed. Signatures can no longer be added or removed." %}</span></div>
+  {% elif sign_lock_reason == "identity" %}
+    <div class="mf-alert mf-alert--info mf-pdfsign__notice" role="status"><svg class="mf-alert__icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg><span>{% trans "Only the person who submitted this form can add or remove signatures. This link is view-only." %}</span></div>
+  {% elif sign_lock_reason == "permission" %}
+    <div class="mf-alert mf-alert--info mf-pdfsign__notice" role="status"><svg class="mf-alert__icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg><span>{% trans "You can read this document, but your role cannot add or remove signatures." %}</span></div>
+  {% elif sign_lock_reason == "noaction" %}
+    <div class="mf-alert mf-alert--info mf-pdfsign__notice" role="status"><svg class="mf-alert__icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg><span>{% trans "No action is required from you, so this document is read-only." %}</span>{% if workflow_undo_visible %}
+      <form method="post" class="mf-inline-form mf-workflow-decision mf-pdfsign__notice-action" data-mf-busy-aria-label="{% trans 'Loading' %}">
+        {% csrf_token %}
+        <input type="hidden" name="workflow_undo_last_approve" value="1" />
+        <input type="hidden" name="workflow_undo_event_id" value="{{ workflow_undo_event_pk }}" />
+        <button type="submit" class="mf-button mf-button--secondary mf-button--small">{% trans "Undo approve" %}</button>
+      </form>{% endif %}</div>
+  {% elif sign_lock_reason == "template" %}
+    <div class="mf-alert mf-alert--info mf-pdfsign__notice" role="status"><svg class="mf-alert__icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg><span>{% trans "This template places your saved signature automatically when you approve. Nothing to draw here." %}</span></div>
+  {% else %}
+    <div class="mf-pdfsign__hint-row">
+      {% if sign_saved_signature_id %}
+        <p class="mf-pdfsign__hint mf-pdfsign__hint--saved">
+          <img class="mf-pdfsign__saved-preview" src="{{ sign_saved_signature_url }}" alt="" />
+          {% trans "Right-click (or press and hold) where your signature goes. Your saved signature is placed there and you can approve or reject right away." %}
+        </p>
+      {% else %}
+        <p class="mf-pdfsign__hint">{% trans "Right-click (or press and hold on touch screens) anywhere on the document to draw your signature at that point." %}{% if workflow_decision_enabled and sign_urls %} {% trans "Approve or reject after placing it and the drawing is kept as your signature for next time." %}{% endif %}</p>
+      {% endif %}
+      {% if sign_saved_signature_id %}
+        <button type="button" class="mf-button mf-button--secondary mf-button--small" data-pdfsign-update>{% trans "Update signature" %}</button>
+      {% endif %}
+    </div>
+  {% endif %}
+
+  <div class="mf-doc-viewer-loading" role="status" aria-live="polite" aria-busy="true" data-pdfsign-loading>
+    <div class="mf-doc-viewer-loading__track" aria-hidden="true">
+      <div class="mf-doc-viewer-loading__bar"></div>
+    </div>
+    <p class="mf-doc-viewer-loading__text">{% trans "Loading document…" %}</p>
+  </div>
+
+  <div class="mf-pdfsign__pages mf-busy-host" data-pdfsign-pages></div>
+
+  <noscript>
+    <iframe class="mf-doc-viewer" title="{% trans 'Merged PDF' %}" src="{{ pdf_inline_path }}"></iframe>
+  </noscript>
+
+  <p class="mf-pdfsign__status" data-pdfsign-status aria-live="polite"></p>
+
+  <div data-pdfsign-list-wrap hidden>
+    <p class="mf-muted">{% trans "Signatures on this document" %}</p>
+    <ul class="mf-pdfsign__list" data-pdfsign-list></ul>
+  </div>
+
+  <div class="mf-dialog-backdrop" data-pdfsign-overlay hidden>
+    <div class="mf-dialog" role="dialog" aria-modal="true" aria-labelledby="mf-pdfsign-title">
+      <h3 class="mf-dialog__title" id="mf-pdfsign-title">{% trans "Draw your signature" %}</h3>
+      <p class="mf-muted">{% trans "Use your mouse or finger. The signature will be placed where you clicked." %}</p>
+      <div class="mf-pdfsign__pad-wrap">
+        <canvas class="mf-pdfsign__pad" data-pdfsign-pad></canvas>
+      </div>
+      <div class="mf-dialog__row">
+        <div class="mf-pdfsign__colors" role="radiogroup" aria-label="{% trans 'Ink color' %}" data-pdfsign-colors>
+          <span class="mf-pdfsign__colors-label">{% trans "Ink color" %}</span>
+          <button type="button" class="mf-pdfsign__swatch is-active" data-color="#101828" style="--swatch:#101828" aria-label="{% trans 'Black' %}" aria-pressed="true"></button>
+          <button type="button" class="mf-pdfsign__swatch" data-color="#1d4ed8" style="--swatch:#1d4ed8" aria-label="{% trans 'Blue' %}" aria-pressed="false"></button>
+          <button type="button" class="mf-pdfsign__swatch" data-color="#b91c1c" style="--swatch:#b91c1c" aria-label="{% trans 'Red' %}" aria-pressed="false"></button>
+          <button type="button" class="mf-pdfsign__swatch" data-color="#15803d" style="--swatch:#15803d" aria-label="{% trans 'Green' %}" aria-pressed="false"></button>
+        </div>
+        <label class="mf-pdfsign__size">
+          {% trans "Size" %}
+          <select class="mf-input mf-input--select" data-pdfsign-size>
+            <option value="0.15">{% trans "Small" %}</option>
+            <option value="0.22" selected>{% trans "Medium" %}</option>
+            <option value="0.32">{% trans "Large" %}</option>
+          </select>
+        </label>
+        <button type="button" class="mf-link mf-link--muted" data-pdfsign-clear>{% trans "Clear" %}</button>
+      </div>
+      <p class="mf-hint mf-hint--error" data-pdfsign-dialog-error hidden></p>
+      <div class="mf-actions">
+        <button type="button" class="mf-button mf-button--primary" data-pdfsign-place>{% trans "Place signature" %}</button>
+        <button type="button" class="mf-button mf-button--secondary" data-pdfsign-cancel>{% trans "Cancel" %}</button>
+      </div>
+    </div>
+  </div>
+  </div>
+
+{% if workflow_decision_enabled and sign_urls %}
+<div class="mf-dialog-backdrop" data-pdfsign-decision hidden>
+  <form
+    method="post"
+    class="mf-dialog mf-form mf-stack mf-workflow-decision"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="mf-pdfsign-decision-title"
+    data-mf-busy-aria-label="{% trans 'Loading' %}"
+    {% include "magicforms/manage/includes/workflow_approve_undo_hint_attrs.html" %}
+  >
+    {% csrf_token %}
+    <input type="hidden" name="workflow_action_anchor" value="{{ submission.current_step_id|default:0 }}" />
+    <h3 class="mf-dialog__title" id="mf-pdfsign-decision-title">{% trans "Signature placed. Approve or reject?" %}</h3>
+    <p class="mf-muted">{% trans "Approve advances to the next step. Reject stops the workflow here and needs a reason." %}</p>
+    <div class="mf-field">
+      <label class="mf-label" for="mf-pdfsign-decision-comment">{% trans "Comment" %} <span class="mf-muted">{% trans "Optional when approving; required when rejecting." %}</span></label>
+      <textarea id="mf-pdfsign-decision-comment" name="workflow_decision_comment" class="mf-input mf-input--textarea" rows="3" maxlength="800" required></textarea>
+    </div>
+    <div class="mf-actions">
+      <button type="submit" name="workflow_decision" value="approve" class="mf-button mf-button--primary" formnovalidate>{% trans "Approve" %}</button>
+      <button type="submit" name="workflow_decision" value="reject" class="mf-button mf-button--danger">{% trans "Reject" %}</button>
+      <button type="button" class="mf-button mf-button--quiet" data-pdfsign-decision-cancel>{% trans "Later" %}</button>
+    </div>
+  </form>
+</div>
+{% endif %}
+{{ signature_placements|json_script:"mf-pdfsign-placements" }}
+{{ sign_i18n|json_script:"mf-pdfsign-i18n" }}

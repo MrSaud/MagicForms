@@ -1,0 +1,6 @@
+<div class="mf-field">
+  {{ field.errors }}
+  <label class="mf-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+  {{ field }}
+  {% if field.help_text %}<p class="mf-hint">{{ field.help_text }}</p>{% endif %}
+</div>

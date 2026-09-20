@@ -1,0 +1,30 @@
+{% load static i18n static_versioned %}
+<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE|default:'en' }}" dir="{% block html_dir %}{% if LANGUAGE_BIDI %}rtl{% else %}ltr{% endif %}{% endblock %}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}MagicForms{% endblock %}</title>
+  <link rel="icon" href="{% static_v 'magicforms/img/favicon.svg' %}" type="image/svg+xml">
+  <link rel="icon" href="{% static_v 'magicforms/img/favicon-32.png' %}" sizes="32x32" type="image/png">
+  <link rel="apple-touch-icon" href="{% static_v 'magicforms/img/apple-touch-icon.png' %}">
+  <link rel="stylesheet" href="{% static_v 'magicforms/css/theme.css' %}">
+  <script src="{% static_v 'magicforms/js/mf_core.js' %}" defer></script>
+  {% block extrahead %}{% endblock %}
+</head>
+<body class="mf-body{% block body_class %} mf-public-site{% endblock %}">
+  <main class="mf-shell{% block shell_class %}{% endblock %}"{% if portal_theme_inline %} style="{{ portal_theme_inline }}"{% endif %}>
+    {% block public_site_nav %}{% endblock %}
+    {% block language_bar %}{% endblock %}
+    {% block content %}{% endblock %}
+    {% block language_bar_after %}{% endblock %}
+    {% block site_footer %}
+      {% include "magicforms/includes/public_footer_min.html" %}
+    {% endblock %}
+  </main>
+  {% block footer_scripts %}
+  <script src="{% static 'magicforms/js/pdf_iframe_loader.js' %}" defer></script>
+  <script src="{% static 'magicforms/js/topnav_responsive.js' %}" defer></script>
+  {% endblock %}
+</body>
+</html>

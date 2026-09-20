@@ -1,0 +1,127 @@
+{% load i18n magicforms_i18n %}
+{# Shared inbox-style list. Expects: submissions (page), list_mode "inbox"|"search", inbox_detail_seen_submission_ids (set). #}
+{# Row = ONE line: facts (title, step, reference, applicant, date) then Approve + Reject. The rejection reason input is hidden until Reject is clicked; the same Reject button then submits. #}
+<ul class="mf-manage-table mf-card mf-inbox-list">
+  {% for s in submissions %}
+    <li class="mf-manage-row mf-inbox-row{% if list_mode == "inbox" and s.inbox_highlight_color %} mf-manage-row--hl-{{ s.inbox_highlight_color }}{% endif %}">
+      <div class="mf-inbox-row__main">
+        <div class="mf-inbox-row__title-line">
+          {% if list_mode == "inbox" and s.inbox_workflow_quick_enabled %}
+          <input
+            type="checkbox"
+            class="mf-inbox-batch-check"
+            name="submission_ids"
+            value="{{ s.pk }}"
+            form="mf-inbox-batch-form"
+            data-inbox-batch-check
+            aria-label="{% blocktrans with ref=s.reference_token %}Select submission {{ ref }}{% endblocktrans %}"
+          />
+          {% endif %}
+          {% if list_mode == "inbox" and s.pk not in inbox_detail_seen_submission_ids %}
+          <span class="mf-inbox-action-star" role="img" aria-label="{% trans 'Action needed' %}">★</span>
+          {% endif %}
+          {% if list_mode == "inbox" and s.has_unread_thread %}
+          <span class="mf-inbox-thread-badge" title="{% trans 'New thread message' %}" role="img" aria-label="{% trans 'New thread message' %}"></span>
+          {% endif %}
+          <a class="mf-manage-row-title" href="{% url 'manage:submission_manage_detail' s.form.pk s.pk %}">{{ s.form.title|mf_trans }}</a>
+          {% if s.workflow_state == "completed" %}
+            <span class="mf-pill mf-pill--inbox-status mf-pill--inbox-completed" role="status">{% trans "Completed" %}</span>
+          {% elif s.workflow_state == "rejected" %}
+            <span class="mf-pill mf-pill--inbox-status mf-pill--inbox-rejected" role="status">{% trans "Rejected" %}</span>
+          {% elif s.current_step %}
+            <span class="mf-pill mf-pill--inbox-status mf-pill--inbox-progress" role="status">{{ s.current_step.label|mf_trans }}</span>
+          {% else %}
+            <span class="mf-pill mf-pill--inbox-status mf-pill--inbox-progress" role="status">{% trans "In progress" %}</span>
+          {% endif %}
+          {% if list_mode == "search" and s.search_role_labels %}
+            {% for role in s.search_role_labels %}<span class="mf-badge">{{ role }}</span>{% endfor %}
+          {% endif %}
+          <span class="mf-inbox-row__meta mf-muted">
+          <code class="mf-code">{{ s.reference_token }}</code>
+          {% if s.inbox_applicant_guest_value or s.inbox_applicant_username or s.inbox_applicant_first_name %}
+            <span class="mf-inbox-meta-sep" aria-hidden="true">·</span>
+            <span class="mf-inbox-applicant">
+              {% if s.inbox_applicant_guest_value %}{{ s.inbox_applicant_guest_value }}
+              {% else %}{% if s.inbox_applicant_first_name %}{{ s.inbox_applicant_first_name }}{% elif s.inbox_applicant_username %}{{ s.inbox_applicant_username }}{% endif %}{% endif %}
+            </span>
+          {% endif %}
+          {% if list_mode == "search" %}
+            <span class="mf-inbox-meta-sep" aria-hidden="true">·</span>
+            <span>{{ s.form.entity.name|mf_trans }}</span>
+          {% endif %}
+          <span class="mf-inbox-meta-sep" aria-hidden="true">·</span>
+          <time datetime="{{ s.submitted_at|date:'c' }}">{{ s.submitted_at|date:"M j, Y" }}</time>
+          {% if s.private_tag_labels %}
+            {% for t in s.private_tag_labels %}<span class="mf-pill mf-pill--private-tag">{{ t }}</span>{% endfor %}
+          {% endif %}
+          </span>
+        </div>
+      </div>
+      {% if list_mode == "inbox" %}
+      <div class="mf-inbox-row__actions">
+        {% if s.inbox_workflow_quick_enabled %}
+        <form
+          method="post"
+          action="{% url 'manage:submission_manage_detail' s.form.pk s.pk %}"
+          class="mf-inline-form mf-workflow-decision"
+          data-mf-busy-aria-label="{% trans 'Loading' %}"
+          {% include "magicforms/manage/includes/workflow_approve_undo_hint_attrs.html" %}
+        >
+          {% csrf_token %}
+          <input type="hidden" name="workflow_action_anchor" value="{{ s.current_step_id|default:0 }}" />
+          <input type="hidden" name="workflow_decision" value="approve" />
+          <input type="hidden" name="next" value="{{ request.get_full_path }}" />
+          <button type="submit" class="mf-button mf-button--primary mf-button--small">{% trans "Approve" %}</button>
+        </form>
+        <form
+          method="post"
+          action="{% url 'manage:submission_manage_detail' s.form.pk s.pk %}"
+          class="mf-inline-form mf-workflow-decision mf-inbox-row__reject"
+          data-mf-busy-aria-label="{% trans 'Loading' %}"
+          data-inbox-reject-form
+        >
+          {% csrf_token %}
+          <input type="hidden" name="workflow_action_anchor" value="{{ s.current_step_id|default:0 }}" />
+          <input type="hidden" name="workflow_decision" value="reject" />
+          <input type="hidden" name="next" value="{{ request.get_full_path }}" />
+          <span class="mf-inbox-row__reason" data-inbox-reject-reason hidden>
+            <label class="mf-sr-only" for="mf-workflow-reject-reason-inbox-{{ s.pk }}">{% trans "Rejection reason" %}</label>
+            <input id="mf-workflow-reject-reason-inbox-{{ s.pk }}" type="text" name="workflow_decision_comment" class="mf-input" maxlength="800" required disabled autocomplete="off" placeholder="{% trans 'Rejection reason (required)' %}" />
+            <button type="button" class="mf-inbox-row__reason-cancel" data-inbox-reject-cancel aria-label="{% trans 'Cancel' %}" title="{% trans 'Cancel' %}">&times;</button>
+          </span>
+          <button type="submit" class="mf-button mf-button--secondary mf-button--small mf-inbox-row__reject-btn" data-inbox-reject-submit>{% trans "Reject" %}</button>
+        </form>
+        {% endif %}
+        {% if s.inbox_undo_last_approve_visible %}
+        <form
+          method="post"
+          action="{% url 'manage:submission_manage_detail' s.form.pk s.pk %}"
+          class="mf-inline-form mf-workflow-decision mf-workflow-undo"
+          data-mf-busy-aria-label="{% trans 'Loading' %}"
+        >
+          {% csrf_token %}
+          <input type="hidden" name="workflow_undo_last_approve" value="1" />
+          <input type="hidden" name="workflow_undo_event_id" value="{{ s.inbox_undo_event_pk }}" />
+          <input type="hidden" name="next" value="{{ request.get_full_path }}" />
+          <button type="submit" class="mf-button mf-button--secondary mf-button--small">{% trans "Undo approve" %}</button>
+        </form>
+        {% endif %}
+        <div class="mf-inbox-row__tools">
+          <div class="mf-inbox-highlight" data-inbox-highlight data-submission-id="{{ s.pk }}">
+            <button type="button" class="mf-inbox-highlight__toggle" data-inbox-highlight-toggle aria-expanded="false" aria-haspopup="true" aria-label="{% trans 'Highlight row color' %}" title="{% trans 'Highlight row color' %}">
+              <span class="mf-inbox-highlight__dot{% if s.inbox_highlight_color %} mf-inbox-highlight__dot--{{ s.inbox_highlight_color }}{% endif %}" data-inbox-highlight-dot></span>
+            </button>
+            <div class="mf-inbox-highlight__palette" data-inbox-highlight-palette hidden>
+              {% for key, label in highlight_colors %}
+              <button type="button" class="mf-inbox-highlight__swatch mf-inbox-highlight__swatch--{{ key }}" data-inbox-highlight-color="{{ key }}" aria-label="{{ label }}" title="{{ label }}"></button>
+              {% endfor %}
+              <button type="button" class="mf-inbox-highlight__swatch mf-inbox-highlight__swatch--clear" data-inbox-highlight-color="" aria-label="{% trans 'Clear highlight' %}" title="{% trans 'Clear highlight' %}">&times;</button>
+            </div>
+          </div>
+          {% include "magicforms/manage/includes/submission_task_control.html" with s=s compact=1 %}
+        </div>
+      </div>
+      {% endif %}
+    </li>
+  {% endfor %}
+</ul>

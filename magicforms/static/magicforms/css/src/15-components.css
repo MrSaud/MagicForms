@@ -1,0 +1,557 @@
+/*
+ * Component primitives (UI Phase 2). Pages compose these instead of defining their own chrome.
+ *
+ *   .mf-page-head     title row: heading + optional meta on the start side, actions on the end side
+ *   .mf-empty         empty state for lists and tables
+ *   .mf-dialog        modal panel; pair with .mf-dialog-backdrop (fixed, centred)
+ *   .mf-busy          in-place busy overlay for a region (.mf-busy-host is position: relative)
+ *   .mf-spinner       the one spinner used by buttons, overlays and inline states
+ *   .mf-tabs          horizontal tab strip (links or buttons with aria-current / aria-selected)
+ *   .mf-table         data table: caption-style header, hairline rows, no zebra
+ *   .mf-pill          small status token: text + tint, never a filled block
+ *   .mf-alert         inline notice: surface + start border in the status colour
+ *   utilities         .mf-m0 .mf-mt-1 .mf-p-3 .mf-p-4 .mf-list-plain .mf-narrow-block …
+ */
+
+/* ---------------------------------------------------------------- page head */
+.mf-page-head,
+.mf-manage-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--mf-space-3) var(--mf-space-5);
+  margin-bottom: var(--mf-space-5);
+}
+
+.mf-page-head__title {
+  margin: 0;
+  font-size: var(--mf-font-display);
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+}
+
+.mf-page-head__meta {
+  margin: var(--mf-space-1) 0 0;
+  color: var(--mf-text-muted);
+  font-size: var(--mf-font-body);
+}
+
+.mf-page-head__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--mf-space-2);
+}
+
+/* ---------------------------------------------------------------- icon button (+ optional count badge) */
+.mf-button--icon {
+  position: relative;
+  width: 2.375rem;
+  min-width: 2.375rem;
+  height: 2.375rem;
+  padding: 0;
+  color: var(--mf-text-muted);
+}
+
+.mf-button--icon:hover {
+  color: var(--mf-text-primary);
+}
+
+.mf-button--icon svg {
+  display: block;
+  flex: none;
+  width: 18px;
+  height: 18px;
+}
+
+.mf-button__badge {
+  position: absolute;
+  top: -0.35rem;
+  inset-inline-end: -0.35rem;
+  min-width: 1.15rem;
+  height: 1.15rem;
+  padding: 0 0.3rem;
+  border-radius: 999px;
+  background: var(--mf-color-primary);
+  color: var(--mf-on-accent);
+  font-size: 0.68rem;
+  font-weight: 600;
+  line-height: 1.15rem;
+  text-align: center;
+  pointer-events: none;
+}
+
+/* ---------------------------------------------------------------- empty state */
+.mf-empty {
+  padding: var(--mf-space-6) var(--mf-space-4);
+  text-align: center;
+  color: var(--mf-text-muted);
+  border: 1px dashed var(--mf-border-strong);
+  border-radius: var(--mf-radius-md);
+  background: var(--mf-surface);
+}
+
+.mf-empty__title {
+  margin: 0 0 var(--mf-space-1);
+  color: var(--mf-text-primary);
+  font-weight: 600;
+  font-size: var(--mf-font-heading);
+}
+
+.mf-empty__text {
+  margin: 0;
+  font-size: var(--mf-font-body);
+}
+
+.mf-empty__action {
+  margin-top: var(--mf-space-4);
+}
+
+/* ---------------------------------------------------------------- dialog */
+.mf-dialog-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--mf-space-4);
+  background: var(--mf-scrim);
+}
+
+.mf-dialog-backdrop[hidden] {
+  display: none !important;
+}
+
+.mf-dialog {
+  width: min(40rem, 100%);
+  max-height: calc(100vh - 2rem);
+  overflow: auto;
+  padding: var(--mf-space-5);
+  border-radius: var(--mf-radius-lg);
+  background: var(--mf-surface-elevated);
+  border: 1px solid var(--mf-border);
+  box-shadow: var(--mf-shadow-dialog);
+  display: flex;
+  flex-direction: column;
+  gap: var(--mf-space-3);
+}
+
+.mf-dialog__title {
+  margin: 0;
+  font-size: var(--mf-font-heading);
+  font-weight: 600;
+}
+
+.mf-dialog__row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--mf-space-2) var(--mf-space-4);
+}
+
+.mf-dialog.is-busy {
+  pointer-events: none;
+}
+
+@media (max-width: 600px) {
+  .mf-dialog {
+    padding: var(--mf-space-4);
+  }
+  .mf-dialog__row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .mf-dialog .mf-actions {
+    flex-direction: column;
+  }
+  .mf-dialog .mf-actions .mf-button {
+    width: 100%;
+  }
+}
+
+/* ---------------------------------------------------------------- spinner + busy */
+.mf-spinner {
+  display: inline-block;
+  width: 1.25rem;
+  height: 1.25rem;
+  border-radius: 50%;
+  border: 2px solid var(--mf-accent-a20);
+  border-top-color: var(--mf-color-primary);
+  animation: mf-spin 0.8s linear infinite;
+  vertical-align: middle;
+}
+
+.mf-spinner--large {
+  width: 2rem;
+  height: 2rem;
+  border-width: 3px;
+}
+
+.mf-button.is-busy::before {
+  content: "";
+  display: inline-block;
+  width: 0.9em;
+  height: 0.9em;
+  border-radius: 50%;
+  border: 2px solid currentColor;
+  border-top-color: transparent;
+  opacity: 0.7;
+  animation: mf-spin 0.8s linear infinite;
+}
+
+.mf-busy-host {
+  position: relative;
+}
+
+.mf-busy-host.is-updating > :not(.mf-busy) {
+  opacity: 0.45;
+  transition: opacity var(--mf-motion) var(--mf-ease);
+}
+
+.mf-busy {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding-top: clamp(4rem, 20vh, 10rem);
+  gap: var(--mf-space-3);
+  color: var(--mf-text-primary);
+  font-weight: 600;
+  text-align: center;
+}
+
+@keyframes mf-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ---------------------------------------------------------------- tabs */
+.mf-tabs {
+  display: flex;
+  gap: var(--mf-space-1);
+  border-bottom: 1px solid var(--mf-border);
+  margin-bottom: var(--mf-space-5);
+  overflow-x: auto;
+}
+
+.mf-tabs__tab {
+  padding: var(--mf-space-2) var(--mf-space-3);
+  margin-bottom: -1px;
+  border: none;
+  border-bottom: 2px solid transparent;
+  background: none;
+  font: inherit;
+  color: var(--mf-text-muted);
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: color var(--mf-motion) var(--mf-ease), border-color var(--mf-motion) var(--mf-ease);
+}
+
+.mf-tabs__tab:hover {
+  color: var(--mf-text-primary);
+}
+
+.mf-tabs__tab[aria-current="page"],
+.mf-tabs__tab[aria-selected="true"] {
+  color: var(--mf-text-primary);
+  border-bottom-color: var(--mf-color-primary);
+  font-weight: 600;
+}
+
+/* ---------------------------------------------------------------- table */
+.mf-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--mf-font-body);
+}
+
+.mf-table th {
+  text-align: start;
+  font-size: var(--mf-font-caption);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--mf-text-muted);
+  padding: var(--mf-space-2) var(--mf-space-3);
+  border-bottom: 1px solid var(--mf-border);
+}
+
+.mf-table td {
+  padding: var(--mf-space-3);
+  border-bottom: 1px solid var(--mf-border);
+  vertical-align: top;
+}
+
+.mf-table tr:last-child td {
+  border-bottom: none;
+}
+
+/* ---------------------------------------------------------------- alerts (calm: surface + status edge) */
+.mf-alert {
+  padding: var(--mf-space-3) var(--mf-space-4);
+  border-radius: var(--mf-radius-sm);
+  background: var(--mf-surface);
+  border: 1px solid var(--mf-border);
+  border-inline-start: 3px solid var(--mf-border-strong);
+  color: var(--mf-text-primary);
+  font-size: var(--mf-font-body);
+}
+
+.mf-alert--info {
+  border-inline-start-color: var(--mf-color-primary);
+}
+
+.mf-alert--success {
+  border-inline-start-color: var(--mf-success);
+}
+
+.mf-alert--warn {
+  border-inline-start-color: var(--mf-warning);
+}
+
+.mf-alert--error {
+  border-inline-start-color: var(--mf-danger);
+}
+
+/* ---------------------------------------------------------------- utilities */
+.mf-m0 {
+  margin: 0;
+}
+
+.mf-mt-1 {
+  margin-top: var(--mf-space-1);
+}
+
+.mf-p-3 {
+  padding: var(--mf-space-3) var(--mf-space-4);
+}
+
+.mf-p-4 {
+  padding: var(--mf-space-4);
+}
+
+.mf-list-plain {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.mf-list-tight {
+  padding-inline-start: 1.2rem;
+}
+
+.mf-narrow-block {
+  max-width: 28rem;
+  margin: 0 auto var(--mf-space-6);
+}
+
+.mf-narrow-block--top {
+  margin-top: var(--mf-space-6);
+}
+
+.mf-text-danger {
+  color: var(--mf-danger);
+}
+
+.mf-qr-block {
+  max-width: 22rem;
+}
+
+.mf-img-fluid {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+.mf-break-all {
+  word-break: break-all;
+}
+
+.mf-undo-banner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--mf-space-2) var(--mf-space-4);
+  margin-bottom: var(--mf-space-4);
+}
+
+/* ---------------------------------------------------------------- select (one native control app-wide)
+ * Flat surface, soft border, a single chevron, same height as .mf-input so it lines up in rows.
+ * Bare <select> rendered by Django inside .mf-field gets the same look as a safety net.
+ * Sizes: default, .mf-input--select-sm (toolbars, pagination, compact filters).
+ */
+select.mf-input,
+select.mf-input--select,
+.mf-field > select:not([class]) {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 100%;
+  max-width: 100%;
+  min-height: 2.625rem;
+  margin: 0;
+  padding-block: 0.55rem;
+  padding-inline: 0.85rem 2.4rem;
+  font: inherit;
+  font-size: var(--mf-font-body);
+  line-height: 1.4;
+  color: var(--mf-text-primary);
+  background-color: var(--mf-surface);
+  background-image: var(--mf-select-chevron);
+  background-repeat: no-repeat;
+  background-position: right 0.8rem center;
+  background-size: 1rem 1rem;
+  border: 1px solid var(--mf-border);
+  border-radius: var(--mf-radius-sm);
+  box-shadow: none;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    border-color var(--mf-motion) var(--mf-ease),
+    box-shadow var(--mf-motion) var(--mf-ease);
+}
+
+[dir="rtl"] select.mf-input,
+[dir="rtl"] select.mf-input--select,
+[dir="rtl"] .mf-field > select:not([class]) {
+  padding-inline: 2.4rem 0.85rem;
+  background-position: left 0.8rem center;
+}
+
+select.mf-input:hover:not(:disabled),
+select.mf-input--select:hover:not(:disabled),
+.mf-field > select:not([class]):hover:not(:disabled) {
+  border-color: var(--mf-border-strong);
+}
+
+select.mf-input:focus,
+select.mf-input--select:focus,
+.mf-field > select:not([class]):focus {
+  outline: none;
+  border-color: var(--mf-color-primary);
+}
+
+select.mf-input:focus-visible,
+select.mf-input--select:focus-visible,
+.mf-field > select:not([class]):focus-visible {
+  box-shadow: var(--mf-focus-ring);
+}
+
+select.mf-input:disabled,
+select.mf-input--select:disabled,
+.mf-field > select:not([class]):disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+select.mf-input[aria-invalid="true"],
+select.mf-input--select[aria-invalid="true"],
+.mf-field > select:not([class])[aria-invalid="true"] {
+  border-color: var(--mf-danger);
+}
+
+select.mf-input option,
+select.mf-input--select option,
+.mf-field > select:not([class]) option {
+  font: inherit;
+  padding: 0.35rem 0.5rem;
+  color: var(--mf-text-primary);
+  background: var(--mf-surface);
+}
+
+/* Small: matches .mf-button--small in toolbars, pagination and compact filter panels. */
+select.mf-input--select-sm {
+  min-height: 2rem;
+  padding-block: 0.35rem;
+  padding-inline: 0.65rem 2rem;
+  font-size: 0.875rem;
+  background-position: right 0.6rem center;
+  background-size: 0.9rem 0.9rem;
+}
+
+[dir="rtl"] select.mf-input--select-sm {
+  padding-inline: 2rem 0.65rem;
+  background-position: left 0.6rem center;
+}
+
+/* List boxes: no chevron, natural height, roomy rows. */
+select.mf-input[multiple],
+select.mf-input[size]:not([size="1"]),
+select.mf-input--select[multiple],
+.mf-field > select:not([class])[multiple] {
+  min-height: unset;
+  height: auto;
+  padding: var(--mf-space-1);
+  background-image: none;
+  white-space: normal;
+  cursor: default;
+  overflow-y: auto;
+}
+
+select.mf-input[multiple] option,
+select.mf-input--select[multiple] option,
+.mf-field > select:not([class])[multiple] option {
+  border-radius: 6px;
+}
+
+/* ---------------------------------------------------------------- toolbar (search + view controls in one row) */
+.mf-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--mf-space-2);
+}
+
+.mf-toolbar__search {
+  flex: 1 1 16rem;
+  min-width: 0;
+}
+
+.mf-toolbar__search .mf-input {
+  width: 100%;
+}
+
+/* Toolbar fields sit level with the (smaller) buttons beside them. */
+.mf-toolbar .mf-input,
+.mf-toolbar select.mf-input {
+  min-height: 2.375rem;
+  padding-block: 0.45rem;
+  font-size: 0.9375rem;
+}
+
+.mf-toolbar__select {
+  flex: 0 1 12rem;
+  min-width: 8rem;
+}
+
+.mf-toolbar__select--narrow {
+  flex-basis: 9rem;
+}
+
+.mf-toolbar__end {
+  margin-inline-start: auto;
+  display: inline-flex;
+  gap: var(--mf-space-1);
+}
+
+.mf-visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.mf-dashboard-stats--secondary {
+  margin-bottom: var(--mf-space-4);
+}

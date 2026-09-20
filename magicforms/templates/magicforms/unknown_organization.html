@@ -1,0 +1,21 @@
+{% extends "magicforms/base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Organization not found" %} · MagicForms{% endblock %}
+
+{% block brand_logo_href %}{{ apex_site_url }}/{% endblock %}
+
+{% block content %}
+<section class="mf-hero mf-hero--compact">
+  <h1 class="mf-display mf-display--small">{% trans "Organization not found" %}</h1>
+  <p class="mf-body-text">
+    {% blocktrans trimmed with slug=subdomain_slug %}
+      There is no active organization registered for <code class="mf-code">{{ slug }}</code> on this site.
+      Check the address with your administrator, or open the main site below.
+    {% endblocktrans %}
+  </p>
+  <p class="mf-muted mf-public-site-local-nav">
+    <a class="mf-link" href="{{ apex_site_url }}/">{% trans "Go to main site" %}</a>
+  </p>
+</section>
+{% endblock %}

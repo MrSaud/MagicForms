@@ -1,0 +1,320 @@
+{% extends "magicforms/manage/base_manage.html" %}
+{% load i18n static %}
+
+{% block manage_title %}{% if mode == "add" %}{% trans "New organization" %}{% else %}{% trans "Edit" %} {{ entity_obj.name }}{% endif %}{% endblock %}
+
+{% block manage_content %}
+<section class="mf-manage-section mf-stack">
+  <h1 class="mf-display mf-display--small">{% if mode == "add" %}{% trans "New organization" %}{% else %}{% trans "Edit organization" %}{% endif %}</h1>
+  <form method="post" enctype="multipart/form-data" class="mf-form mf-form--wide mf-stack mf-stack--lg">
+    {% csrf_token %}
+    {% if form.non_field_errors %}<div class="mf-alert mf-alert--error">{{ form.non_field_errors }}</div>{% endif %}
+
+    <details class="mf-entity-form-details mf-card mf-card--glass mf-stack"{% if form.errors %} open{% endif %}>
+      <summary class="mf-entity-form-details__summary">
+        <span class="mf-heading mf-heading--section">{% trans "Identity" %}</span>
+      </summary>
+      <div class="mf-entity-form-details__body mf-stack">
+        {% for field in form %}
+          {% if field.name == "name" or field.name == "slug" or field.name == "is_active" or field.name == "page_logo" %}
+            <div class="mf-field">
+              {{ field.errors }}
+              <label class="mf-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+              {% if field.name == "page_logo" and mode != "add" and entity_obj.page_logo %}
+                <p class="mf-entity-logo-preview-wrap">
+                  <img
+                    class="mf-entity-logo-preview"
+                    src="{{ entity_obj.page_logo.url }}"
+                    alt=""
+                    width="160"
+                    height="64"
+                    loading="lazy"
+                  />
+                </p>
+              {% endif %}
+              {{ field }}
+              {% if field.help_text %}<p class="mf-hint">{{ field.help_text }}</p>{% endif %}
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+    </details>
+
+    <details class="mf-entity-form-details mf-card mf-card--soft mf-stack"{% if form.errors %} open{% endif %}>
+      <summary class="mf-entity-form-details__summary">
+        <span class="mf-heading mf-heading--section">{% trans "Public portal" %}</span>
+      </summary>
+      <div class="mf-entity-form-details__body mf-stack">
+        {% for field in form %}
+          {% if field.name == "public_site_title" or field.name == "public_site_tagline" or field.name == "home_news" or field.name == "public_contact_email" or field.name == "footer_note" or field.name == "show_on_public_directory" %}
+            <div class="mf-field">
+              {{ field.errors }}
+              <label class="mf-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+              {{ field }}
+              {% if field.help_text %}<p class="mf-hint">{{ field.help_text }}</p>{% endif %}
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+    </details>
+
+    <details class="mf-entity-form-details mf-card mf-card--glass mf-stack"{% if form.errors %} open{% endif %}>
+      <summary class="mf-entity-form-details__summary">
+        <span class="mf-heading mf-heading--section">{% trans "Theme & behavior" %}</span>
+      </summary>
+      <div class="mf-entity-form-details__body mf-stack">
+        <p class="mf-hint">{% trans "Configure three color sets. Only the active one is used on the public portal; the others stay saved until you switch." %}</p>
+
+        <div class="mf-theme-preset mf-stack mf-stack--md">
+          <h3 class="mf-heading mf-heading--compact">{% trans "Theme 1" %}</h3>
+          <div class="mf-field">
+            {{ form.theme_slot_0_primary.errors }}
+            <label class="mf-label" for="{{ form.theme_slot_0_primary.id_for_label }}">{{ form.theme_slot_0_primary.label }}</label>
+            <div class="mf-theme-color-row">
+              <input
+                type="color"
+                class="mf-theme-color-picker"
+                id="{{ form.theme_slot_0_primary.id_for_label }}_mf_picker"
+                data-mf-hex-target="{{ form.theme_slot_0_primary.id_for_label }}"
+                aria-label="{% trans 'Theme 1 primary color' %}"
+              />
+              {{ form.theme_slot_0_primary }}
+            </div>
+          </div>
+          <div class="mf-field">
+            {{ form.theme_slot_0_secondary.errors }}
+            <label class="mf-label" for="{{ form.theme_slot_0_secondary.id_for_label }}">{{ form.theme_slot_0_secondary.label }}</label>
+            <div class="mf-theme-color-row">
+              <input
+                type="color"
+                class="mf-theme-color-picker"
+                id="{{ form.theme_slot_0_secondary.id_for_label }}_mf_picker"
+                data-mf-hex-target="{{ form.theme_slot_0_secondary.id_for_label }}"
+                data-mf-optional="1"
+                aria-label="{% trans 'Theme 1 secondary color' %}"
+              />
+              {{ form.theme_slot_0_secondary }}
+            </div>
+          </div>
+          <div class="mf-field">
+            {{ form.theme_slot_0_background.errors }}
+            <label class="mf-label" for="{{ form.theme_slot_0_background.id_for_label }}">{{ form.theme_slot_0_background.label }}</label>
+            <div class="mf-theme-color-row">
+              <input
+                type="color"
+                class="mf-theme-color-picker"
+                id="{{ form.theme_slot_0_background.id_for_label }}_mf_picker"
+                data-mf-hex-target="{{ form.theme_slot_0_background.id_for_label }}"
+                data-mf-optional="1"
+                aria-label="{% trans 'Theme 1 background tint' %}"
+              />
+              {{ form.theme_slot_0_background }}
+            </div>
+          </div>
+        </div>
+
+        <div class="mf-theme-preset mf-stack mf-stack--md">
+          <h3 class="mf-heading mf-heading--compact">{% trans "Theme 2" %}</h3>
+          <div class="mf-field">
+            {{ form.theme_slot_1_primary.errors }}
+            <label class="mf-label" for="{{ form.theme_slot_1_primary.id_for_label }}">{{ form.theme_slot_1_primary.label }}</label>
+            <div class="mf-theme-color-row">
+              <input
+                type="color"
+                class="mf-theme-color-picker"
+                id="{{ form.theme_slot_1_primary.id_for_label }}_mf_picker"
+                data-mf-hex-target="{{ form.theme_slot_1_primary.id_for_label }}"
+                aria-label="{% trans 'Theme 2 primary color' %}"
+              />
+              {{ form.theme_slot_1_primary }}
+            </div>
+          </div>
+          <div class="mf-field">
+            {{ form.theme_slot_1_secondary.errors }}
+            <label class="mf-label" for="{{ form.theme_slot_1_secondary.id_for_label }}">{{ form.theme_slot_1_secondary.label }}</label>
+            <div class="mf-theme-color-row">
+              <input
+                type="color"
+                class="mf-theme-color-picker"
+                id="{{ form.theme_slot_1_secondary.id_for_label }}_mf_picker"
+                data-mf-hex-target="{{ form.theme_slot_1_secondary.id_for_label }}"
+                data-mf-optional="1"
+                aria-label="{% trans 'Theme 2 secondary color' %}"
+              />
+              {{ form.theme_slot_1_secondary }}
+            </div>
+          </div>
+          <div class="mf-field">
+            {{ form.theme_slot_1_background.errors }}
+            <label class="mf-label" for="{{ form.theme_slot_1_background.id_for_label }}">{{ form.theme_slot_1_background.label }}</label>
+            <div class="mf-theme-color-row">
+              <input
+                type="color"
+                class="mf-theme-color-picker"
+                id="{{ form.theme_slot_1_background.id_for_label }}_mf_picker"
+                data-mf-hex-target="{{ form.theme_slot_1_background.id_for_label }}"
+                data-mf-optional="1"
+                aria-label="{% trans 'Theme 2 background tint' %}"
+              />
+              {{ form.theme_slot_1_background }}
+            </div>
+          </div>
+        </div>
+
+        <div class="mf-theme-preset mf-stack mf-stack--md">
+          <h3 class="mf-heading mf-heading--compact">{% trans "Theme 3" %}</h3>
+          <div class="mf-field">
+            {{ form.theme_slot_2_primary.errors }}
+            <label class="mf-label" for="{{ form.theme_slot_2_primary.id_for_label }}">{{ form.theme_slot_2_primary.label }}</label>
+            <div class="mf-theme-color-row">
+              <input
+                type="color"
+                class="mf-theme-color-picker"
+                id="{{ form.theme_slot_2_primary.id_for_label }}_mf_picker"
+                data-mf-hex-target="{{ form.theme_slot_2_primary.id_for_label }}"
+                aria-label="{% trans 'Theme 3 primary color' %}"
+              />
+              {{ form.theme_slot_2_primary }}
+            </div>
+          </div>
+          <div class="mf-field">
+            {{ form.theme_slot_2_secondary.errors }}
+            <label class="mf-label" for="{{ form.theme_slot_2_secondary.id_for_label }}">{{ form.theme_slot_2_secondary.label }}</label>
+            <div class="mf-theme-color-row">
+              <input
+                type="color"
+                class="mf-theme-color-picker"
+                id="{{ form.theme_slot_2_secondary.id_for_label }}_mf_picker"
+                data-mf-hex-target="{{ form.theme_slot_2_secondary.id_for_label }}"
+                data-mf-optional="1"
+                aria-label="{% trans 'Theme 3 secondary color' %}"
+              />
+              {{ form.theme_slot_2_secondary }}
+            </div>
+          </div>
+          <div class="mf-field">
+            {{ form.theme_slot_2_background.errors }}
+            <label class="mf-label" for="{{ form.theme_slot_2_background.id_for_label }}">{{ form.theme_slot_2_background.label }}</label>
+            <div class="mf-theme-color-row">
+              <input
+                type="color"
+                class="mf-theme-color-picker"
+                id="{{ form.theme_slot_2_background.id_for_label }}_mf_picker"
+                data-mf-hex-target="{{ form.theme_slot_2_background.id_for_label }}"
+                data-mf-optional="1"
+                aria-label="{% trans 'Theme 3 background tint' %}"
+              />
+              {{ form.theme_slot_2_background }}
+            </div>
+          </div>
+        </div>
+
+        <div class="mf-field mf-stack">
+          <fieldset class="mf-fieldset mf-stack mf-stack--sm">
+            <legend class="mf-label">{{ form.active_theme_index.label }}</legend>
+            {{ form.active_theme_index.errors }}
+            <div class="mf-active-theme-radios mf-stack mf-stack--sm">
+              {% for radio in form.active_theme_index %}
+                <label class="mf-choice mf-choice--radio" for="{{ radio.id_for_label }}">
+                  {{ radio.tag }}
+                  <span>{{ radio.choice_label }}</span>
+                </label>
+              {% endfor %}
+            </div>
+            {% if form.active_theme_index.help_text %}<p class="mf-hint">{{ form.active_theme_index.help_text }}</p>{% endif %}
+          </fieldset>
+        </div>
+        {% for field in form %}
+          {% if field.name == "notifications_enabled" %}
+            <div class="mf-field">
+              {{ field.errors }}
+              <label class="mf-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+              {{ field }}
+              {% if field.help_text %}<p class="mf-hint">{{ field.help_text }}</p>{% endif %}
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+    </details>
+
+    <details class="mf-entity-form-details mf-card mf-card--glass mf-stack"{% if form.errors %} open{% endif %}>
+      <summary class="mf-entity-form-details__summary">
+        <span class="mf-heading mf-heading--section">{% trans "Email notifications" %}</span>
+      </summary>
+      <div class="mf-entity-form-details__body mf-stack">
+        <p class="mf-hint">
+          {% blocktrans trimmed %}
+            When enabled together with Notifications (under Theme & behavior), every outbound email for this organization—applicant mail from submissions and any future notification hooks—uses this SMTP server, not the global site mail settings in Django.
+          {% endblocktrans %}
+        </p>
+        {% if mode == "edit" and entity_obj %}
+        <p class="mf-actions">
+          <a class="mf-button mf-button--secondary mf-button--small" href="{% url 'manage:entity_email_notifications' entity_obj.pk %}">{% trans "Email notification templates" %}</a>
+        </p>
+        {% endif %}
+        {% for field in form %}
+          {% if field.name == "email_notifications_enabled" or field.name == "email_from_address" or field.name == "email_reply_to" or field.name == "email_smtp_host" or field.name == "email_smtp_port" or field.name == "email_smtp_use_tls" or field.name == "email_smtp_use_ssl" or field.name == "email_smtp_username" or field.name == "email_smtp_password" %}
+            <div class="mf-field">
+              {{ field.errors }}
+              <label class="mf-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+              {{ field }}
+              {% if field.help_text %}<p class="mf-hint">{{ field.help_text }}</p>{% endif %}
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+    </details>
+
+    <details class="mf-entity-form-details mf-card mf-card--glass mf-stack"{% if form.errors %} open{% endif %}>
+      <summary class="mf-entity-form-details__summary">
+        <span class="mf-heading mf-heading--section">{% trans "Login API" %}</span>
+      </summary>
+      <div class="mf-entity-form-details__body mf-stack">
+        <p class="mf-hint">
+          {% blocktrans trimmed %}
+            Optional directory login API. When active, workspace sign-in uses the tenant ID from settings plus the username and password entered on this page—if the API does not return success, sign-in is denied (no Django password fallback).
+          {% endblocktrans %}
+        </p>
+        {% for field in form %}
+          {% if field.name == "login_api_endpoint" or field.name == "login_api_tenant_id" or field.name == "login_api_key_name" or field.name == "login_api_token" or field.name == "login_api_active" %}
+            <div class="mf-field">
+              {{ field.errors }}
+              <label class="mf-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+              {{ field }}
+              {% if field.help_text %}<p class="mf-hint">{{ field.help_text }}</p>{% endif %}
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+    </details>
+
+    <details class="mf-entity-form-details mf-card mf-card--soft mf-stack"{% if form.errors %} open{% endif %}>
+      <summary class="mf-entity-form-details__summary">
+        <span class="mf-heading mf-heading--section">{% trans "Internal" %}</span>
+      </summary>
+      <div class="mf-entity-form-details__body mf-stack">
+        {% for field in form %}
+          {% if field.name == "portal_meta_note" %}
+            <div class="mf-field">
+              {{ field.errors }}
+              <label class="mf-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+              {{ field }}
+              {% if field.help_text %}<p class="mf-hint">{{ field.help_text }}</p>{% endif %}
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+    </details>
+
+    <div class="mf-actions">
+      <button type="submit" class="mf-button mf-button--primary">{% if mode == "add" %}{% trans "Create" %}{% else %}{% trans "Save" %}{% endif %}</button>
+      <a class="mf-link mf-link--muted" href="{% if cancel_url %}{{ cancel_url }}{% else %}{% url 'manage:entity_list' %}{% endif %}">{% trans "Cancel" %}</a>
+    </div>
+  </form>
+</section>
+{% endblock %}
+
+{% block footer_scripts %}
+{{ block.super }}
+<script src="{% static 'magicforms/js/entity_theme_color_pickers.js' %}" defer></script>
+{% endblock %}

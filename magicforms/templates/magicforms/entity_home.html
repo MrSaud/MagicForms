@@ -1,0 +1,83 @@
+{% extends "magicforms/base.html" %}
+{% load i18n magicforms_i18n portal_urls %}
+
+{% block title %}{{ entity.get_public_display_title|mf_trans }} · MagicForms{% endblock %}
+
+{% block brand_logo_href %}{% portal_url 'magicforms:entity_home' entity_slug=entity.slug %}{% endblock %}
+
+{% block content %}
+<section class="mf-hero">
+  {% if entity.page_logo %}
+    <img class="mf-entity-logo" src="{{ entity.page_logo.url }}" alt="" width="160" height="64" loading="lazy" />
+  {% endif %}
+  <p class="mf-eyebrow">{{ entity.name|mf_trans }}</p>
+  <h1 class="mf-display mf-display--small">{{ entity.get_public_display_title|mf_trans }}</h1>
+  {% if entity.public_site_tagline %}
+    <p class="mf-lead">{{ entity.public_site_tagline|mf_trans }}</p>
+  {% endif %}
+  {% if entity.public_contact_email %}
+    <p class="mf-hint">
+      <a class="mf-link" href="mailto:{{ entity.public_contact_email }}">{{ entity.public_contact_email }}</a>
+    </p>
+  {% endif %}
+  <p class="mf-actions mf-mt">
+    <a class="mf-button mf-button--secondary" href="{% portal_url 'magicforms:submission_track' %}">{% trans "Track a submission" %}</a>
+  </p>
+</section>
+
+{% if entity.home_news %}
+<section class="mf-card mf-card--soft mf-stack mf-stack--md">
+  <h2 class="mf-heading mf-heading--section">{% trans "News & updates" %}</h2>
+  <p class="mf-body-text mf-entity-news">{{ entity.home_news|mf_trans }}</p>
+</section>
+{% endif %}
+
+{% if published_forms %}
+<section class="mf-stack mf-stack--lg">
+  <h2 class="mf-heading mf-heading--section">{% trans "Open forms" %}</h2>
+  <ul class="mf-form-list">
+    {% for f in published_forms %}
+      <li>
+        <a class="mf-form-link" href="{% portal_url 'magicforms:form_public' entity_slug=f.entity.slug slug=f.slug %}{% if f.public_share_key %}?share={{ f.public_share_key }}{% endif %}">{{ f.title|mf_trans }}</a>
+        {% if f.submission_deadline %}
+        <p class="mf-form-list-due">
+          {% trans "Due" %} <time datetime="{{ f.submission_deadline|date:'Y-m-d' }}">{{ f.submission_deadline|date:"M j, Y" }}</time>
+        </p>
+        {% endif %}
+        {% with steps=f.workflow_steps.all %}
+        <p class="mf-form-list-workflow">
+          <span class="mf-form-list-workflow-label">{% trans "Workflow" %}</span>
+          {% if steps %}
+            <span class="mf-form-list-workflow-path">
+              {% for step in steps %}
+              <span class="mf-form-list-workflow-segment">
+                {% if not forloop.first %}<span class="mf-form-list-workflow-sep" aria-hidden="true">→</span>{% endif %}
+                <span class="mf-form-list-workflow-step-text">{{ step.label|mf_trans }}</span>
+              </span>
+              {% endfor %}
+            </span>
+          {% else %}
+            <span class="mf-form-list-workflow-empty">{% trans "No steps yet" %}</span>
+          {% endif %}
+        </p>
+        {% endwith %}
+      </li>
+    {% endfor %}
+  </ul>
+</section>
+{% else %}
+<section class="mf-card mf-card--glass mf-stack">
+  <p class="mf-body-text mf-muted">{% trans "No open forms right now. Check back later." %}</p>
+</section>
+{% endif %}
+
+{% if entity.footer_note %}
+<section class="mf-card mf-card--glass mf-stack">
+  <p class="mf-body-text mf-muted mf-entity-news">{{ entity.footer_note|mf_trans }}</p>
+</section>
+{% endif %}
+
+{% if not portal_short_urls %}
+<p class="mf-body-text mf-public-site-local-nav"><a class="mf-link" href="{{ apex_public_home_url }}">← {% trans "All organizations" %}</a></p>
+{% endif %}
+{% endblock %}

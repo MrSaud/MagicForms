@@ -1,0 +1,39 @@
+{% extends "magicforms/manage/base_manage.html" %}
+{% load i18n %}
+
+{% block manage_title %}{% trans "Related forms" %} · {{ form_obj.title }}{% endblock %}
+
+{% block manage_content %}
+<section class="mf-manage-section mf-stack">
+  <p class="mf-eyebrow">{{ form_obj.title }}</p>
+  <h1 class="mf-display mf-display--small">{% trans "Related forms" %}</h1>
+  <p class="mf-muted">
+    {% blocktrans trimmed %}
+      When a submission reaches the chosen workflow step, the applicant can complete a linked form (same organization). The base workflow does not wait for it.
+    {% endblocktrans %}
+  </p>
+  <p class="mf-actions mf-stack">
+    <a class="mf-button mf-button--primary" href="{% url 'manage:related_link_add' form_obj.pk %}">{% trans "Add link" %}</a>
+  </p>
+  {% if links %}
+  <ul class="mf-manage-table mf-card mf-card--soft mf-mt">
+    {% for link in links %}
+    <li class="mf-manage-row">
+      <div>
+        <span class="mf-manage-row-title">{{ link.child_form.title }}</span>
+        <span class="mf-muted">{% trans "at step" %} {{ link.trigger_step.label }}</span>
+      </div>
+      <div class="mf-manage-row-actions">
+        <form method="post" action="{% url 'manage:related_link_delete' form_obj.pk link.pk %}" class="mf-inline-form" onsubmit="return confirm('{% trans "Remove this related link?" %}');">
+          {% csrf_token %}
+          <button type="submit" class="mf-button mf-button--secondary">{% trans "Remove" %}</button>
+        </form>
+      </div>
+    </li>
+    {% endfor %}
+  </ul>
+  {% else %}
+  <p class="mf-body-text mf-muted mf-mt">{% trans "No related forms linked yet." %}</p>
+  {% endif %}
+</section>
+{% endblock %}

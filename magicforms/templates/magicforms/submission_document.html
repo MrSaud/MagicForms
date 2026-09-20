@@ -1,0 +1,41 @@
+{% extends "magicforms/base.html" %}
+{% load static_versioned i18n static magicforms_i18n portal_urls %}
+
+{% block html_dir %}{{ form_def.public_dir }}{% endblock %}
+
+{% block body_class %} mf-public-site mf-public-form-page{% endblock %}
+
+{% block title %}{% trans "Your filled form" %} · {{ form_def.title|mf_trans }} · {{ form_def.entity.get_public_display_title|mf_trans }}{% endblock %}
+
+{% block extrahead %}
+<script defer src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js"></script>
+<script defer src="{% static_v 'magicforms/js/document_sign.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+<div class="mf-public-form-layout">
+  {% if messages %}
+  <ul class="mf-messages">
+    {% for message in messages %}
+      <li class="mf-message mf-message--{{ message.level_tag }}">{{ message }}</li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+
+  <section class="mf-hero mf-hero--compact">
+    <h1 class="mf-eyebrow">{{ form_def.title|mf_trans }}</h1>
+    <p class="mf-lead mf-lead--mono">{% trans "Reference" %}: {{ submission.reference_token }}</p>
+    <p class="mf-actions mf-mt">
+      <a class="mf-button mf-button--primary" href="{% portal_url 'magicforms:submission_merged_document' entity_slug=form_def.entity.slug slug=form_def.slug token=submission.reference_token fmt='pdf' %}">{% trans "Download PDF" %}</a>
+      {% if not form_def.is_for_public %}
+      <a class="mf-button mf-button--secondary" href="{% portal_url 'magicforms:submission_detail' entity_slug=form_def.entity.slug slug=form_def.slug token=submission.reference_token %}">{% trans "Track this submission" %}</a>
+      {% endif %}
+    </p>
+  </section>
+
+  <div class="mf-card mf-card--glass mf-stack">
+    <h2 class="mf-heading">{% trans "Filled document" %}</h2>
+    {% include "magicforms/includes/pdf_sign_widget.html" %}
+  </div>
+</div>
+{% endblock %}

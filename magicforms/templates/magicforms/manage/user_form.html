@@ -1,0 +1,190 @@
+{% extends "magicforms/manage/base_manage.html" %}
+{% load i18n %}
+
+{% block manage_title %}{% if is_create %}{% trans "New user" %}{% else %}{% trans "Edit" %} {{ edit_user.get_username }}{% endif %}{% endblock %}
+
+{% block manage_content %}
+<section class="mf-manage-section mf-stack">
+  <p class="mf-eyebrow">{% trans "People" %}</p>
+  <h1 class="mf-display mf-display--small">{% if is_create %}{% trans "New user" %}{% else %}{% trans "Edit user" %}{% endif %}</h1>
+  {% if not is_create %}
+    <p class="mf-muted">{% trans "Username" %}: <code class="mf-code">{{ edit_user.get_username }}</code></p>
+  {% endif %}
+
+  <form method="post" class="mf-form mf-form--wide mf-form--user-edit mf-stack mf-card mf-card--glass mf-dashboard-chart-card">
+    {% csrf_token %}
+
+    <h2 class="mf-heading">{% trans "Account" %}</h2>
+    {% if is_create %}
+      {% for field in user_form %}
+        <div class="mf-field">
+          {{ field.errors }}
+          <label class="mf-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+          {{ field }}
+          {% if field.help_text %}<p class="mf-hint">{{ field.help_text }}</p>{% endif %}
+        </div>
+      {% endfor %}
+    {% else %}
+      {% for field in account_form %}
+        <div class="mf-field">
+          {{ field.errors }}
+          <label class="mf-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+          {{ field }}
+          {% if field.help_text %}<p class="mf-hint">{{ field.help_text }}</p>{% endif %}
+        </div>
+      {% endfor %}
+
+      <h2 class="mf-heading">{% trans "Password" %}</h2>
+      <p class="mf-muted">{% trans "Leave both fields blank to keep the current password." %}</p>
+      {% for field in pw_form %}
+        <div class="mf-field">
+          {{ field.errors }}
+          <label class="mf-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+          {{ field }}
+        </div>
+      {% endfor %}
+    {% endif %}
+
+    {% if people_entity_rows %}
+    <details class="mf-entity-form-details mf-card mf-card--soft mf-stack"{% if people_orgs_section_open %} open{% endif %}>
+      <summary class="mf-entity-form-details__summary">
+        <span class="mf-heading mf-heading--section">
+          {% if can_grant_entity_permissions %}
+            {% trans "Organizations & workspace permissions" %}
+          {% else %}
+            {% trans "Organizations" %}
+          {% endif %}
+        </span>
+      </summary>
+      <div class="mf-entity-form-details__body mf-stack">
+        <p class="mf-muted mf-mb-text">
+          {% if can_grant_entity_permissions %}
+            {% trans "Assign organizations and optional workspace permissions. Read allows viewing; write allows changes. Organization admins (staff) always have full access in their orgs." %}
+          {% else %}
+            {% trans "Select at least one organization this user belongs to." %}
+          {% endif %}
+        </p>
+        <ul class="mf-body-text mf-stack mf-people-org-list">
+          {% for row in people_entity_rows %}
+            <li class="mf-people-org-row mf-stack">
+              <label class="mf-label mf-people-org-row__entity">
+                <input type="checkbox" name="entity_ids" value="{{ row.entity.pk }}" class="mf-checkbox" {% if row.member_checked %}checked{% endif %} />
+                {{ row.entity.name }} <span class="mf-muted">({{ row.entity.slug }})</span>
+              </label>
+              {% if row.permission_groups %}
+              <table class="mf-people-perms-table" aria-label="{% trans 'Workspace permissions' %}">
+                <thead>
+                  <tr>
+                    <th scope="col">{% trans "Area" %}</th>
+                    <th scope="col" class="mf-people-perms-table__level">{% trans "Read" %}</th>
+                    <th scope="col" class="mf-people-perms-table__level">{% trans "Write" %}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for group in row.permission_groups %}
+                    <tr>
+                      <th scope="row" class="mf-people-perms-table__area">{{ group.label }}</th>
+                      <td class="mf-people-perms-table__level">
+                        <label class="mf-people-perms-table__check">
+                          <input type="checkbox" name="{{ group.read.input_name }}" class="mf-checkbox" {% if group.read.checked %}checked{% endif %} />
+                          <span class="mf-sr-only">{% trans "Read" %} — {{ group.label }}</span>
+                        </label>
+                      </td>
+                      <td class="mf-people-perms-table__level">
+                        <label class="mf-people-perms-table__check">
+                          <input type="checkbox" name="{{ group.write.input_name }}" class="mf-checkbox" {% if group.write.checked %}checked{% endif %} />
+                          <span class="mf-sr-only">{% trans "Write" %} — {{ group.label }}</span>
+                        </label>
+                      </td>
+                    </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+              {% endif %}
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </details>
+    {% endif %}
+
+    <h2 class="mf-heading">{% trans "Employee profile" %}</h2>
+    <p class="mf-muted mf-mb-text">
+      {% blocktrans trimmed %}
+        Optional HR fields. For signed-in public forms, mapping keys resolve on <code class="mf-code">user.profile</code>
+        (e.g. <code class="mf-code">job_title</code>, <code class="mf-code">department</code>, <code class="mf-code">civil_id</code>,
+        <code class="mf-code">employee_number</code>, <code class="mf-code">age</code> from birth date).
+      {% endblocktrans %}
+    </p>
+
+    <div class="mf-form-profile-grid">
+      {% for field in profile_form %}
+        <div class="mf-field">
+          {{ field.errors }}
+          <label class="mf-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+          {{ field }}
+          {% if field.help_text %}<p class="mf-hint">{{ field.help_text }}</p>{% endif %}
+        </div>
+      {% endfor %}
+    </div>
+
+    <div class="mf-actions">
+      <button type="submit" class="mf-button mf-button--primary">{% if is_create %}{% trans "Create user" %}{% else %}{% trans "Save changes" %}{% endif %}</button>
+      <a class="mf-link mf-link--muted" href="{% url 'manage:user_list' %}">{% trans "Cancel" %}</a>
+    </div>
+  </form>
+
+  {% if not is_create %}
+  <section class="mf-manage-section mf-stack mf-mt-section">
+    <h2 class="mf-heading">{% trans "Signatures" %}</h2>
+    <p class="mf-muted mf-mb-text">
+    {% blocktrans with lim=signature_limit trimmed %}
+      Add signature images (PNG, JPEG, GIF, WebP, SVG), up to {{ lim }} per user. Removing an image is not available here; the employee can do that from “My signatures” if your policy allows.
+      The primary image is used first in merged documents; use “Set as primary” on a row below. Uploads are separate from the account form above.
+    {% endblocktrans %}
+    </p>
+
+    {% if signatures %}
+    <ul class="mf-signature-list mf-card mf-card--soft">
+      {% for sig in signatures %}
+        <li class="mf-signature-row">
+          <div class="mf-signature-thumb-wrap">
+            {% if sig.image %}
+              <img class="mf-signature-thumb" src="{{ sig.image.url }}" alt="" width="120" height="80" loading="lazy" />
+            {% endif %}
+          </div>
+          <div class="mf-signature-meta">
+            <span class="mf-muted">#{{ forloop.counter }}</span>
+            {% if sig.is_primary %}<span class="mf-badge">{% trans "Primary" %}</span>{% endif %}
+          </div>
+          <form method="post" class="mf-inline-form">
+            {% csrf_token %}
+            <input type="hidden" name="signature_action" value="set_primary" />
+            <input type="hidden" name="signature_id" value="{{ sig.pk }}" />
+            <button type="submit" class="mf-button mf-button--secondary mf-button--small">{% trans "Set as primary" %}</button>
+          </form>
+        </li>
+      {% endfor %}
+    </ul>
+    {% else %}
+      <p class="mf-muted">{% trans "No signature images yet." %}</p>
+    {% endif %}
+
+    {% if signatures|length < signature_limit %}
+    <form method="post" enctype="multipart/form-data" class="mf-form mf-stack mf-mt-text">
+      {% csrf_token %}
+      <input type="hidden" name="signature_action" value="add" />
+      {% for field in signature_add_form %}
+        <div class="mf-field">
+          {{ field.errors }}
+          <label class="mf-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+          {{ field }}
+        </div>
+      {% endfor %}
+      <button type="submit" class="mf-button mf-button--secondary">{% trans "Add signature image" %}</button>
+    </form>
+    {% endif %}
+  </section>
+  {% endif %}
+</section>
+{% endblock %}

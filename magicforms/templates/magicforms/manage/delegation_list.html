@@ -1,0 +1,50 @@
+{% extends "magicforms/manage/base_manage.html" %}
+{% load i18n %}
+
+{% block manage_title %}{% trans "Delegations" %}{% endblock %}
+
+{% block manage_content %}
+<section class="mf-manage-section mf-stack">
+  <h1 class="mf-display mf-display--small">{% trans "Workflow delegations" %}</h1>
+  <p class="mf-lead">
+    {% blocktrans trimmed %}
+      When <strong>User A</strong> delegates to <strong>User B</strong>, User B sees the same inbox items and may approve or reject for steps assigned to User A, while the delegation is active and within its dates.
+    {% endblocktrans %}
+  </p>
+  <p class="mf-manage-toolbar-actions">
+    <a class="mf-button mf-button--primary" href="{% url 'manage:delegation_add' %}">{% trans "Add delegation" %}</a>
+  </p>
+
+  {% if delegations %}
+  {% include "magicforms/manage/includes/studio_pagination.html" with page_obj=delegations %}
+  <ul class="mf-manage-table mf-card mf-card--glass">
+    {% for d in delegations %}
+      <li class="mf-manage-row">
+        <div>
+          <span class="mf-manage-row-title">{{ d.delegator.get_username }} → {{ d.delegate.get_username }}</span>
+          <span class="mf-muted">
+            {{ d.entity.name }} ·
+            {% if d.is_active %}{% trans "Active" %}{% else %}{% trans "Revoked" %}{% endif %}
+            {% if d.valid_from %} · {% trans "from" %} {{ d.valid_from|date:"M j, Y" }}{% endif %}
+            {% if d.valid_until %} · {% trans "until" %} {{ d.valid_until|date:"M j, Y" }}{% endif %}
+            · {% trans "created" %} {{ d.created_at|date:"M j, Y" }}{% if d.created_by %} {% trans "by" %} {{ d.created_by }}{% endif %}
+            {% if d.notes %} · {{ d.notes }}{% endif %}
+          </span>
+        </div>
+        <div class="mf-manage-row-actions">
+          {% if d.is_active %}
+            <form method="post" action="{% url 'manage:delegation_revoke' d.pk %}" class="mf-inline-form" onsubmit="return confirm('{% trans "Revoke this delegation? The delegate will no longer act for this delegator." %}');">
+              {% csrf_token %}
+              <button type="submit" class="mf-button mf-button--secondary">{% trans "Revoke" %}</button>
+            </form>
+          {% endif %}
+        </div>
+      </li>
+    {% endfor %}
+  </ul>
+  {% include "magicforms/manage/includes/studio_pagination.html" with page_obj=delegations studio_pagination_footer=1 %}
+  {% else %}
+  <p class="mf-body-text">{% trans "No delegations yet." %}</p>
+  {% endif %}
+</section>
+{% endblock %}

@@ -1,0 +1,75 @@
+{% extends "magicforms/manage/base_manage.html" %}
+{% load i18n %}
+
+{% block manage_title %}{% trans "People" %}{% endblock %}
+
+{% block manage_content %}
+<section class="mf-manage-section mf-stack">
+  <h1 class="mf-display mf-display--small">{% trans "People" %}</h1>
+  <p class="mf-lead">
+    {% trans "Create and edit accounts for your organizations: super admins (all organizations), organization admins (staff), and end users (applicants). Not the Django admin UI." %}
+  </p>
+  <p class="mf-manage-toolbar-actions">
+    <a class="mf-button mf-button--primary" href="{% url 'manage:user_add' %}">{% trans "Add user" %}</a>
+  </p>
+</section>
+
+<section class="mf-manage-section">
+  <div class="mf-people-panel">
+    <form method="get" class="mf-card mf-card--glass mf-people-search-card" action="">
+      <input type="hidden" name="per_page" value="{{ per_page }}" />
+      {% if role_filter %}<input type="hidden" name="role" value="{{ role_filter }}" />{% endif %}
+      <fieldset class="mf-people-role-filters">
+        <legend class="mf-sr-only">{% trans "Role" %}</legend>
+        <div class="mf-people-role-filters-row">
+          <a class="mf-link{% if not role_filter %} mf-link--active{% endif %}" href="?{% if search_q %}q={{ search_q|urlencode }}&amp;{% endif %}per_page={{ per_page }}">{% trans "All" %}</a>
+          <a class="mf-link{% if role_filter == 'staff' %} mf-link--active{% endif %}" href="?role=staff{% if search_q %}&amp;q={{ search_q|urlencode }}{% endif %}&amp;per_page={{ per_page }}">{% trans "Organization admins" %}</a>
+          <a class="mf-link{% if role_filter == 'end_user' %} mf-link--active{% endif %}" href="?role=end_user{% if search_q %}&amp;q={{ search_q|urlencode }}{% endif %}&amp;per_page={{ per_page }}">{% trans "End users" %}</a>
+          <a class="mf-link{% if role_filter == 'superuser' %} mf-link--active{% endif %}" href="?role=superuser{% if search_q %}&amp;q={{ search_q|urlencode }}{% endif %}&amp;per_page={{ per_page }}">{% trans "Super admins" %}</a>
+        </div>
+      </fieldset>
+      <label class="mf-label" for="id_q">{% trans "Search" %}</label>
+      <div class="mf-people-search-row">
+        <input
+          id="id_q"
+          class="mf-input"
+          type="search"
+          name="q"
+          value="{{ search_q }}"
+          placeholder="{% trans 'Username, email, name, employee #, civil ID, job title' %}"
+          autocomplete="off"
+        />
+        <button type="submit" class="mf-button mf-button--primary mf-people-search-submit">{% trans "Search" %}</button>
+      </div>
+    </form>
+
+    {% if users %}
+    {% include "magicforms/manage/includes/studio_pagination.html" with page_obj=users %}
+    <ul class="mf-manage-table mf-card mf-card--glass mf-people-results">
+      {% for u in users %}
+        <li class="mf-manage-row mf-people-row">
+          <div class="mf-people-row-main">
+            <a class="mf-manage-row-title" href="{% url 'manage:user_edit' u.pk %}">{{ u.get_username }}</a>
+            <span class="mf-muted mf-people-row-meta">
+              {% if u.get_full_name %}{{ u.get_full_name }} · {% endif %}{{ u.email|default:"—" }}
+              {% if u.profile.employee_number %} · #{{ u.profile.employee_number }}{% endif %}
+              {% if u.profile.job_title %} · {{ u.profile.job_title }}{% endif %}
+              {% if not u.is_active %} · <strong>{% trans "inactive" %}</strong>{% endif %}
+              {% if u.is_superuser %} · <strong>{% trans "Super admin" %}</strong>
+              {% elif u.is_staff %} · <strong>{% trans "Organization admin" %}</strong>
+              {% else %} · <strong>{% trans "End user" %}</strong>{% endif %}
+            </span>
+          </div>
+          <div class="mf-manage-row-actions">
+            <a class="mf-button mf-button--secondary mf-button--small" href="{% url 'manage:user_edit' u.pk %}">{% trans "Edit" %}</a>
+          </div>
+        </li>
+      {% endfor %}
+    </ul>
+    {% include "magicforms/manage/includes/studio_pagination.html" with page_obj=users studio_pagination_footer=1 %}
+    {% else %}
+    <p class="mf-body-text mf-card mf-card--soft mf-people-empty">{% if search_q %}{% trans "No users match this search." %}{% else %}{% trans "No users found." %}{% endif %}</p>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

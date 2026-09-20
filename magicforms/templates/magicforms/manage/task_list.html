@@ -1,0 +1,145 @@
+{% extends "magicforms/manage/base_manage.html" %}
+{% load i18n magicforms_i18n %}
+
+{% block manage_title %}{% trans "My tasks" %}{% endblock %}
+
+{% block manage_content %}
+<section class="mf-manage-section mf-stack mf-task-list-page">
+  <header class="mf-task-list-page__header mf-stack">
+    <h1 class="mf-display mf-display--small">{% trans "My tasks" %}</h1>
+    <p class="mf-lead">
+      {% blocktrans trimmed %}
+        Submissions you marked to follow up. Only you see this list.
+      {% endblocktrans %}
+    </p>
+  </header>
+
+  <div class="mf-task-list-toolbar mf-card mf-card--glass">
+    <p class="mf-body-text mf-muted mf-task-list-toolbar__count">
+      {% if open_count %}
+        {% blocktrans count counter=open_count trimmed %}
+          {{ counter }} open task
+        {% plural %}
+          {{ counter }} open tasks
+        {% endblocktrans %}
+      {% else %}
+        {% trans "No open tasks." %}
+      {% endif %}
+    </p>
+    <p class="mf-actions mf-task-list-toolbar__actions">
+      {% if show_done %}
+        <a class="mf-link" href="{% url 'manage:task_list' %}">{% trans "Hide completed" %}</a>
+      {% else %}
+        <a class="mf-link" href="{% url 'manage:task_list' %}?show_done=1">{% trans "Show completed" %}</a>
+      {% endif %}
+    </p>
+  </div>
+
+  {% if task_rows %}
+  <ul class="mf-task-list">
+    {% for task in task_rows %}
+      {% with s=task.submission %}
+      <li class="mf-task-card{% if task.is_done %} mf-task-card--done{% elif task.due_urgency == 'overdue' %} mf-task-card--overdue{% elif task.due_urgency == 'due_soon' %} mf-task-card--due-soon{% endif %}">
+        <div class="mf-task-card__header">
+          <form
+            method="post"
+            action="{% url 'manage:submission_task' s.form.pk s.pk %}"
+            class="mf-inline-form mf-task-card__check"
+          >
+            {% csrf_token %}
+            <input type="hidden" name="task_action" value="toggle_done" />
+            <input type="hidden" name="redirect_tasks" value="1" />
+            {% if show_done %}<input type="hidden" name="show_done" value="1" />{% endif %}
+            <label class="mf-task-card__check-label">
+              <input
+                type="checkbox"
+                class="mf-task-card__checkbox"
+                {% if task.is_done %}checked{% endif %}
+                onchange="this.form.submit()"
+              />
+              <span class="mf-sr-only">{% trans "Mark done" %}</span>
+            </label>
+          </form>
+          <div class="mf-task-card__body">
+            <a class="mf-task-card__title" href="{% url 'manage:submission_manage_detail' s.form.pk s.pk %}">
+              {{ s.form.title|mf_trans }}
+            </a>
+            <p class="mf-task-card__meta">
+              <code class="mf-code">{{ s.reference_token }}</code>
+              <span class="mf-task-card__meta-sep" aria-hidden="true">·</span>
+              <span>{{ s.form.entity.name|mf_trans }}</span>
+            </p>
+            {% if task.note %}
+            <p class="mf-body-text mf-task-card__note">{{ task.note }}</p>
+            {% endif %}
+          </div>
+        </div>
+
+        <footer class="mf-task-card__footer">
+          <div class="mf-task-card__deadline">
+            <form
+              method="post"
+              action="{% url 'manage:submission_task' s.form.pk s.pk %}"
+              class="mf-inline-form mf-task-card__due-form"
+            >
+              {% csrf_token %}
+              <input type="hidden" name="task_action" value="set_due_date" />
+              <input type="hidden" name="redirect_tasks" value="1" />
+              {% if show_done %}<input type="hidden" name="show_done" value="1" />{% endif %}
+              <label class="mf-label mf-label--compact" for="task-due-{{ task.pk }}">{% trans "Deadline" %}</label>
+              <input
+                id="task-due-{{ task.pk }}"
+                class="mf-input mf-task-card__due-input{% if task.due_urgency == 'overdue' %} mf-task-card__due-input--overdue{% elif task.due_urgency == 'due_soon' %} mf-task-card__due-input--due-soon{% endif %}"
+                type="date"
+                name="task_due_date"
+                value="{% if task.due_date %}{{ task.due_date|date:'Y-m-d' }}{% endif %}"
+                onchange="this.form.submit()"
+              />
+            </form>
+            {% if task.due_date and not task.is_done %}
+            <p class="mf-task-card__due-hint mf-task-card__due-hint--{{ task.due_urgency|default:'ok' }}">
+              {% if task.due_urgency == 'overdue' %}
+                {% trans "Overdue" %}
+              {% elif task.due_urgency == 'due_soon' %}
+                {% trans "Due soon" %}
+              {% else %}
+                {% blocktrans with d=task.due_date|date:"M j, Y" %}Due {{ d }}{% endblocktrans %}
+              {% endif %}
+            </p>
+            {% endif %}
+          </div>
+          <div class="mf-task-card__footer-end">
+            <time class="mf-muted mf-task-card__added" datetime="{{ task.created_at|date:'c' }}">
+              {% blocktrans with d=task.created_at|date:"M j, Y" %}Added {{ d }}{% endblocktrans %}
+            </time>
+            <form
+              method="post"
+              action="{% url 'manage:submission_task' s.form.pk s.pk %}"
+              class="mf-inline-form"
+            >
+              {% csrf_token %}
+              <input type="hidden" name="task_action" value="remove" />
+              <input type="hidden" name="redirect_tasks" value="1" />
+              {% if show_done %}<input type="hidden" name="show_done" value="1" />{% endif %}
+              <button type="submit" class="mf-button mf-button--secondary mf-button--small">{% trans "Remove" %}</button>
+            </form>
+          </div>
+        </footer>
+      </li>
+      {% endwith %}
+    {% endfor %}
+  </ul>
+  {% else %}
+  <div class="mf-empty mf-task-list-empty">
+    <p class="mf-empty__text">
+      {% if show_done %}
+        {% trans "No tasks yet. Add items from your inbox or a submission page." %}
+      {% else %}
+        {% trans "Your task list is empty. Use “Task” on an inbox row or submission to add one." %}
+      {% endif %}
+    </p>
+    <p><a class="mf-link" href="{% url 'manage:inbox' %}">{% trans "Open inbox" %}</a></p>
+  </div>
+  {% endif %}
+</section>
+{% endblock %}

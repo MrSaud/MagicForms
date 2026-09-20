@@ -1,0 +1,221 @@
+/* Post-submit document page: the filled PDF takes the whole viewport height */
+.mf-doc-viewer-wrap--page {
+  min-height: min(78vh, 70rem);
+  max-height: none;
+}
+
+.mf-doc-viewer-wrap--page .mf-doc-viewer {
+  min-height: min(78vh, 70rem);
+  height: calc(100vh - 14rem);
+}
+
+/* Document page: pdf.js pages + right-click signature pad */
+.mf-pdfsign {
+  position: relative;
+}
+
+.mf-pdfsign [hidden] {
+  display: none !important;
+}
+
+.mf-dialog-backdrop.is-busy .mf-pdfsign__pad {
+  pointer-events: none;
+  opacity: 0.6;
+}
+
+.mf-pdfsign__hint-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--mf-space-2) var(--mf-space-4);
+  margin-bottom: var(--mf-space-3);
+}
+
+.mf-pdfsign__hint-row .mf-pdfsign__hint {
+  margin: 0;
+  flex: 1 1 20rem;
+}
+
+.mf-pdfsign__hint {
+  margin: 0 0 0.75rem;
+  color: var(--mf-text-secondary);
+  font-size: 0.95rem;
+}
+
+.mf-pdfsign__pages {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.25rem;
+  padding: 1rem 0;
+  min-height: 24rem;
+}
+
+.mf-pdfsign__page {
+  position: relative;
+  width: 100%;
+  max-width: 60rem;
+}
+
+.mf-pdfsign__canvas {
+  display: block;
+  width: 100%;
+  height: auto;
+  background: var(--mf-paper);
+  border-radius: 6px;
+  box-shadow: 0 10px 30px var(--mf-ink-a12);
+  cursor: context-menu;
+  -webkit-touch-callout: none;
+  user-select: none;
+}
+
+.mf-pdfsign__page-label {
+  position: absolute;
+  inset-inline-end: 0.5rem;
+  top: 0.5rem;
+  font-size: 0.75rem;
+  padding: 0.1rem 0.5rem;
+  border-radius: 999px;
+  background: var(--mf-ink-a55);
+  color: var(--mf-paper);
+  pointer-events: none;
+}
+
+.mf-pdfsign__status {
+  min-height: 1.3em;
+  margin: 0.5rem 0 0;
+  font-size: 0.95rem;
+}
+
+.mf-pdfsign__status--error {
+  color: var(--mf-danger);
+}
+
+.mf-pdfsign__status--ok {
+  color: var(--mf-success);
+}
+
+.mf-pdfsign__list {
+  list-style: none;
+  margin: 0.5rem 0 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+  font-size: 0.9rem;
+}
+
+.mf-pdfsign__list button {
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+  color: var(--mf-danger);
+  text-decoration: underline;
+  cursor: pointer;
+  margin-inline-start: 0.35rem;
+}
+
+.mf-pdfsign__pad-wrap {
+  border: 1px dashed var(--mf-ink-a25);
+  border-radius: 12px;
+  background: var(--mf-gray-50);
+  overflow: hidden;
+}
+
+.mf-pdfsign__pad {
+  display: block;
+  width: 100%;
+  height: 14rem;
+  touch-action: none;
+  cursor: crosshair;
+}
+
+.mf-pdfsign__size {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.9rem;
+}
+
+.mf-pdfsign__colors {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.9rem;
+}
+
+.mf-pdfsign__colors-label {
+  margin-inline-end: 0.15rem;
+}
+
+.mf-pdfsign__swatch {
+  width: 1.6rem;
+  height: 1.6rem;
+  border-radius: 50%;
+  border: 2px solid var(--mf-paper);
+  background: var(--swatch, var(--mf-blue-900));
+  box-shadow: 0 0 0 1px var(--mf-ink-a18);
+  cursor: pointer;
+  padding: 0;
+}
+
+.mf-pdfsign__swatch.is-active {
+  box-shadow: 0 0 0 2px var(--mf-accent);
+}
+
+/* Signature updates: overlay on the pages while the PDF is regenerated */
+.mf-pdfsign__pages {
+  position: relative;
+}
+
+
+/* Read-only notices use the shared alert component; the icon sits on the first line of text. */
+.mf-pdfsign__notice {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--mf-space-2);
+  margin: 0 0 var(--mf-space-3);
+}
+
+.mf-pdfsign__notice .mf-alert__icon {
+  flex: none;
+  margin-top: 0.15rem;
+}
+
+.mf-pdfsign__notice > span {
+  flex: 1 1 auto;
+}
+
+.mf-pdfsign__notice-action {
+  flex: none;
+  margin-inline-start: auto;
+}
+
+.mf-pdfsign__canvas.is-readonly {
+  cursor: default;
+}
+
+.mf-pdfsign__sealed {
+  margin-inline-start: var(--mf-space-2);
+  font-size: var(--mf-font-caption);
+  color: var(--mf-text-muted);
+}
+
+.mf-pdfsign__hint--saved {
+  display: flex;
+  align-items: center;
+  gap: var(--mf-space-3);
+}
+
+.mf-pdfsign__saved-preview {
+  flex: none;
+  height: 2.25rem;
+  width: auto;
+  max-width: 7rem;
+  padding: 2px 6px;
+  border: 1px solid var(--mf-border);
+  border-radius: var(--mf-radius-sm);
+  background: var(--mf-surface);
+}

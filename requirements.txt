@@ -1,0 +1,11 @@
+Django>=5.2,<6
+mysqlclient>=2.2
+docxtpl>=0.16,<1
+pypdf>=5.0,<6
+Pillow>=10,<12
+qrcode>=7.4,<8
+openpyxl>=3.1,<4
+reportlab>=4.2,<5
+arabic-reshaper>=3.0,<4
+python-bidi>=0.4,<0.7
+cryptography>=42,<45

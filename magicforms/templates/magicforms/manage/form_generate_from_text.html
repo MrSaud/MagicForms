@@ -1,0 +1,74 @@
+{% extends "magicforms/manage/base_manage.html" %}
+{% load i18n %}
+
+{% block manage_title %}{% trans "Generate form from text" %}{% endblock %}
+
+{% block manage_content %}
+<section class="mf-manage-section mf-stack">
+  <h1 class="mf-display mf-display--small">{% trans "Generate form from text" %}</h1>
+  <p class="mf-lead">
+    {% blocktrans trimmed %}
+      Describe the form and the fields you need. The engine turns that into a draft form you can edit
+      (fields, workflow, slug, publish) like any other form.
+    {% endblocktrans %}
+  </p>
+
+  <div class="mf-card mf-card--soft mf-stack">
+    <h2 class="mf-heading">{% trans "How it works" %}</h2>
+    <ul class="mf-body-text mf-manage-bullet-list">
+      <li>
+        {% blocktrans trimmed %}
+          <strong>With <code class="mf-code">OPENAI_API_KEY</code> set:</strong> an OpenAI model reads your description
+          and returns structured fields (JSON). Optional: <code class="mf-code">MAGIFORM_TEXT_TO_FORM_MODEL</code>,
+          <code class="mf-code">OPENAI_API_BASE</code>.
+        {% endblocktrans %}
+      </li>
+      <li>
+        {% blocktrans trimmed %}
+          <strong>Otherwise:</strong> a built-in line parser runs: use a title line, then a
+          <code class="mf-code">Fields:</code> section, or bullet / numbered lines for each field.
+        {% endblocktrans %}
+      </li>
+      <li>
+        {% blocktrans trimmed %}
+          Field hints in parentheses, for example
+          <code class="mf-code">- Start date (date, required)</code> or
+          <code class="mf-code">- Department (select: Sales, Engineering, Ops)</code>.
+        {% endblocktrans %}
+      </li>
+    </ul>
+  </div>
+
+  <form method="post" class="mf-form mf-form--wide">
+    {% csrf_token %}
+    {% if entity_choices|length > 1 %}
+    <div class="mf-field">
+      <label class="mf-label" for="id_entity">{% trans "Organization" %}</label>
+      <select name="entity" id="id_entity" class="mf-input mf-input--select" required>
+        <option value="">{% trans "— Select —" %}</option>
+        {% for e in entity_choices %}
+          <option value="{{ e.pk }}">{{ e.name }} ({{ e.slug }})</option>
+        {% endfor %}
+      </select>
+      <p class="mf-hint">{% trans "The draft form is created inside this organization." %}</p>
+    </div>
+    {% endif %}
+    <div class="mf-field">
+      <label class="mf-label" for="id_description">{% trans "Form description" %}</label>
+      <textarea
+        id="id_description"
+        name="description"
+        class="mf-input mf-input--textarea"
+        rows="16"
+        required
+        placeholder="{% trans 'Example (heuristic mode): Conference registration, Fields: Full name (text, required), etc.' %}"
+      >{{ description }}</textarea>
+      <p class="mf-hint">{% trans "Paste as much context as you like. You can also paste a JSON object with “title” and “fields”." %}</p>
+    </div>
+    <div class="mf-actions">
+      <button type="submit" class="mf-button mf-button--primary">{% trans "Create draft form" %}</button>
+      <a class="mf-link mf-link--muted" href="{% url 'manage:dashboard' %}">{% trans "Cancel" %}</a>
+    </div>
+  </form>
+</section>
+{% endblock %}

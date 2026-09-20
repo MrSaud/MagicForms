@@ -1,0 +1,22 @@
+{% extends "magicforms/manage/base_manage.html" %}
+{% load i18n magicforms_i18n %}
+
+{% block manage_title %}{% trans "Organization settings" %}{% endblock %}
+
+{% block manage_content %}
+<section class="mf-manage-section mf-stack">
+  <p class="mf-eyebrow">{% trans "Settings" %}</p>
+  <h1 class="mf-display mf-display--small">{% trans "Organization settings" %}</h1>
+  <p class="mf-muted">{% trans "Choose an organization to edit branding, SMTP, and email templates." %}</p>
+  <ul class="mf-list-plain mf-stack mf-body-text" >
+    {% for ent in entities %}
+      <li class="mf-card mf-card--soft mf-pad">
+        <a class="mf-link" href="{% url 'manage:organization_settings_hub' ent.pk %}">{{ ent.name|mf_trans }}</a>
+        <span class="mf-muted">({{ ent.slug }})</span>
+      </li>
+    {% empty %}
+      <li class="mf-muted">{% trans "No organizations available." %}</li>
+    {% endfor %}
+  </ul>
+</section>
+{% endblock %}

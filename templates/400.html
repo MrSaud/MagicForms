@@ -1,0 +1,9 @@
+{% extends "errors/base_error.html" %}
+{% load i18n %}
+
+{% block error_title %}{% trans "Bad request" %} · MagicForms{% endblock %}
+{% block error_code %}400{% endblock %}
+{% block error_heading %}{% trans "Bad request" %}{% endblock %}
+{% block error_message %}
+  {% trans "The request could not be understood. Check the link or form and try again." %}
+{% endblock %}

@@ -1,0 +1,43 @@
+{% extends "magicforms/base.html" %}
+{% load i18n portal_urls %}
+
+{% block title %}{% trans "Forms to complete" %} · MagicForms{% endblock %}
+
+{% block content %}
+<section class="mf-hero mf-hero--compact">
+  <p class="mf-eyebrow"><span class="mf-green-star" aria-hidden="true">★</span> {% trans "Requests" %}</p>
+  <h1 class="mf-display mf-display--small">{% trans "Related forms to complete" %}</h1>
+  <p class="mf-muted">
+    {% blocktrans trimmed %}
+      These are extra forms linked to submissions you started while signed in. Complete each one to finish your application.
+    {% endblocktrans %}
+  </p>
+</section>
+
+{% if pending_rows %}
+<ul class="mf-manage-table mf-card mf-card--soft mf-stack">
+  {% for row in pending_rows %}
+  <li class="mf-manage-row mf-stack">
+    <div>
+      <span class="mf-manage-row-title">{{ row.link.child_form.title }}</span>
+      <span class="mf-muted">
+        · {% trans "Main form" %}: {{ row.parent_submission.form.title }}
+        · {{ row.link.child_form.entity.get_public_display_title }}
+      </span>
+    </div>
+    <div class="mf-actions">
+      <a
+        class="mf-button mf-button--primary"
+        href="{% portal_url 'magicforms:related_form_public' entity_slug=row.link.child_form.entity.slug slug=row.link.child_form.slug access_token=row.access_token %}"
+      >{% trans "Complete form" %}</a>
+    </div>
+  </li>
+  {% endfor %}
+</ul>
+{% else %}
+<div class="mf-card mf-card--glass mf-stack">
+  <p class="mf-body-text mf-muted">{% trans "You have no pending related forms." %}</p>
+  <p class="mf-body-text mf-public-site-local-nav"><a class="mf-link" href="{{ portal_home_url }}">← {% trans "Home" %}</a></p>
+</div>
+{% endif %}
+{% endblock %}

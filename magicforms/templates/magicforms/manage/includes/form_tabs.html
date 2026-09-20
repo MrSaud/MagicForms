@@ -1,0 +1,27 @@
+{% load i18n %}
+{% comment %}
+Form setup tabs (UI Phase 3). Rendered by base_manage.html on every page that has ``form_obj``.
+Six primary tabs; the rest under a native <details> "More" menu (no JS needed).
+{% endcomment %}
+{% with url_name=request.resolver_match.url_name %}
+<nav class="mf-tabs mf-form-tabs" aria-label="{% trans 'Form setup' %}">
+  <a class="mf-tabs__tab" href="{% url 'manage:form_detail' form_obj.pk %}"{% if url_name == 'form_detail' %} aria-current="page"{% endif %}>{% trans "Overview" %}</a>
+  <a class="mf-tabs__tab" href="{% url 'manage:field_list' form_obj.pk %}"{% if url_name|slice:":6" == 'field_' %} aria-current="page"{% endif %}>{% trans "Fields" %}</a>
+  <a class="mf-tabs__tab" href="{% url 'manage:section_list' form_obj.pk %}"{% if url_name|slice:":8" == 'section_' %} aria-current="page"{% endif %}>{% trans "Sections" %}</a>
+  <a class="mf-tabs__tab" href="{% url 'manage:workflow_list' form_obj.pk %}"{% if url_name|slice:":9" == 'workflow_' %} aria-current="page"{% endif %}>{% trans "Workflow" %}</a>
+  <a class="mf-tabs__tab" href="{% url 'manage:form_edit' form_obj.pk %}"{% if url_name == 'form_edit' %} aria-current="page"{% endif %}>{% trans "Settings" %}</a>
+  <a class="mf-tabs__tab" href="{% url 'manage:submission_list' form_obj.pk %}"{% if url_name|slice:":11" == 'submission_' %} aria-current="page"{% endif %}>{% trans "Submissions" %}</a>
+  <details class="mf-tabs__more">
+    <summary class="mf-tabs__tab mf-tabs__more-summary"{% if url_name == 'form_intro_edit' or url_name|slice:":5" == 'logo_' or url_name == 'form_submit_validation' or url_name == 'form_outbound' or url_name|slice:":8" == 'related_' or url_name == 'form_qrcode' %} aria-current="page"{% endif %}>{% trans "More" %} ▾</summary>
+    <div class="mf-tabs__menu">
+      <a href="{% url 'manage:form_intro_edit' form_obj.pk %}">{% trans "Announcement page" %}</a>
+      <a href="{% url 'manage:logo_list' form_obj.pk %}">{% trans "Logos" %}</a>
+      <a href="{% url 'manage:form_submit_validation' form_obj.pk %}">{% trans "Validate by API" %}</a>
+      <a href="{% url 'manage:form_outbound' form_obj.pk %}">{% trans "External POST" %}</a>
+      <a href="{% url 'manage:related_link_list' form_obj.pk %}">{% trans "Related forms" %}</a>
+      <a href="{% url 'manage:form_qrcode' form_obj.pk %}">{% trans "Share QR" %}</a>
+      <a href="{% url 'manage:form_preview' form_obj.pk %}">{% trans "Preview" %}</a>
+    </div>
+  </details>
+</nav>
+{% endwith %}

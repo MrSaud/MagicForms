@@ -1,0 +1,256 @@
+{% load opaque_ids i18n magicforms_i18n %}
+<details
+  class="mf-responses-grid-views-details mf-entity-form-details mf-card mf-card--glass"
+  id="mf-responses-grid-views"
+  data-form-pk="{{ selected_form.pk|oid }}"
+  data-active-cols="{{ active_column_keys_csv }}"
+  data-all-cols="{{ all_column_keys_csv }}"
+  data-base-url="{% url 'manage:responses_grid' %}"
+  data-submitted-from="{{ responses_submitted_from }}"
+  data-submitted-to="{{ responses_submitted_to }}"
+  data-sort-key="{{ grid_sort_key }}"
+  data-sort-order="{% if grid_sort_desc %}desc{% else %}asc{% endif %}"
+>
+  <summary class="mf-entity-form-details__summary mf-responses-grid-views-details__summary">
+    <span class="mf-heading mf-heading--section">{% trans "Columns & saved views" %}</span>
+    <span class="mf-responses-grid-views-details__meta mf-muted">
+      {% if active_grid_view %}
+        · {{ active_grid_view.name }}{% if not user_owns_active_grid_view %} ({% trans "shared" %}){% endif %}
+      {% else %}
+        · {% blocktrans count counter=active_column_keys|length trimmed %}
+          {{ counter }} column
+        {% plural %}
+          {{ counter }} columns
+        {% endblocktrans %}
+      {% endif %}
+    </span>
+  </summary>
+
+  <div class="mf-entity-form-details__body mf-stack mf-responses-grid-views">
+    <p class="mf-muted mf-body-text">
+      {% trans "Choose which columns appear in the table and exports. Save layouts as named views and share them with other staff in this organization." %}
+    </p>
+
+    <div class="mf-responses-grid-views__load mf-stack">
+      <label class="mf-label" for="id_grid_saved_view">{% trans "Saved view" %}</label>
+      <div class="mf-responses-grid-views__load-row">
+        <select id="id_grid_saved_view" class="mf-input mf-input--select" data-mf-grid-view-select>
+          <option value="">{% trans "Custom column selection" %}</option>
+          {% for v in saved_grid_views %}
+            <option
+              value="{{ v.pk|oid }}"
+              {% if active_grid_view and active_grid_view.pk == v.pk %}selected{% endif %}
+            >
+              {{ v.name }}{% if v.owner_id != user.pk %} ({% trans "shared" %}){% endif %}{% if v.is_default %} · {% trans "default" %}{% endif %}
+            </option>
+          {% endfor %}
+        </select>
+        <button type="button" class="mf-button mf-button--primary mf-button--small" data-mf-grid-apply-view>{% trans "Load view" %}</button>
+      </div>
+      {% if active_grid_view %}
+      <p class="mf-muted mf-body-text">
+        {% if user_owns_active_grid_view %}
+          {% blocktrans with n=active_grid_view.name %}Active view: <strong>{{ n }}</strong> (you own this){% endblocktrans %}
+          · <a class="mf-link" href="{% url 'manage:responses_grid' %}?form={{ selected_form.pk|oid }}&view={{ active_grid_view.pk|oid }}&open_share=1&share_view={{ active_grid_view.pk|oid }}{% if responses_submitted_from %}&submitted_from={{ responses_submitted_from }}{% endif %}{% if responses_submitted_to %}&submitted_to={{ responses_submitted_to }}{% endif %}#mf-share-view">{% trans "Share this view" %}</a>
+        {% else %}
+          {% blocktrans with n=active_grid_view.name o=active_grid_view.owner.get_username %}Active view: <strong>{{ n }}</strong> (shared by {{ o }}){% endblocktrans %}
+        {% endif %}
+      </p>
+      {% elif owned_grid_views %}
+      <p class="mf-muted mf-body-text">
+        <a class="mf-link" href="{% url 'manage:responses_grid' %}?form={{ selected_form.pk|oid }}&open_share=1&share_view={{ share_grid_view.pk|oid }}{% if responses_submitted_from %}&submitted_from={{ responses_submitted_from }}{% endif %}{% if responses_submitted_to %}&submitted_to={{ responses_submitted_to }}{% endif %}#mf-share-view">{% trans "Share a saved view with colleagues" %}</a>
+      </p>
+      {% endif %}
+    </div>
+
+    <div class="mf-responses-grid-views__columns mf-stack" data-mf-grid-columns>
+      <div class="mf-responses-grid-views__columns-toolbar">
+        <span class="mf-label">{% trans "Visible columns" %}</span>
+        <span class="mf-actions">
+          <button type="button" class="mf-button mf-button--secondary mf-button--small" data-mf-grid-cols-all>{% trans "Select all" %}</button>
+          <button type="button" class="mf-button mf-button--secondary mf-button--small" data-mf-grid-cols-none>{% trans "Clear" %}</button>
+          <button type="button" class="mf-button mf-button--primary mf-button--small" data-mf-grid-apply-cols>{% trans "Apply columns" %}</button>
+        </span>
+      </div>
+      <div class="mf-responses-grid-views__column-groups">
+      <fieldset class="mf-responses-grid-views__fieldset">
+        <legend class="mf-responses-grid-views__legend">{% trans "Submission" %}</legend>
+        <ul class="mf-responses-grid-views__checks">
+          {% for col in column_catalog %}
+            {% if col.group == "meta" and col.key != "meta:applicant" and col.key != "meta:applicant_name" and col.key != "meta:email" and col.key != "meta:account" %}
+            <li>
+              <label class="mf-check-row">
+                <input
+                  type="checkbox"
+                  name="column_keys"
+                  value="{{ col.key }}"
+                  data-mf-grid-col
+                  {% if col.key in active_column_keys %}checked{% endif %}
+                />
+                <span>{{ col.label|mf_trans }}</span>
+              </label>
+            </li>
+            {% endif %}
+          {% endfor %}
+        </ul>
+      </fieldset>
+      <fieldset class="mf-responses-grid-views__fieldset">
+        <legend class="mf-responses-grid-views__legend">{% trans "Applicant" %}</legend>
+        <ul class="mf-responses-grid-views__checks">
+          {% for col in column_catalog %}
+            {% if col.key == "meta:applicant" or col.key == "meta:applicant_name" or col.key == "meta:email" or col.key == "meta:account" %}
+            <li>
+              <label class="mf-check-row">
+                <input
+                  type="checkbox"
+                  name="column_keys"
+                  value="{{ col.key }}"
+                  data-mf-grid-col
+                  {% if col.key in active_column_keys %}checked{% endif %}
+                />
+                <span>{{ col.label|mf_trans }}</span>
+              </label>
+            </li>
+            {% endif %}
+          {% endfor %}
+        </ul>
+      </fieldset>
+        {% if column_catalog %}
+        <fieldset class="mf-responses-grid-views__fieldset">
+          <legend class="mf-responses-grid-views__legend">{% trans "Form fields" %}</legend>
+          <ul class="mf-responses-grid-views__checks mf-responses-grid-views__checks--fields">
+            {% for col in column_catalog %}
+              {% if col.group == "field" %}
+              <li>
+                <label class="mf-check-row">
+                  <input
+                    type="checkbox"
+                    name="column_keys"
+                    value="{{ col.key }}"
+                    data-mf-grid-col
+                    {% if col.key in active_column_keys %}checked{% endif %}
+                  />
+                  <span>{{ col.label|mf_trans }}</span>
+                </label>
+              </li>
+              {% endif %}
+            {% endfor %}
+          </ul>
+        </fieldset>
+        {% endif %}
+      </div>
+    </div>
+
+    <details class="mf-responses-grid-views__save-details" open>
+      <summary class="mf-responses-grid-views__save-summary">{% trans "Save view" %}</summary>
+      <form
+        method="post"
+        action="{% url 'manage:responses_grid_view_save' %}"
+        class="mf-form mf-stack mf-responses-grid-views__save-form"
+        data-mf-grid-save-form
+      >
+        {% csrf_token %}
+        <input type="hidden" name="form" value="{{ selected_form.pk|oid }}" />
+        <input type="hidden" name="column_keys_csv" value="{{ active_column_keys_csv }}" data-mf-grid-save-cols />
+        <input type="hidden" name="submitted_from" value="{{ responses_submitted_from }}" />
+        <input type="hidden" name="submitted_to" value="{{ responses_submitted_to }}" />
+        {% if active_grid_view and user_owns_active_grid_view %}
+        <input type="hidden" name="view_id" value="{{ active_grid_view.pk|oid }}" />
+        {% endif %}
+        <div class="mf-field">
+          <label class="mf-label" for="id_view_name">{% trans "View name" %}</label>
+          <input
+            class="mf-input"
+            type="text"
+            id="id_view_name"
+            name="view_name"
+            maxlength="120"
+            required
+            value="{% if active_grid_view and user_owns_active_grid_view %}{{ active_grid_view.name }}{% endif %}"
+            placeholder="{% trans 'e.g. HR review — core fields' %}"
+          />
+        </div>
+        <label class="mf-check-row">
+          <input type="checkbox" name="set_default" value="1" {% if active_grid_view and active_grid_view.is_default %}checked{% endif %} />
+          <span>{% trans "Use as my default for this form" %}</span>
+        </label>
+        <div class="mf-actions">
+          <button type="submit" class="mf-button mf-button--primary mf-button--small" data-mf-grid-save-submit>{% trans "Save view" %}</button>
+          {% if active_grid_view and user_owns_active_grid_view %}
+          <button
+            type="submit"
+            class="mf-button mf-button--secondary mf-button--small"
+            formaction="{% url 'manage:responses_grid_view_delete' active_grid_view.pk %}"
+            formmethod="post"
+            onclick="return confirm('{% trans "Delete this saved view?" %}');"
+          >
+            {% trans "Delete view" %}
+          </button>
+          {% endif %}
+        </div>
+      </form>
+    </details>
+
+    {% if share_grid_view %}
+    <details class="mf-responses-grid-views__share-details" id="mf-share-view"{% if open_share_panel or user_owns_active_grid_view %} open{% endif %}>
+      <summary class="mf-responses-grid-views__save-summary">
+        {% trans "Share with colleagues" %}
+        {% if shared_with_users %}
+          <span class="mf-muted">({% blocktrans count counter=shared_with_users|length %}{{ counter }} person{% plural %}{{ counter }} people{% endblocktrans %})</span>
+        {% endif %}
+      </summary>
+      <div class="mf-stack">
+        <p class="mf-muted mf-body-text">
+          {% blocktrans with n=share_grid_view.name %}Sharing saved view <strong>{{ n }}</strong>. Colleagues will see it in their saved-view list for this form.{% endblocktrans %}
+        </p>
+        {% if owned_grid_views|length > 1 %}
+        <div class="mf-field">
+          <label class="mf-label" for="id_share_view_pick">{% trans "View to share" %}</label>
+          <select id="id_share_view_pick" class="mf-input mf-input--select" onchange="if (this.value) window.location = this.value;">
+            {% for v in owned_grid_views %}
+            <option
+              value="{% url 'manage:responses_grid' %}?form={{ selected_form.pk|oid }}&share_view={{ v.pk|oid }}&open_share=1{% if active_grid_view %}&view={{ active_grid_view.pk|oid }}{% endif %}{% if responses_submitted_from %}&submitted_from={{ responses_submitted_from }}{% endif %}{% if responses_submitted_to %}&submitted_to={{ responses_submitted_to }}{% endif %}#mf-share-view"
+              {% if share_grid_view.pk == v.pk %}selected{% endif %}
+            >
+              {{ v.name }}{% if v.is_default %} · {% trans "default" %}{% endif %}
+            </option>
+            {% endfor %}
+          </select>
+        </div>
+        {% endif %}
+        <form
+          method="post"
+          action="{% url 'manage:responses_grid_view_share' share_grid_view.pk %}"
+          class="mf-form mf-stack mf-responses-grid-views__share-form"
+        >
+          {% csrf_token %}
+          <input type="hidden" name="submitted_from" value="{{ responses_submitted_from }}" />
+          <input type="hidden" name="submitted_to" value="{{ responses_submitted_to }}" />
+          <div class="mf-field">
+            <label class="mf-label" for="id_grid_share_users">{% trans "Colleagues with access" %}</label>
+            <select
+              id="id_grid_share_users"
+              name="share_user_ids"
+              multiple
+              class="js-mf-grid-share-ts"
+              data-search-url="{% url 'manage:user_search' %}?form={{ selected_form.pk|oid }}"
+            >
+              {% for row in shared_with_users %}
+              <option value="{{ row.user.pk }}" selected>
+                {{ row.user.get_username }}{% if row.user.get_full_name %} — {{ row.user.get_full_name }}{% endif %}{% if row.user.email %} ({{ row.user.email }}){% endif %}
+              </option>
+              {% endfor %}
+            </select>
+            <p class="mf-muted mf-body-text mf-workflow-assignees">
+              {% trans "Type to search by username, email, or name. Pick someone from the list to add them; use × on a tag to remove." %}
+            </p>
+          </div>
+          <div class="mf-actions">
+            <button type="submit" class="mf-button mf-button--primary mf-button--small">{% trans "Update sharing" %}</button>
+          </div>
+        </form>
+      </div>
+    </details>
+    {% endif %}
+  </div>
+</details>

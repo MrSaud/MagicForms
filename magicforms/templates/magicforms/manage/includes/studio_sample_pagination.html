@@ -1,0 +1,22 @@
+{% load i18n magicforms_pagination %}
+{% if sample_forms_page and sample_forms_page.paginator.num_pages > 1 %}
+<nav class="mf-pagination mf-pagination--samples" aria-label="{% trans 'Starter sample forms pagination' %}">
+  <div class="mf-pagination__nav">
+    {% if sample_forms_page.has_previous %}
+      <a class="mf-link mf-pagination__link" href="{% sample_forms_page_url sample_forms_page.previous_page_number %}">{% trans "Previous" %}</a>
+    {% else %}
+      <span class="mf-muted mf-pagination__link mf-pagination__link--disabled">{% trans "Previous" %}</span>
+    {% endif %}
+    <span class="mf-pagination__status mf-muted">
+      {% blocktrans with p=sample_forms_page.number t=sample_forms_page.paginator.num_pages trimmed %}
+        Page {{ p }} of {{ t }}
+      {% endblocktrans %}
+    </span>
+    {% if sample_forms_page.has_next %}
+      <a class="mf-link mf-pagination__link" href="{% sample_forms_page_url sample_forms_page.next_page_number %}">{% trans "Next" %}</a>
+    {% else %}
+      <span class="mf-muted mf-pagination__link mf-pagination__link--disabled">{% trans "Next" %}</span>
+    {% endif %}
+  </div>
+</nav>
+{% endif %}

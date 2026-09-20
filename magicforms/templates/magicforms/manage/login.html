@@ -1,0 +1,61 @@
+{% extends "magicforms/base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Sign in" %} · {% trans "MagicForms" %}{% endblock %}
+
+{% block content %}
+<section class="mf-narrow-block mf-narrow-block--top mf-manage-section mf-stack mf-card mf-card--glass" >
+  <h1 class="mf-display mf-display--small">{% trans "Sign in" %}</h1>
+  <p class="mf-muted mf-body-text">
+    {% blocktrans trimmed %}
+      Anyone can use public forms and organization portals without signing in.
+      Use this page to sign in to MagicForms: <strong>superusers</strong> and <strong>staff</strong> use the full workspace for their organizations;
+      <strong>employees and applicants</strong> who belong to an organization can open their home after sign-in to reach published forms and their own submissions.
+    {% endblocktrans %}
+  </p>
+
+  {% if login_api_entities %}
+    <p class="mf-hint mf-body-text">
+      {% blocktrans trimmed %}
+        Directory sign-in uses your organization username (<code>entity-slug-username</code>, e.g. <code>mosa-kuwait-jdoe</code>) and password.
+        If directory sign-in fails, access is not granted (no Django password fallback).
+      {% endblocktrans %}
+    </p>
+  {% endif %}
+
+  {% if form.non_field_errors %}
+    {% for err in form.non_field_errors %}
+      <p class="mf-text-danger mf-body-text" >{{ err }}</p>
+    {% endfor %}
+  {% elif form.errors %}
+    <p class="mf-text-danger mf-body-text" >{% trans "Please correct the errors below." %}</p>
+  {% endif %}
+
+  <form method="post" action="{% url 'manage:login' %}" class="mf-form mf-stack">
+    {% csrf_token %}
+    <div class="mf-field">
+      {{ form.username.errors }}
+      <label class="mf-label" for="{{ form.username.id_for_label }}">{{ form.username.label }}</label>
+      {{ form.username }}
+      {% if form.username.help_text %}<p class="mf-hint">{{ form.username.help_text }}</p>{% endif %}
+    </div>
+    <div class="mf-field">
+      {{ form.password.errors }}
+      <label class="mf-label" for="{{ form.password.id_for_label }}">{{ form.password.label }}</label>
+      {{ form.password }}
+    </div>
+    <input type="hidden" name="next" value="{{ next }}" />
+    <div class="mf-actions">
+      <button type="submit" class="mf-button mf-button--primary">{% trans "Sign in" %}</button>
+    </div>
+  </form>
+
+  <p class="mf-muted mf-body-text">
+    {% blocktrans trimmed %}
+      Low-level user administration (groups, flags) is only in
+      <a class="mf-link" href="/admin/">/admin/</a> for <strong>superusers</strong>.
+    {% endblocktrans %}
+  </p>
+  <p><a class="mf-link" href="{{ landing_page_url }}">← {% trans "Landing page" %}</a></p>
+</section>
+{% endblock %}

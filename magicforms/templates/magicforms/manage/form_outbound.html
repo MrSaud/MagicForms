@@ -1,0 +1,276 @@
+{% extends "magicforms/manage/base_manage.html" %}
+{% load i18n static %}
+
+{% block manage_title %}{% trans "External POST" %} · {{ form_obj.title }}{% endblock %}
+
+{% block manage_content %}
+<div class="mf-stack mf-stack--lg">
+  <p class="mf-form-back">
+    <a class="mf-link" href="{% url 'manage:form_detail' form_obj.pk %}">← {% trans "Back to form" %}</a>
+  </p>
+  <h1 class="mf-display mf-display--small">{% trans "External POST" %}</h1>
+  <p class="mf-muted mf-body-text">
+    {% blocktrans trimmed %}
+      When enabled, MagicForms POSTs JSON to your endpoint on submit and selected workflow events.
+      File upload fields are sent as signed download URLs when mapped. Secrets are stored encrypted.
+    {% endblocktrans %}
+  </p>
+
+  <form method="post" class="mf-form mf-stack mf-stack--lg">
+    {% csrf_token %}
+    {{ config_form.non_field_errors }}
+
+    {% if config_locked %}
+    <div class="mf-p-4 mf-card mf-card--soft mf-stack" role="status" >
+      <p class="mf-body-text">
+        {% trans "This integration is active. Live submissions use these settings. Turn off Active and save to change the endpoint, auth, triggers, or field mappings." %}
+      </p>
+    </div>
+    {% endif %}
+
+    <section class="mf-card mf-card--glass mf-stack">
+      <h2 class="mf-heading">{% trans "Connection" %}</h2>
+      <div class="mf-field">
+        <label class="mf-label">{{ config_form.is_active.label }}</label>
+        {{ config_form.is_active }}
+      </div>
+      <div class="mf-field">
+        <label class="mf-label" for="{{ config_form.endpoint_url.id_for_label }}">{{ config_form.endpoint_url.label }}</label>
+        {{ config_form.endpoint_url }}
+        {{ config_form.endpoint_url.errors }}
+      </div>
+      <div class="mf-grid mf-grid--2">
+        <div class="mf-field">
+          <label class="mf-label" for="{{ config_form.timeout_seconds.id_for_label }}">{{ config_form.timeout_seconds.label }}</label>
+          {{ config_form.timeout_seconds }}
+        </div>
+        <div class="mf-field">
+          <label class="mf-label" for="{{ config_form.auth_type.id_for_label }}">{{ config_form.auth_type.label }}</label>
+          {{ config_form.auth_type }}
+        </div>
+      </div>
+      <div class="mf-field">
+        <label class="mf-label" for="{{ config_form.auth_header_name.id_for_label }}">{{ config_form.auth_header_name.label }}</label>
+        {{ config_form.auth_header_name }}
+      </div>
+      <div class="mf-field">
+        <label class="mf-label" for="{{ config_form.secret_plain.id_for_label }}">{{ config_form.secret_plain.label }}</label>
+        {{ config_form.secret_plain }}
+        <p class="mf-hint">{{ config_form.secret_plain.help_text }}</p>
+        {{ config_form.secret_plain.errors }}
+      </div>
+      <div class="mf-field">
+        <label class="mf-label" for="{{ config_form.hmac_header_name.id_for_label }}">{{ config_form.hmac_header_name.label }}</label>
+        {{ config_form.hmac_header_name }}
+      </div>
+      <div class="mf-field">
+        <label class="mf-label" for="{{ config_form.payload_root_key.id_for_label }}">{{ config_form.payload_root_key.label }}</label>
+        {{ config_form.payload_root_key }}
+        <p class="mf-hint">{{ config_form.payload_root_key.help_text }}</p>
+      </div>
+      <div class="mf-field">
+        <label class="mf-label" for="{{ config_form.custom_headers_json.id_for_label }}">{% trans "Custom headers (JSON object)" %}</label>
+        {{ config_form.custom_headers_json }}
+        {{ config_form.custom_headers_json.errors }}
+      </div>
+    </section>
+
+    <section class="mf-card mf-card--glass mf-stack">
+      <h2 class="mf-heading">{% trans "Triggers" %}</h2>
+      <ul class="mf-stack">
+        <li><label>{{ config_form.trigger_submitted }} {{ config_form.trigger_submitted.label }}</label></li>
+        <li><label>{{ config_form.trigger_step_approved }} {{ config_form.trigger_step_approved.label }}</label></li>
+        <li><label>{{ config_form.trigger_workflow_completed }} {{ config_form.trigger_workflow_completed.label }}</label></li>
+        <li><label>{{ config_form.trigger_workflow_rejected }} {{ config_form.trigger_workflow_rejected.label }}</label></li>
+      </ul>
+    </section>
+
+    <details class="mf-card mf-card--glass mf-stack mf-entity-form-details">
+      <summary class="mf-heading mf-entity-form-details__summary">{% trans "Field mapping" %}</summary>
+      <div class="mf-stack mf-mt">
+        <p class="mf-hint">
+          {% blocktrans with saved=mapping_saved_count max=mapping_max trimmed %}
+            {{ saved }} of {{ max }} mappings saved. Up to {{ max }} external keys per form; only rows with an external key are stored. Blank rows are for new mappings.
+          {% endblocktrans %}
+        </p>
+        <p class="mf-hint">
+          {% blocktrans with shown=mapping_form_count trimmed %}
+            {{ shown }} rows on this page (saved mappings plus empty rows).
+          {% endblocktrans %}
+          {% trans "File upload fields can be mapped using transforms: signed download URL, filename only, or an object with both (default). URLs expire after the configured lifetime (default 1 hour)." %}
+        </p>
+        <p class="mf-hint">{% trans "Map external JSON keys to form answers, applicant account/profile (when the submitter was signed in), or submission/workflow values. Applicant fields use the same keys as form pre-fill mapping (email, employee_number, civil_id, department, etc.)." %}</p>
+        {{ map_formset.management_form }}
+        {{ map_formset.non_form_errors }}
+        <div class="mf-stack">
+          {% for f in map_formset %}
+          <div class="mf-p-4 mf-card mf-card--soft mf-stack" >
+            {% for hidden in f.hidden_fields %}{{ hidden }}{% endfor %}
+            {% if f.DELETE %}<label>{{ f.DELETE }} {% trans "Remove" %}</label>{% endif %}
+            <div class="mf-grid mf-grid--2">
+              <div class="mf-field">
+                <label class="mf-label">{{ f.external_key.label }}</label>
+                {{ f.external_key }}
+                {{ f.external_key.errors }}
+              </div>
+              <div class="mf-field">
+                <label class="mf-label">{{ f.source_picker.label }}</label>
+                {{ f.source_picker }}
+                {{ f.source_picker.errors }}
+              </div>
+            </div>
+            <div class="mf-grid mf-grid--2">
+              <div class="mf-field">
+                <label class="mf-label">{{ f.source_ref.label }}</label>
+                {{ f.source_ref }}
+              </div>
+              <div class="mf-field">
+                <label class="mf-label">{{ f.transform.label }}</label>
+                {{ f.transform }}
+              </div>
+            </div>
+            <label>{{ f.required }} {{ f.required.label }}</label>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </details>
+
+    <div class="mf-actions">
+      {% if config_locked %}
+      <button type="submit" class="mf-button mf-button--primary">{% trans "Save (deactivate to edit)" %}</button>
+      {% else %}
+      <button type="submit" class="mf-button mf-button--primary">{% trans "Save integration" %}</button>
+      {% endif %}
+      <a class="mf-button mf-button--secondary" href="{% url 'manage:form_detail' form_obj.pk %}">{% trans "Cancel" %}</a>
+    </div>
+  </form>
+
+  <section
+    class="mf-card mf-card--glass mf-stack"
+    aria-labelledby="mf-outbound-test-heading"
+    id="mf-outbound-test"
+    data-mf-label-success="{% trans 'Success' %}"
+    data-mf-label-failed="{% trans 'Failed' %}"
+    data-mf-label-result="{% trans 'Test result' %}"
+    data-mf-label-url="{% trans 'URL' %}"
+    data-mf-label-req-headers="{% trans 'Request headers (redacted)' %}"
+    data-mf-label-req-body="{% trans 'Request body' %}"
+    data-mf-label-response="{% trans 'Response' %}"
+    data-mf-label-no-response="{% trans 'No response body returned.' %}"
+    data-mf-label-sending="{% trans 'Sending request…' %}"
+    data-mf-hint-403="{% trans '403 Forbidden usually means your API rejected auth or the caller. Check auth type and secret, custom headers, IP allowlists, and HMAC signing against the exact JSON sent (including payload root wrap).' %}"
+    data-test-ready="{% if test_ready %}1{% else %}0{% endif %}"
+    data-mf-not-ready-message="{{ test_readiness_message|escape }}"
+  >
+    <h2 class="mf-heading" id="mf-outbound-test-heading">{% trans "Test API" %}</h2>
+    <p class="mf-hint">
+      {% trans "Tests use the saved endpoint and secret. Results appear in this section; partners may ignore requests with header X-MagicForms-Test: 1." %}
+    </p>
+
+    <div id="mf-outbound-test-progress" class="mf-outbound-test-progress" hidden role="status" aria-live="polite">
+      <p class="mf-outbound-test-progress__text">{% trans "Sending request…" %}</p>
+      <div class="mf-outbound-test-progress__track" aria-hidden="true">
+        <div class="mf-outbound-test-progress__bar"></div>
+      </div>
+    </div>
+
+    {% if not test_ready %}
+    <p class="mf-muted mf-body-text">{{ test_readiness_message }}</p>
+    {% endif %}
+    {% if test_ready %}
+    <div class="mf-actions mf-actions--wrap">
+      <form method="post" action="{% url 'manage:form_outbound_test_health' form_obj.pk %}" class="mf-inline-form" data-mf-no-busy="true" data-mf-outbound-test data-mf-progress-label="{% trans 'Checking API health…' %}">
+        {% csrf_token %}
+        <button type="submit" class="mf-button mf-button--secondary">{% trans "Check API health" %}</button>
+      </form>
+      <form method="post" action="{% url 'manage:form_outbound_test_sample' form_obj.pk %}" class="mf-inline-form" data-mf-no-busy="true" data-mf-outbound-test data-mf-progress-label="{% trans 'Posting sample data…' %}">
+        {% csrf_token %}
+        <button type="submit" class="mf-button mf-button--secondary">{% trans "POST sample data" %}</button>
+      </form>
+      {% if has_submissions %}
+      <form method="post" action="{% url 'manage:form_outbound_test_submission' form_obj.pk %}" class="mf-inline-form" data-mf-no-busy="true" data-mf-outbound-test data-mf-progress-label="{% trans 'Posting latest submission…' %}">
+        {% csrf_token %}
+        <button type="submit" class="mf-button mf-button--primary">{% trans "POST latest submission" %}</button>
+      </form>
+      {% endif %}
+    </div>
+    <p class="mf-hint">{% trans "Health check sends a minimal JSON ping. Sample data uses your field mappings with placeholder values. Latest submission uses real answers from the most recent response." %}</p>
+    {% endif %}
+
+    <div
+      class="mf-card mf-card--soft mf-stack mf-outbound-test-result{% if test_result %} mf-outbound-test-result--{% if test_result.ok %}ok{% else %}fail{% endif %}{% endif %}"
+      id="mf-outbound-test-result"
+      {% if not test_result %} hidden{% endif %}
+    >
+      {% if test_result %}
+      {% include "magicforms/manage/includes/form_outbound_test_result.html" %}
+      {% endif %}
+    </div>
+
+    <form
+      id="mf-outbound-test-custom-form"
+      method="post"
+      action="{% url 'manage:form_outbound_test_custom' form_obj.pk %}"
+      class="mf-form mf-stack"
+      data-mf-no-busy="true"
+      data-mf-outbound-test="custom"
+      data-mf-progress-label="{% trans 'Sending custom JSON…' %}"
+    >
+      {% csrf_token %}
+      <div class="mf-field">
+        <label class="mf-label" for="mf-outbound-test-json">{% trans "Custom JSON body" %}</label>
+        <textarea
+          id="mf-outbound-test-json"
+          name="json_body"
+          class="mf-input mf-input--textarea mf-code mf-help-pre"
+          rows="14"
+          spellcheck="false"
+        >{{ test_custom_json }}</textarea>
+        <p class="mf-hint">
+          {% if config.payload_root_key %}
+          {% blocktrans with root=config.payload_root_key trimmed %}
+            Edit the object below; on send it is wrapped as {"{{ root }}": …} using your saved payload root key.
+          {% endblocktrans %}
+          {% else %}
+          {% trans "Edit the JSON object to send. Must be valid JSON (object). Auth headers and X-MagicForms-Test apply like production." %}
+          {% endif %}
+        </p>
+      </div>
+      <div class="mf-actions">
+        <button type="button" class="mf-button mf-button--primary" id="mf-outbound-test-custom-send">{% trans "Send custom JSON" %}</button>
+      </div>
+      {% if not test_ready %}
+      <p class="mf-hint">{% trans "Save endpoint URL (and API secret if required) above, then you can send this JSON." %}</p>
+      {% endif %}
+    </form>
+  </section>
+
+  <section class="mf-card mf-card--glass mf-stack">
+    <h2 class="mf-heading">{% trans "Recent deliveries" %}</h2>
+    {% if recent_deliveries %}
+    <ul class="mf-manage-list">
+      {% for d in recent_deliveries %}
+      <li class="mf-manage-row mf-stack">
+        <span>{{ d.created_at|date:"M j, Y H:i" }} · {{ d.trigger }} · {{ d.submission.reference_token }} · {{ d.get_status_display }}{% if d.response_status %} (HTTP {{ d.response_status }}){% endif %}</span>
+        {% if d.status == "dead" or d.error_message %}
+        <form method="post" action="{% url 'manage:form_outbound_retry' form_obj.pk d.pk %}" class="mf-inline-form">
+          {% csrf_token %}
+          <button type="submit" class="mf-link">{% trans "Retry" %}</button>
+        </form>
+        {% endif %}
+        {% if d.error_message %}<p class="mf-hint mf-muted">{{ d.error_message|truncatechars:200 }}</p>{% endif %}
+      </li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <p class="mf-muted">{% trans "No deliveries yet." %}</p>
+    {% endif %}
+  </section>
+</div>
+{% endblock %}
+
+{% block footer_scripts %}
+{{ block.super }}
+<script src="{% static 'magicforms/js/outbound_test.js' %}" defer></script>
+{% endblock %}

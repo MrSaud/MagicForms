@@ -1,0 +1,593 @@
+{% extends "magicforms/manage/base_manage.html" %}
+{% load i18n static %}
+
+{% block manage_title %}{% trans "Workspace help" %}{% endblock %}
+
+{% block manage_content %}
+<article
+  class="mf-help-doc mf-stack"
+  data-mf-copy-label="{% trans 'Copy' %}"
+  data-mf-copied-label="{% trans 'Copied' %}"
+>
+  <header class="mf-manage-section mf-stack">
+    <h1 class="mf-display mf-display--small">{% trans "Workspace help" %}</h1>
+    <p class="mf-lead">
+      {% blocktrans trimmed %}
+        This guide explains how to go from an empty form to a published experience, how merged print
+        documents work, and where to find the main workspace tools. It is written for staff and
+        administrators who use the MagicForms workspace (the /manage/ area).
+      {% endblocktrans %}
+    </p>
+  </header>
+
+  <nav class="mf-card mf-card--glass mf-stack" aria-label="{% trans 'On this page' %}">
+    <h2 class="mf-heading">{% trans "On this page" %}</h2>
+    <ol class="mf-help-toc">
+      <li><a href="#overview">{% trans "Overview" %}</a></li>
+      <li><a href="#access">{% trans "Who can use the workspace" %}</a></li>
+      <li><a href="#build-form">{% trans "Building a form (A–Z)" %}</a></li>
+      <li><a href="#print-templates">{% trans "Print templates: DOCX, PDF, ODT" %}</a></li>
+      <li><a href="#placeholders">{% trans "DOCX and PDF placeholders" %}</a></li>
+      <li><a href="#signatures">{% trans "Signatures in merged documents" %}</a></li>
+      <li><a href="#signatures-select-approvals">{% trans "Selecting specific approvals" %}</a></li>
+      <li><a href="#inbox">{% trans "Inbox, submissions, and search" %}</a></li>
+      <li><a href="#people">{% trans "People, delegations, and categories" %}</a></li>
+      <li><a href="#respondents">{% trans "What respondents see" %}</a></li>
+      <li><a href="#tips">{% trans "Practical tips" %}</a></li>
+    </ol>
+  </nav>
+
+  <section id="overview" class="mf-manage-section mf-card mf-card--glass mf-stack mf-help-section">
+    <h2 class="mf-heading">{% trans "Overview" %}</h2>
+    <p class="mf-body-text">
+      {% blocktrans trimmed %}
+        MagicForms has two sides: the public site (portals, live forms, and “track my submission” links)
+        and the workspace (/manage/), where you define forms, workflow, print templates, and handle the inbox.
+        Publishing checks that the form has at least one field and one workflow step.
+      {% endblocktrans %}
+    </p>
+    <ul class="mf-manage-bullet-list">
+      <li>{% trans "Home — list and search your forms, see high-level stats." %}</li>
+      <li>{% trans "Inbox — submissions waiting for an action on a step you can act on." %}</li>
+      <li>{% trans "Search — find submissions across your scope." %}</li>
+      <li>{% trans "New form / From text — create a blank form or draft fields from a description." %}</li>
+    </ul>
+  </section>
+
+  <section id="access" class="mf-manage-section mf-card mf-card--glass mf-stack mf-help-section">
+    <h2 class="mf-heading">{% trans "Who can use the workspace" %}</h2>
+    <p class="mf-body-text">
+      {% blocktrans trimmed %}
+        Superusers can manage every organization and use the Organizations area. Other staff only see
+        data for organizations they belong to (memberships). If you are staff but see no forms, ask a
+        superuser to add you to the right organization. Superusers can optionally narrow the visible
+        organization list using “Organization scope” in the header.
+      {% endblocktrans %}
+    </p>
+  </section>
+
+  <section id="build-form" class="mf-manage-section mf-card mf-card--glass mf-stack mf-help-section">
+    <h2 class="mf-heading">{% trans "Building a form (A–Z)" %}</h2>
+    <ol class="mf-manage-bullet-list">
+      <li>
+        <strong>{% trans "Create the form." %}</strong>
+        {% trans "Use" %}
+        <a href="{{ new_form_url }}">{% trans "New form" %}</a>{% if ai_features_enabled %}
+        {% trans "or" %}
+        <a href="{{ from_text_url }}">{% trans "From text" %}</a>{% endif %}.
+        {% blocktrans trimmed %}
+          Choose the organization and title (a URL path is created automatically from the title).
+          Public URLs use your organization path and that path; you can require a secret share segment
+          or query when configured in form settings.
+        {% endblocktrans %}
+      </li>
+      <li>
+        {% blocktrans trimmed %}
+          <strong>Settings.</strong> Open <strong>Settings</strong> on the form: description, category,
+          submission deadline, one-response-per-user, anonymous access, forwarding, public share key,
+          hide from portal lists, print template files, and more. Turn on <strong>Published</strong>
+          when the form is ready.
+        {% endblocktrans %}
+      </li>
+      <li>
+        {% blocktrans trimmed %}
+          <strong>Logos (optional).</strong> Up to three images. Assign each to <em>left</em>,
+          <em>center (above the title)</em>, or <em>right</em> on the live form header.
+        {% endblocktrans %}
+      </li>
+      <li>
+        {% blocktrans trimmed %}
+          <strong>Fields.</strong> Add questions with types such as short text, paragraph, email, number,
+          date, dropdown, radio, checkbox, checklist, and file upload. Each field has an <strong>internal name</strong>
+          (letters, numbers, hyphens): that name is what you use in print templates and APIs of merge.
+        {% endblocktrans %}
+      </li>
+      <li>
+        {% blocktrans trimmed %}
+          <strong>Optional mapping.</strong> For signed-in users, a mapping name can pre-fill a field
+          from the user account or HR profile (see the field help text in the editor for supported keys).
+        {% endblocktrans %}
+      </li>
+      <li>
+        {% blocktrans trimmed %}
+          <strong>Sections.</strong> Group fields into collapsible sections on the public form if you want
+          a long form to feel structured.
+        {% endblocktrans %}
+      </li>
+      <li>
+        {% blocktrans trimmed %}
+          <strong>Workflow.</strong> Define ordered steps (labels and descriptions shown to applicants).
+          Assign staff who may act while a submission sits on a step. Approvals move the submission forward;
+          rejection stops it. You need at least one step before publishing.
+        {% endblocktrans %}
+      </li>
+      <li>
+        {% blocktrans trimmed %}
+          <strong>Related forms (optional).</strong> Link a “child” form to a parent form so selected
+          applicants can complete an extra questionnaire after the main submission.
+        {% endblocktrans %}
+      </li>
+      <li>
+        {% blocktrans trimmed %}
+          <strong>Share.</strong> Use <strong>Share QR</strong> for the public URL. Applicants receive a
+          private reference link to track status and download merged documents when you allow it.
+        {% endblocktrans %}
+      </li>
+    </ol>
+  </section>
+
+  <section id="print-templates" class="mf-manage-section mf-card mf-card--glass mf-stack mf-help-section">
+    <h2 class="mf-heading">{% trans "Print templates: DOCX, PDF, ODT" %}</h2>
+    <p class="mf-body-text">
+      {% blocktrans trimmed %}
+        In form <strong>Settings</strong>, the <strong>primary print template</strong> can be a DOCX or
+        a fillable PDF. When someone submits, MagicForms merges answers into that file for download or
+        preview. An optional <strong>ODT</strong> file is for staff who prefer LibreOffice: answers are
+        <em>not</em> merged into the ODT; use the DOCX or PDF field for merged outputs.
+      {% endblocktrans %}
+    </p>
+    <ul class="mf-manage-bullet-list">
+      <li>
+        {% blocktrans trimmed %}
+          <strong>DOCX</strong> uses Word with Jinja-style placeholders (via docxtpl). Use the same
+          spelling as each field’s internal name; hyphens in names become underscores in the template
+          context, and both forms are usually provided so either works.
+        {% endblocktrans %}
+      </li>
+      <li>
+        {% blocktrans trimmed %}
+          <strong>PDF</strong> uses AcroForm fields. Names should match internal field names; hierarchical
+          field names from desktop tools are supported by matching the trailing segment.
+        {% endblocktrans %}
+      </li>
+      <li>
+        {% if docx_pdf_available %}
+          {% trans "This server can convert merged DOCX to PDF for in-browser preview when LibreOffice is configured." %}
+        {% else %}
+          {% trans "If the server is configured with LibreOffice, merged DOCX can be shown as PDF in the browser; otherwise only the DOCX download may be available for DOCX templates." %}
+        {% endif %}
+      </li>
+      <li>
+        {% blocktrans trimmed %}
+          Merged DOCX can be marked “read only” in Word for typical users (not cryptographic protection).
+          For a format that is not meaningfully editable in Word, distribute <strong>PDF</strong> instead.
+        {% endblocktrans %}
+      </li>
+    </ul>
+  </section>
+
+  <section id="placeholders" class="mf-manage-section mf-card mf-card--glass mf-stack mf-help-section">
+    <h2 class="mf-heading">{% trans "DOCX and PDF placeholders" %}</h2>
+    <p class="mf-body-text">
+      {% blocktrans trimmed %}
+        In <strong>DOCX</strong>, use Jinja syntax. For each form field, the merge context includes the
+        field’s internal <code class="mf-code">name</code> and a Jinja-safe variant (hyphens and special
+        characters mapped to underscores). Example for a field whose internal name is
+        <code class="mf-code">applicant-name</code>:
+      {% endblocktrans %}
+    </p>
+    {% verbatim %}<pre class="mf-code mf-help-pre">{{ applicant-name }}  or  {{ applicant_name }}</pre>{% endverbatim %}
+    <p class="mf-body-text">{% trans "Built-in string variables (same names in DOCX and PDF text fields):" %}</p>
+    <ul class="mf-manage-bullet-list">
+      <li><code class="mf-code">form_title</code>, <code class="mf-code">form_description</code></li>
+      <li><code class="mf-code">submitter_email</code>, <code class="mf-code">reference_token</code></li>
+      <li><code class="mf-code">submitted_at</code>, <code class="mf-code">current_step_label</code></li>
+      <li><code class="mf-code">workflow_timeline</code> — {% trans "multiline history of events." %}</li>
+      <li><code class="mf-code">workflow_actions_summary</code> — {% trans "short line of approve/reject actions." %}</li>
+      <li><code class="mf-code">workflow_comments</code> — {% trans "all non-empty event messages." %}</li>
+      <li><code class="mf-code">workflow_last_action</code>, <code class="mf-code">workflow_last_comment</code></li>
+      <li><code class="mf-code">workflow_approver_signatures</code> — {% trans "PDF text: lines noting approvals where the actor has a signature image on file." %}</li>
+    </ul>
+    <p class="mf-body-text">
+      {% blocktrans trimmed %}
+        Checkbox values merge as “Yes” or “No”. File fields merge as the uploaded file name (or empty).
+      {% endblocktrans %}
+    </p>
+  </section>
+
+  <section id="signatures" class="mf-manage-section mf-card mf-card--glass mf-stack mf-help-section">
+    <h2 class="mf-heading">{% trans "Signatures in merged documents" %}</h2>
+    <p class="mf-body-text">
+      {% blocktrans trimmed %}
+        Applicant and approver signature <strong>images</strong> are merged only in <strong>DOCX</strong>
+        templates (as InlineImage). Variable names are fixed — they are <em>not</em> the labels users set on
+        “My signatures”. PDF AcroForm merges are text-only; use <code class="mf-code">workflow_approver_signatures</code>
+        or separate PDF fields for names and dates.
+      {% endblocktrans %}
+    </p>
+
+    <h3 class="mf-heading mf-heading--section">{% trans "Images and dates in Word" %}</h3>
+    <ul class="mf-manage-bullet-list">
+      <li>
+        {% blocktrans trimmed %}
+          Use normal Jinja placeholders <code class="mf-code">{{ variable }}</code> for signature images and
+          for dates. Dates are <strong>plain text</strong> (for example <code class="mf-code">2026-05-19 14:30</code>),
+          not RichText — do <em>not</em> use <code class="mf-code">{{r ... }}</code> for date fields unless you
+          build RichText yourself in Python.
+        {% endblocktrans %}
+      </li>
+      <li>
+        {% blocktrans trimmed %}
+          <strong>No signature image on file:</strong>
+          <code class="mf-code">signature_primary</code> or
+          <code class="mf-code">approver_signature_primary</code> is filled with the submit or approval date only
+          (no name, no “Approved:” label). Put names elsewhere (<code class="mf-code">submitted_at</code>, form
+          fields, or <code class="mf-code">row.label</code> for approvers).
+        {% endblocktrans %}
+      </li>
+      <li>
+        {% blocktrans trimmed %}
+          <strong>Signature image exists:</strong> the primary placeholder is the image. Add a
+          <strong>second line</strong> in your template for the date (see paste blocks below). Style that line
+          in Word with a smaller font if you want a compact date under the image.
+        {% endblocktrans %}
+      </li>
+      <li>
+        {% blocktrans trimmed %}
+          <code class="mf-code">signature_primary_date</code> and
+          <code class="mf-code">approver_signature_primary_date</code> are always set (submit date and first
+          approver’s approval date). Use them on the line below the image; when there is no image, they match
+          the same date as the primary placeholder.
+        {% endblocktrans %}
+      </li>
+    </ul>
+
+    <h3 class="mf-heading mf-heading--section">{% trans "Respondent (applicant) variables" %}</h3>
+    <ul class="mf-manage-bullet-list">
+      <li>
+        <code class="mf-code">signature_primary</code> —
+        {% blocktrans trimmed %}
+          primary signature image from “My signatures” (lowest <code class="mf-code">sort_order</code>), or the
+          submit date if no image.
+        {% endblocktrans %}
+      </li>
+      <li>
+        <code class="mf-code">signature_primary_date</code> —
+        {% blocktrans trimmed %}submit date/time; use on the line below the image.{% endblocktrans %}
+      </li>
+      <li>
+        <code class="mf-code">signature_primary_fallback</code> —
+        {% blocktrans trimmed %}same submit date as plain text (handy if you branch in Jinja).{% endblocktrans %}
+      </li>
+      <li>
+        <code class="mf-code">signature_primary_has_image</code> —
+        {% blocktrans trimmed %}<code class="mf-code">True</code> / <code class="mf-code">False</code> for conditionals.{% endblocktrans %}
+      </li>
+      <li>
+        <code class="mf-code">submission_signatures</code> —
+        {% blocktrans trimmed %}
+          list of all respondent signature <em>images</em> (each row: <code class="mf-code">label</code>,
+          <code class="mf-code">image</code>). Rows without a file are omitted from this list.
+        {% endblocktrans %}
+      </li>
+    </ul>
+
+    <h3 class="mf-heading mf-heading--section">{% trans "Primary respondent — paste into Word" %}</h3>
+    <p class="mf-muted mf-body-text">{% trans "Recommended block (image + date on separate lines):" %}</p>
+    {% verbatim %}
+    <pre class="mf-code mf-help-pre">{{ signature_primary }}
+{{ signature_primary_date }}</pre>
+    {% endverbatim %}
+    <p class="mf-muted mf-body-text">
+      {% blocktrans trimmed %}
+        If there is no image, the first line is already the date; the second line repeats the same date (you may
+        hide it with Jinja using <code class="mf-code">signature_primary_has_image</code> if you prefer one line only).
+      {% endblocktrans %}
+    </p>
+
+    <h3 class="mf-heading mf-heading--section">{% trans "Approver variables" %}</h3>
+    <ul class="mf-manage-bullet-list">
+      <li>
+        <code class="mf-code">approver_signature_primary</code> —
+        {% blocktrans trimmed %}
+          image or approval date from the <em>first</em> approval / workflow-completion event (chronological).
+        {% endblocktrans %}
+      </li>
+      <li>
+        <code class="mf-code">approver_signature_primary_date</code> —
+        {% blocktrans trimmed %}that event’s approval date/time; line below the image.{% endblocktrans %}
+      </li>
+      <li>
+        <code class="mf-code">approver_signature_primary_on_behalf</code> —
+        {% blocktrans trimmed %}
+          bilingual “On behalf of …” when the approver used a <strong>delegation</strong>; empty for direct
+          assignees. Place below the image or date.
+        {% endblocktrans %}
+      </li>
+      <li>
+        <code class="mf-code">approver_signature_primary_has_image</code> —
+        {% blocktrans trimmed %}<code class="mf-code">True</code> / <code class="mf-code">False</code>.{% endblocktrans %}
+      </li>
+      <li>
+        <code class="mf-code">approver_signatures</code> —
+        {% blocktrans trimmed %}
+          all approval / completion events in order. Each row:
+          <code class="mf-code">label</code>,
+          <code class="mf-code">image</code> (empty when no file),
+          <code class="mf-code">fallback</code> / <code class="mf-code">date</code> (approval date),
+          <code class="mf-code">has_image</code>,
+          <code class="mf-code">on_behalf</code>,
+          <code class="mf-code">on_behalf_docx</code>.
+        {% endblocktrans %}
+      </li>
+    </ul>
+
+    <h3 class="mf-heading mf-heading--section">{% trans "Primary approver — paste into Word" %}</h3>
+    <p class="mf-muted mf-body-text">{% trans "Recommended block:" %}</p>
+    {% verbatim %}
+    <pre class="mf-code mf-help-pre">{{ approver_signature_primary }}
+{{ approver_signature_primary_date }}
+{{ approver_signature_primary_on_behalf }}</pre>
+    {% endverbatim %}
+
+    <h3 class="mf-heading mf-heading--section">{% trans "All approvers — loop in Word" %}</h3>
+    {% verbatim %}
+    <pre class="mf-code mf-help-pre">{% for row in approver_signatures %}
+{{ row.label }}
+{% if row.has_image %}{{ row.image }}{% else %}{{ row.fallback }}{% endif %}
+{{ row.date }}
+{{ row.on_behalf_docx }}
+{% endfor %}</pre>
+    {% endverbatim %}
+    <p class="mf-body-text">
+      {% blocktrans trimmed %}
+        Each row is one actor who approved a step or completed the workflow, in <strong>chronological</strong>
+        order. The image is that user’s primary signature from “My signatures”. If they have no image,
+        <code class="mf-code">row.fallback</code> and <code class="mf-code">row.date</code> are the approval date only.
+        <code class="mf-code">row.label</code> is step label and display name (for example
+        <code class="mf-code">Manager review · jdoe</code>).
+      {% endblocktrans %}
+    </p>
+
+    <h3 class="mf-heading mf-heading--section" id="signatures-select-approvals">{% trans "Selecting specific approvals" %}</h3>
+    <p class="mf-body-text">
+      {% blocktrans trimmed %}
+        You can choose which approvals appear in the DOCX <strong>without changing MagicForms</strong> — only
+        edit the Word template. <code class="mf-code">approver_signatures</code> is a normal Jinja list; rows are
+        in <strong>chronological</strong> order (when each event was recorded), not necessarily the order of steps
+        in the form designer.
+      {% endblocktrans %}
+    </p>
+
+    <h4 class="mf-heading mf-heading--subsection">{% trans "First approval only" %}</h4>
+    <p class="mf-body-text">
+      {% blocktrans trimmed %}
+        Use <code class="mf-code">approver_signature_primary</code> (and
+        <code class="mf-code">approver_signature_primary_date</code> /
+        <code class="mf-code">approver_signature_primary_on_behalf</code>) — same as the first row when the list
+        is not empty. See the primary approver paste block above.
+      {% endblocktrans %}
+    </p>
+
+    <h4 class="mf-heading mf-heading--subsection">{% trans "Fixed position (by index)" %}</h4>
+    <p class="mf-body-text">
+      {% blocktrans trimmed %}
+        Pick the 1st, 2nd, … approval by index when count and order are always the same:
+      {% endblocktrans %}
+    </p>
+    {% verbatim %}
+    <pre class="mf-code mf-help-pre">{{ approver_signatures[0].label }}
+{% if approver_signatures[0].has_image %}{{ approver_signatures[0].image }}{% else %}{{ approver_signatures[0].fallback }}{% endif %}
+{{ approver_signatures[0].date }}
+{{ approver_signatures[0].on_behalf_docx }}</pre>
+    {% endverbatim %}
+    <p class="mf-muted mf-body-text">
+      {% blocktrans trimmed %}
+        Use <code class="mf-code">[1]</code> for the second event, and so on. If someone approves out of order or a
+        step is skipped, indices may point at the wrong person.
+      {% endblocktrans %}
+    </p>
+
+    <h4 class="mf-heading mf-heading--subsection">{% trans "Filter by step or approver (inside the loop)" %}</h4>
+    <p class="mf-body-text">
+      {% blocktrans trimmed %}
+        <code class="mf-code">row.label</code> combines the <strong>workflow step label</strong> and the approver’s
+        display name. Match part of that text in Jinja — use the step name as shown in the workspace, for example:
+      {% endblocktrans %}
+    </p>
+    {% verbatim %}
+    <pre class="mf-code mf-help-pre">{% for row in approver_signatures %}
+{% if 'Manager review' in row.label %}
+{{ row.label }}
+{% if row.has_image %}{{ row.image }}{% else %}{{ row.fallback }}{% endif %}
+{{ row.date }}
+{{ row.on_behalf_docx }}
+{% endif %}
+{% endfor %}</pre>
+    {% endverbatim %}
+    <p class="mf-muted mf-body-text">
+      {% blocktrans trimmed %}
+        Put each step’s block in its own table row or paragraph in Word. You can also match a username if it
+        appears in <code class="mf-code">row.label</code>.
+      {% endblocktrans %}
+    </p>
+
+    <h4 class="mf-heading mf-heading--subsection">{% trans "Last approval only" %}</h4>
+    <p class="mf-body-text">
+      {% blocktrans trimmed %}
+        If your merge supports negative indices, you may use
+        <code class="mf-code">approver_signatures[-1]</code>. Otherwise use
+        <code class="mf-code">loop.last</code> inside the loop:
+      {% endblocktrans %}
+    </p>
+    {% verbatim %}
+    <pre class="mf-code mf-help-pre">{% for row in approver_signatures %}
+{% if loop.last %}
+{{ row.label }}
+{% if row.has_image %}{{ row.image }}{% else %}{{ row.fallback }}{% endif %}
+{{ row.date }}
+{{ row.on_behalf_docx }}
+{% endif %}
+{% endfor %}</pre>
+    {% endverbatim %}
+
+    <h4 class="mf-heading mf-heading--subsection">{% trans "What is not available in the template" %}</h4>
+    <ul class="mf-manage-bullet-list">
+      <li>
+        {% blocktrans trimmed %}
+          One MagicForms variable per workflow step slug (for example
+          <code class="mf-code">{{ sig_manager }}</code>) — use index, primary placeholders, or filter on
+          <code class="mf-code">row.label</code> instead.
+        {% endblocktrans %}
+      </li>
+      <li>
+        {% blocktrans trimmed %}
+          Selecting by internal step ID — only the combined <code class="mf-code">label</code> is exposed on each row.
+        {% endblocktrans %}
+      </li>
+      <li>
+        {% blocktrans trimmed %}
+          Rejections in <code class="mf-code">approver_signatures</code> — only approve and workflow-complete events.
+        {% endblocktrans %}
+      </li>
+      <li>
+        {% blocktrans trimmed %}
+          Guaranteed order equal to the workflow designer’s step order — order is by <strong>event time</strong>.
+          Completing the workflow adds another row like a step approval.
+        {% endblocktrans %}
+      </li>
+    </ul>
+    <p class="mf-body-text">
+      {% blocktrans trimmed %}
+        <strong>Practical layout:</strong> fixed cells for known steps → filter with
+      {% endblocktrans %}
+      {% verbatim %}<code class="mf-code">{% if 'Step label' in row.label %}</code>{% endverbatim %}
+      {% blocktrans trimmed %}
+        ; one main signature →
+        <code class="mf-code">approver_signature_primary</code>; full history in order → loop all rows (see above).
+      {% endblocktrans %}
+    </p>
+
+    <h3 class="mf-heading mf-heading--section">{% trans "Multiple respondent images" %}</h3>
+    {% verbatim %}
+    <pre class="mf-code mf-help-pre">{% for row in submission_signatures %}
+{{ row.label }}  {{ row.image }}
+{% endfor %}</pre>
+    {% endverbatim %}
+
+    <h3 class="mf-heading mf-heading--section">{% trans "If the date does not appear" %}</h3>
+    <ul class="mf-manage-bullet-list">
+      <li>
+        {% blocktrans trimmed %}
+          Re-download or preview the <strong>merged</strong> DOCX/PDF after changing the template or deploying
+          server updates — opening an old downloaded file will not update.
+        {% endblocktrans %}
+      </li>
+      <li>
+        {% blocktrans trimmed %}
+          If the user has a signature <strong>image</strong>, you must include
+          <code class="mf-code">signature_primary_date</code> or
+          <code class="mf-code">approver_signature_primary_date</code> on the next line; the image placeholder alone
+          does not include a date.
+        {% endblocktrans %}
+      </li>
+      <li>
+        {% blocktrans trimmed %}
+          Use <code class="mf-code">{{ signature_primary_date }}</code>, not
+          <code class="mf-code">{{r signature_primary_date }}</code>, unless you intentionally use RichText.
+        {% endblocktrans %}
+      </li>
+      <li>
+        {% blocktrans trimmed %}
+          For approvers, the submission must have at least one approval or workflow-completion event; otherwise
+          approver placeholders are empty.
+        {% endblocktrans %}
+      </li>
+    </ul>
+
+    <p class="mf-body-text">{% trans "Layout tips:" %}</p>
+    <ul class="mf-manage-bullet-list">
+      <li>
+        {% blocktrans trimmed %}
+          <strong>Recommended:</strong> loop <code class="mf-code">approver_signatures</code> in a table so the
+          layout adapts when more steps approve.
+        {% endblocktrans %}
+      </li>
+      <li>
+        {% blocktrans trimmed %}
+          Fixed indices (for example
+        {% endblocktrans %}
+        {% verbatim %}<code class="mf-code">{{ approver_signatures[0].image }}</code>{% endverbatim %}
+        {% blocktrans trimmed %}
+          ) only work when event count and order never change.
+        {% endblocktrans %}
+      </li>
+      <li>
+        {% blocktrans trimmed %}
+          Rejections do not add rows to <code class="mf-code">approver_signatures</code>. Completing the workflow
+          adds a row like a step approval.
+        {% endblocktrans %}
+      </li>
+    </ul>
+  </section>
+
+  <section id="inbox" class="mf-manage-section mf-card mf-card--glass mf-stack mf-help-section">
+    <h2 class="mf-heading">{% trans "Inbox, submissions, and search" %}</h2>
+    <p class="mf-body-text">
+      {% blocktrans trimmed %}
+        The <strong>Inbox</strong> lists submissions that need attention on a workflow step you are
+        allowed to act on (including via delegation). Open a row to see answers, timeline, notes, merged
+        print output, and attachments. Use <strong>Search</strong> to locate submissions by reference,
+        email, or text in answers (according to your permissions).
+      {% endblocktrans %}
+    </p>
+  </section>
+
+  <section id="people" class="mf-manage-section mf-card mf-card--glass mf-stack mf-help-section">
+    <h2 class="mf-heading">{% trans "People, delegations, and categories" %}</h2>
+    <p class="mf-body-text">
+      {% blocktrans trimmed %}
+        <strong>People</strong> manages user accounts in your scope (and optional HR-style profile fields
+        used for directory display and field pre-fill). <strong>Delegations</strong> let one staff member
+        cover another’s inbox actions for a date range. <strong>Categories</strong> group forms on the
+        public portal and in workspace lists.
+      {% endblocktrans %}
+    </p>
+  </section>
+
+  <section id="respondents" class="mf-manage-section mf-card mf-card--glass mf-stack mf-help-section">
+    <h2 class="mf-heading">{% trans "What respondents see" %}</h2>
+    <ul class="mf-manage-bullet-list">
+      <li>{% trans "A branded public form page (with your header logos if configured)." %}</li>
+      <li>{% trans "After submit: a tracking page with status, step description, and downloads you expose." %}</li>
+      <li>{% trans "“My signatures” lets signed-in users maintain images used in DOCX merges and optionally set a primary." %}</li>
+      <li>{% trans "Related invitations appear in “Forms to complete” when the workflow creates them." %}</li>
+    </ul>
+  </section>
+
+  <section id="tips" class="mf-manage-section mf-card mf-card--glass mf-stack mf-help-section">
+    <h2 class="mf-heading">{% trans "Practical tips" %}</h2>
+    <ul class="mf-manage-bullet-list">
+      <li>{% trans "Keep internal field names stable once you start using print templates or integrations." %}</li>
+      <li>{% trans "Publish the form before sharing the public link; draft forms cannot be opened or submitted by respondents." %}</li>
+      <li>{% trans "For DOCX, merge once with a test submission to confirm every placeholder resolves (typos show as empty or errors)." %}</li>
+      <li>{% trans "Use PDF as the primary template when you want non-editable distribution; use DOCX when staff need to tweak layout in Word." %}</li>
+    </ul>
+  </section>
+</article>
+{% endblock %}
+
+{% block footer_scripts %}
+{{ block.super }}
+<script src="{% static 'magicforms/js/help_pre_copy.js' %}" defer></script>
+{% endblock %}

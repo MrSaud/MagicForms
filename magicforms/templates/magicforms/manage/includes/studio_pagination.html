@@ -1,0 +1,45 @@
+{% load i18n magicforms_pagination %}
+{# Pass studio_pagination_footer=1 on the second include (below list) to show only prev/next, not "Per page" again. #}
+{% if page_obj %}
+{% if not studio_pagination_footer or page_obj.paginator.num_pages > 1 %}
+<nav class="mf-pagination" aria-label="{% trans 'List pagination' %}">
+  {% if not studio_pagination_footer %}
+  <form method="get" class="mf-pagination__form">
+    {% for key, value in request.GET.items %}
+      {% if key != "per_page" and key != "page" %}
+        <input type="hidden" name="{{ key }}" value="{{ value }}" />
+      {% endif %}
+    {% endfor %}
+    <label class="mf-pagination__per">
+      <span class="mf-pagination__per-label">{% trans "Per page" %}</span>
+      <select name="per_page" class="mf-input mf-input--select mf-input--select-sm mf-pagination__select" aria-label="{% trans 'Results per page' %}" onchange="this.form.submit()">
+        {% for n in per_page_choices %}
+          <option value="{{ n }}" {% if n == per_page %}selected{% endif %}>{{ n }}</option>
+        {% endfor %}
+      </select>
+    </label>
+  </form>
+  {% endif %}
+
+  {% if page_obj.paginator.num_pages > 1 %}
+    <div class="mf-pagination__nav">
+      {% if page_obj.has_previous %}
+        <a class="mf-link mf-pagination__link" href="{% studio_page_url page_obj.previous_page_number %}">{% trans "Previous" %}</a>
+      {% else %}
+        <span class="mf-muted mf-pagination__link mf-pagination__link--disabled">{% trans "Previous" %}</span>
+      {% endif %}
+      <span class="mf-pagination__status mf-muted">
+        {% blocktrans with p=page_obj.number t=page_obj.paginator.num_pages trimmed %}
+          Page {{ p }} of {{ t }}
+        {% endblocktrans %}
+      </span>
+      {% if page_obj.has_next %}
+        <a class="mf-link mf-pagination__link" href="{% studio_page_url page_obj.next_page_number %}">{% trans "Next" %}</a>
+      {% else %}
+        <span class="mf-muted mf-pagination__link mf-pagination__link--disabled">{% trans "Next" %}</span>
+      {% endif %}
+    </div>
+  {% endif %}
+</nav>
+{% endif %}
+{% endif %}

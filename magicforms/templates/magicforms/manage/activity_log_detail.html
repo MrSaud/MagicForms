@@ -1,0 +1,79 @@
+{% extends "magicforms/manage/base_manage.html" %}
+{% load i18n %}
+
+{% block manage_title %}{% trans "Activity" %} · {{ entry.pk }}{% endblock %}
+
+{% block manage_content %}
+<section class="mf-manage-section mf-stack">
+  <p class="mf-eyebrow">{% trans "Activity log" %}</p>
+  <h1 class="mf-display mf-display--small">{% trans "Activity details" %}</h1>
+  <p class="mf-manage-toolbar-actions">
+    <a class="mf-link mf-link--muted" href="{% url 'manage:activity_log_list' %}">{% trans "Back to log" %}</a>
+  </p>
+
+  <dl class="mf-card mf-card--glass mf-activity-log-detail mf-stack">
+    <div class="mf-activity-log-detail__row">
+      <dt>{% trans "When" %}</dt>
+      <dd>{{ entry.created_at|date:"DATETIME_FORMAT" }}</dd>
+    </div>
+    <div class="mf-activity-log-detail__row">
+      <dt>{% trans "User" %}</dt>
+      <dd>{% if entry.username %}{{ entry.username }}{% else %}{% trans "Anonymous" %}{% endif %}{% if entry.is_staff_actor %} · {% trans "staff" %}{% endif %}</dd>
+    </div>
+    <div class="mf-activity-log-detail__row">
+      <dt>{% trans "Channel" %}</dt>
+      <dd>{{ entry.get_channel_display }}</dd>
+    </div>
+    <div class="mf-activity-log-detail__row">
+      <dt>{% trans "Request" %}</dt>
+      <dd><code class="mf-code">{{ entry.http_method }} {{ entry.path }}</code></dd>
+    </div>
+    {% if entry.query_string %}
+    <div class="mf-activity-log-detail__row">
+      <dt>{% trans "Query" %}</dt>
+      <dd><code class="mf-code mf-code--wrap">{{ entry.query_string }}</code></dd>
+    </div>
+    {% endif %}
+    <div class="mf-activity-log-detail__row">
+      <dt>{% trans "Status" %}</dt>
+      <dd>{{ entry.status_code|default:"—" }}{% if entry.duration_ms %} · {{ entry.duration_ms }} ms{% endif %}</dd>
+    </div>
+    {% if entry.view_name %}
+    <div class="mf-activity-log-detail__row">
+      <dt>{% trans "View" %}</dt>
+      <dd><code class="mf-code">{{ entry.view_name }}</code></dd>
+    </div>
+    {% endif %}
+    {% if entry.summary %}
+    <div class="mf-activity-log-detail__row">
+      <dt>{% trans "Summary" %}</dt>
+      <dd>{{ entry.summary }}</dd>
+    </div>
+    {% endif %}
+    {% if entry.entity_id %}
+    <div class="mf-activity-log-detail__row">
+      <dt>{% trans "Organization ID" %}</dt>
+      <dd>{{ entry.entity_id }}</dd>
+    </div>
+    {% endif %}
+    {% if entry.ip_address %}
+    <div class="mf-activity-log-detail__row">
+      <dt>{% trans "IP address" %}</dt>
+      <dd>{{ entry.ip_address }}</dd>
+    </div>
+    {% endif %}
+    {% if entry.user_agent %}
+    <div class="mf-activity-log-detail__row">
+      <dt>{% trans "User agent" %}</dt>
+      <dd class="mf-body-text">{{ entry.user_agent }}</dd>
+    </div>
+    {% endif %}
+    {% if entry.extra %}
+    <div class="mf-activity-log-detail__row">
+      <dt>{% trans "Extra data" %}</dt>
+      <dd><pre class="mf-code mf-code--block">{{ entry.extra }}</pre></dd>
+    </div>
+    {% endif %}
+  </dl>
+</section>
+{% endblock %}

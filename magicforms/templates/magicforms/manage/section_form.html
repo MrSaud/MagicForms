@@ -1,0 +1,30 @@
+{% extends "magicforms/manage/base_manage.html" %}
+{% load i18n %}
+
+{% block manage_title %}{% if mode == 'add' %}{% trans "Add section" %}{% else %}{% trans "Edit section" %}{% endif %}{% endblock %}
+
+{% block manage_content %}
+<section class="mf-manage-section mf-stack">
+  <h1 class="mf-display mf-display--small">{% if mode == 'add' %}{% trans "Add section" %}{% else %}{% trans "Edit section" %}{% endif %}</h1>
+  <form method="post" class="mf-form mf-form--wide">
+    {% csrf_token %}
+    {% if form.non_field_errors %}<div class="mf-alert mf-alert--error">{{ form.non_field_errors }}</div>{% endif %}
+    {% for field in form %}
+      <div class="mf-field">
+        {{ field.errors }}
+        {% if field.field.widget.input_type == 'checkbox' %}
+          <label class="mf-check-label" for="{{ field.id_for_label }}">{{ field }} <span>{{ field.label }}</span></label>
+        {% else %}
+          <label class="mf-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+          {{ field }}
+        {% endif %}
+        {% if field.help_text %}<p class="mf-hint">{{ field.help_text }}</p>{% endif %}
+      </div>
+    {% endfor %}
+    <div class="mf-actions">
+      <button type="submit" class="mf-button mf-button--primary">{% trans "Save" %}</button>
+      <a class="mf-link mf-link--muted" href="{% url 'manage:section_list' form_obj.pk %}">{% trans "Cancel" %}</a>
+    </div>
+  </form>
+</section>
+{% endblock %}

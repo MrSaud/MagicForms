@@ -1,0 +1,177 @@
+{% extends "magicforms/manage/base_manage.html" %}
+{% load static i18n magicforms_i18n %}
+
+{% block extrahead %}{{ block.super }}
+<script defer src="{% static 'magicforms/js/form_delete_dialog.js' %}"></script>
+{% endblock %}
+
+{% block manage_title %}{{ form_obj.title|mf_trans }}{% endblock %}
+
+{% block form_tabs_eyebrow %}{% endblock %}
+
+{% block manage_content %}
+{# Overview = what this form is, where it lives, how it is doing. Setup lives in the tabs above; nothing is repeated here. #}
+<div class="mf-form-hub">
+  {% if show_sample_claim %}
+  <div class="mf-alert mf-alert--info mf-form-hub__notice" role="status">
+    <p class="mf-m0">{% trans "This is a starter template. Add it to your Forms list to own it, then edit and publish." %}</p>
+    <form method="post" action="{% url 'manage:sample_form_claim' form_obj.pk %}" class="mf-inline-form">
+      {% csrf_token %}
+      <button type="submit" class="mf-button mf-button--primary mf-button--small">{% trans "Add to my forms" %}</button>
+    </form>
+  </div>
+  {% endif %}
+
+  {% if form_obj.deleted_at %}
+  <div class="mf-alert mf-alert--error mf-form-hub__notice" role="status">
+    <p class="mf-m0">{% trans "This form is deleted. It is unpublished and hidden from lists; submissions are kept." %}</p>
+    {% if can_archive %}
+    <form method="post" action="{% url 'manage:form_restore' form_obj.pk %}" class="mf-inline-form">
+      {% csrf_token %}
+      <button type="submit" class="mf-button mf-button--primary mf-button--small">{% trans "Restore form" %}</button>
+    </form>
+    {% endif %}
+  </div>
+  {% endif %}
+
+  <header class="mf-page-head">
+    <div class="mf-form-hub__heading">
+      <div class="mf-form-hub__title-line">
+        <h1 class="mf-page-head__title" id="mf-form-detail-title">{{ form_obj.title|mf_trans }}</h1>
+        {% if form_obj.deleted_at %}
+          <span class="mf-pill mf-pill--form-status mf-pill--form-archived">{% trans "Deleted" %}</span>
+        {% elif form_obj.is_published %}
+          <span class="mf-pill mf-pill--form-status mf-pill--form-published">{% trans "Published" %}</span>
+        {% else %}
+          <span class="mf-pill mf-pill--form-status mf-pill--form-draft">{% trans "Draft" %}</span>
+        {% endif %}
+      </div>
+      <p class="mf-page-head__meta mf-form-hub__meta">
+        {% if form_obj.category %}<span>{{ form_obj.category.name|mf_trans }}</span>{% endif %}
+        {% if form_obj.submission_deadline %}<span>{% if form_obj.submission_deadline_has_passed %}{% trans "Deadline passed" %}{% else %}{% trans "Deadline" %}{% endif %} {{ form_obj.submission_deadline|date:"M j, Y" }}</span>{% endif %}
+        {% if form_obj.intro_capacity %}<span>{% blocktrans with left=form_obj.intro_seats_remaining total=form_obj.intro_capacity %}{{ left }} of {{ total }} seats left{% endblocktrans %}</span>{% endif %}
+        {% if not form_obj.is_for_public %}<span>{% trans "Sign-in required" %}</span>{% endif %}
+        {% if form_obj.one_time_submit %}<span>{% trans "One response each" %}</span>{% endif %}
+        {% if form_obj.allow_submission_forward %}<span>{% trans "Forwarding on" %}</span>{% endif %}
+        {% if form_obj.hide_from_form_lists %}<span>{% trans "Hidden from lists" %}</span>{% endif %}
+        {% if form_obj.public_share_key %}<span>{% trans "Secure share" %}</span>{% endif %}
+        {% if form_obj.intro_page_enabled %}<span>{% trans "Announcement page on" %}</span>{% endif %}
+      </p>
+      {% if form_obj.description %}
+      <p class="mf-form-hub__desc">{{ form_obj.description|mf_trans }}</p>
+      {% endif %}
+    </div>
+    <div class="mf-page-head__actions">
+      {% if form_obj.is_published and not form_obj.deleted_at %}
+      <a class="mf-button mf-button--primary" href="{{ public_url }}" target="_blank" rel="noopener">{% trans "Open live form" %}</a>
+      {% endif %}
+      {% if hub_stats.fields %}{% if not form_obj.deleted_at or user.is_superuser %}
+      <a class="mf-button mf-button--secondary" href="{% url 'manage:form_preview' form_obj.pk %}" target="_blank" rel="noopener">{% trans "Preview" %}</a>
+      {% endif %}{% endif %}
+      {% if not form_obj.deleted_at %}
+      <form method="post" action="{% url 'manage:form_duplicate' form_obj.pk %}" class="mf-inline-form" onsubmit="return confirm('{% trans "Duplicate this form? You get a new draft with the same fields, sections, workflow, logos, and print templates when present. Submissions are not copied." %}');">
+        {% csrf_token %}
+        <button type="submit" class="mf-button mf-button--quiet">{% trans "Duplicate" %}</button>
+      </form>
+      {% endif %}
+    </div>
+  </header>
+
+  {% if not form_obj.deleted_at %}
+  <div class="mf-form-hub__link">
+    <label class="mf-label" for="mf-form-public-url">{% trans "Public link" %}</label>
+    <input id="mf-form-public-url" class="mf-input" type="text" readonly value="{{ public_url }}" spellcheck="false" />
+    <button type="button" class="mf-button mf-button--secondary" id="mf-form-public-url-copy">{% trans "Copy" %}</button>
+    <a class="mf-button mf-button--quiet" href="{% url 'manage:form_qrcode' form_obj.pk %}">{% trans "QR code" %}</a>
+  </div>
+  {% endif %}
+
+  <ul class="mf-form-hub__facts" aria-label="{% trans 'Form summary' %}">
+    <li><a href="{% url 'manage:field_list' form_obj.pk %}"><b>{{ hub_stats.fields }}</b><span>{% blocktrans count counter=hub_stats.fields %}field{% plural %}fields{% endblocktrans %}</span></a></li>
+    <li><a href="{% url 'manage:workflow_list' form_obj.pk %}"><b>{{ hub_stats.workflow_steps }}</b><span>{% blocktrans count counter=hub_stats.workflow_steps %}workflow step{% plural %}workflow steps{% endblocktrans %}</span></a></li>
+    <li><a href="{% url 'manage:submission_list' form_obj.pk %}"><b>{{ hub_stats.submissions }}</b><span>{% blocktrans count counter=hub_stats.submissions %}submission{% plural %}submissions{% endblocktrans %}</span></a></li>
+    {% if hub_stats.logos %}
+    <li><a href="{% url 'manage:logo_list' form_obj.pk %}"><b>{{ hub_stats.logos }}</b><span>{% blocktrans count counter=hub_stats.logos %}header logo{% plural %}header logos{% endblocktrans %}</span></a></li>
+    {% endif %}
+  </ul>
+
+  {% if not form_obj.is_published and not form_obj.deleted_at %}
+  <div class="mf-alert mf-alert--info" role="status">
+    {% if form_obj.uses_dynamic_routing %}
+      {% if hub_stats.fields < 1 %}
+        {% trans "Publishing stays off until the form has at least one field." %}
+      {% else %}
+        {% trans "Ready to go live: open Settings and turn on Published." %}
+      {% endif %}
+    {% elif hub_stats.fields < 1 or hub_stats.workflow_steps < 1 %}
+      {% trans "Publishing stays off until the form has at least one field and one workflow step." %}
+    {% else %}
+      {% trans "Ready to go live: open Settings and turn on Published." %}
+    {% endif %}
+  </div>
+  {% endif %}
+
+  {% if form_obj.print_template or form_obj.print_template_odt %}
+  <section class="mf-form-hub__print" aria-labelledby="mf-form-detail-print-heading">
+    <h2 class="mf-heading" id="mf-form-detail-print-heading">{% trans "Print templates" %}</h2>
+    <ul class="mf-form-hub__print-list">
+      {% if form_obj.print_template %}
+      <li><span class="mf-muted">{% trans "Merged output" %}</span> <code class="mf-code">{{ form_obj.print_template.name }}</code> <a class="mf-link" href="{% url 'manage:form_print_template_download' form_obj.pk %}">{% trans "Download" %}</a></li>
+      {% endif %}
+      {% if form_obj.print_template_odt %}
+      <li><span class="mf-muted">{% trans "ODT for staff editing" %}</span> <code class="mf-code">{{ form_obj.print_template_odt.name }}</code> <a class="mf-link" href="{% url 'manage:form_print_template_odt_download' form_obj.pk %}">{% trans "Download" %}</a></li>
+      {% endif %}
+    </ul>
+  </section>
+  {% endif %}
+
+  {% if can_archive and not form_obj.deleted_at %}
+  <footer class="mf-form-hub__danger">
+    <button type="button" class="mf-button mf-button--quiet mf-form-hub__delete" data-mf-delete-open>{% trans "Delete form" %}</button>
+    <span class="mf-muted">{% trans "Kept in Deleted forms; you can restore it later." %}</span>
+    <div class="mf-dialog-backdrop" data-mf-delete-dialog data-mf-delete-word="confirm" hidden>
+      <form method="post" action="{% url 'manage:form_archive' form_obj.pk %}" class="mf-dialog" role="dialog" aria-modal="true" aria-labelledby="mf-delete-title" data-mf-no-busy="true">
+        {% csrf_token %}
+        <h3 class="mf-dialog__title" id="mf-delete-title">{% trans "Delete this form?" %}</h3>
+        <p class="mf-muted">{% trans "It is unpublished and hidden from public and normal lists. Submissions are kept, and you can restore the form from Deleted forms at any time." %}</p>
+        <div class="mf-field">
+          <label class="mf-label" for="mf-delete-confirm">{% trans "Type “confirm” to continue" %}</label>
+          <input class="mf-input" id="mf-delete-confirm" name="confirm" type="text" autocomplete="off" placeholder="confirm" data-mf-delete-input>
+        </div>
+        <div class="mf-actions">
+          <button type="submit" class="mf-button mf-button--danger" data-mf-delete-submit disabled>{% trans "Delete form" %}</button>
+          <button type="button" class="mf-button mf-button--secondary" data-mf-delete-cancel>{% trans "Cancel" %}</button>
+        </div>
+      </form>
+    </div>
+  </footer>
+  {% endif %}
+</div>
+
+{% if not form_obj.deleted_at %}
+<script>
+(function () {
+  var btn = document.getElementById("mf-form-public-url-copy");
+  var input = document.getElementById("mf-form-public-url");
+  if (!btn || !input) return;
+  btn.addEventListener("click", function () {
+    input.select();
+    input.setSelectionRange(0, input.value.length);
+    var label = btn.textContent;
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(input.value).then(function () {
+        btn.textContent = "{% trans 'Copied' %}";
+        setTimeout(function () { btn.textContent = label; }, 1600);
+      }).catch(function () { document.execCommand("copy"); });
+    } else {
+      try {
+        document.execCommand("copy");
+        btn.textContent = "{% trans 'Copied' %}";
+        setTimeout(function () { btn.textContent = label; }, 1600);
+      } catch (e) {}
+    }
+  });
+})();
+</script>
+{% endif %}
+{% endblock %}

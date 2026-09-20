@@ -1,0 +1,404 @@
+/*
+ * Studio layout (UI Phase 3): left rail + content, form setup tabs, two-column submission page.
+ *
+ *   .mf-studio-layout   grid: rail | content on wide screens (≥ 1100px); single column below
+ *   .mf-studio-rail     five destinations + "More"; sticky under the fixed top bar
+ *   .mf-form-tabs       .mf-tabs with a native <details> "More" menu
+ *   .mf-submission-layout  main column (answers, document, attachments) | side column (workflow, timeline)
+ */
+
+/* ---------------------------------------------------------------- layout */
+.mf-studio-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--mf-space-6);
+  align-items: start;
+}
+
+.mf-studio-rail {
+  display: none;
+}
+
+/* Top-bar button that hides or shows the rail (only meaningful where the rail is shown). */
+.mf-studio-rail-toggle {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 2.35rem;
+  height: 2.35rem;
+  margin: 0;
+  padding: 0;
+  border: 1px solid transparent;
+  border-radius: var(--mf-radius-sm);
+  background: transparent;
+  color: var(--mf-text-muted);
+  cursor: pointer;
+  transition:
+    background-color var(--mf-motion) var(--mf-ease),
+    color var(--mf-motion) var(--mf-ease);
+}
+
+.mf-studio-rail-toggle:hover {
+  background: var(--mf-surface);
+  border-color: var(--mf-border);
+  color: var(--mf-text-primary);
+}
+
+.mf-studio-rail-toggle:focus-visible {
+  outline: none;
+  box-shadow: var(--mf-focus-ring);
+}
+
+.mf-studio-rail-toggle[aria-pressed="true"] {
+  color: var(--mf-color-primary);
+}
+
+@media (min-width: 1100px) {
+  .mf-studio-layout {
+    grid-template-columns: 14rem minmax(0, 1fr);
+  }
+
+  .mf-studio-layout--no-rail {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .mf-studio-rail {
+    display: block;
+    position: sticky;
+    top: calc(env(safe-area-inset-top, 0px) + clamp(4.25rem, 10vw, 5.5rem) + var(--mf-banner-content-gap));
+    max-height: calc(100vh - 6rem);
+    overflow-y: auto;
+    padding-inline-end: var(--mf-space-2);
+  }
+
+  /* The top bar keeps brand, scope, search and account icons; the link list moves to the rail. */
+  .mf-manage-nav--studio .mf-manage-nav__menu > a,
+  .mf-manage-nav--studio .mf-manage-nav__menu > .mf-manage-user-scope-row {
+    display: none;
+  }
+
+  /* Hidable rail: the top-bar toggle sets html[data-mf-rail="hidden"]; the choice is remembered per browser. */
+  .mf-studio-rail-toggle {
+    display: inline-flex;
+  }
+
+  html[data-mf-rail="hidden"] .mf-studio-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  html[data-mf-rail="hidden"] .mf-studio-rail {
+    display: none;
+  }
+}
+
+.mf-studio-rail__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--mf-space-1);
+}
+
+.mf-studio-rail__label {
+  margin: var(--mf-space-5) 0 var(--mf-space-2) var(--mf-space-3);
+  font-size: var(--mf-font-caption);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--mf-text-muted);
+}
+
+.mf-studio-rail__link {
+  display: flex;
+  align-items: center;
+  gap: var(--mf-space-3);
+  padding: var(--mf-space-2) var(--mf-space-3);
+  border-radius: var(--mf-radius-sm);
+  color: var(--mf-text-primary);
+  text-decoration: none;
+  font-size: var(--mf-font-body);
+  font-weight: 500;
+  transition: background-color var(--mf-motion) var(--mf-ease);
+}
+
+.mf-studio-rail__list--secondary .mf-studio-rail__link {
+  font-size: var(--mf-font-caption);
+  font-weight: 500;
+  color: var(--mf-text-muted);
+  padding-block: var(--mf-space-1);
+}
+
+.mf-studio-rail__link:hover {
+  background: var(--mf-surface);
+}
+
+.mf-studio-rail__link:focus-visible {
+  outline: none;
+  box-shadow: var(--mf-focus-ring);
+}
+
+.mf-studio-rail__link[aria-current="page"] {
+  background: var(--mf-surface);
+  border: 1px solid var(--mf-border);
+  color: var(--mf-text-primary);
+  font-weight: 600;
+}
+
+.mf-studio-rail__icon {
+  flex: none;
+  color: var(--mf-text-muted);
+}
+
+.mf-studio-rail__link[aria-current="page"] .mf-studio-rail__icon {
+  color: var(--mf-color-primary);
+}
+
+.mf-studio-rail__badge {
+  margin-inline-start: auto;
+  min-width: 1.4rem;
+  padding: 0 0.4rem;
+  border-radius: 999px;
+  background: var(--mf-color-primary);
+  color: var(--mf-on-accent);
+  font-size: 0.72rem;
+  font-weight: 600;
+  line-height: 1.4rem;
+  text-align: center;
+}
+
+/* ---------------------------------------------------------------- form tabs */
+.mf-form-tabs__eyebrow {
+  margin-bottom: var(--mf-space-2);
+}
+
+/* Wrap rather than scroll: a scrolling strip would clip the "More" dropdown. */
+.mf-form-tabs {
+  margin-bottom: var(--mf-space-5);
+  flex-wrap: wrap;
+  overflow: visible;
+}
+
+.mf-tabs__more {
+  position: relative;
+}
+
+.mf-tabs__more-summary {
+  list-style: none;
+  display: inline-block;
+}
+
+.mf-tabs__more-summary::-webkit-details-marker {
+  display: none;
+}
+
+.mf-tabs__menu {
+  position: absolute;
+  inset-inline-start: 0;
+  top: calc(100% + 0.35rem);
+  z-index: 30;
+  min-width: 14rem;
+  padding: var(--mf-space-2);
+  border-radius: var(--mf-radius-sm);
+  background: var(--mf-surface-elevated);
+  border: 1px solid var(--mf-border);
+  box-shadow: var(--mf-shadow-menu);
+  display: flex;
+  flex-direction: column;
+}
+
+.mf-tabs__menu a {
+  padding: var(--mf-space-2) var(--mf-space-3);
+  border-radius: var(--mf-radius-sm);
+  color: var(--mf-text-primary);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.mf-tabs__menu a:hover {
+  background: var(--mf-surface-muted);
+}
+
+/* ---------------------------------------------------------------- submission page */
+.mf-submission-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--mf-space-5);
+  align-items: start;
+}
+
+@media (min-width: 1100px) {
+  .mf-submission-layout {
+    grid-template-columns: minmax(0, 1.6fr) minmax(20rem, 1fr);
+  }
+
+  .mf-submission-layout__side {
+    position: sticky;
+    top: calc(env(safe-area-inset-top, 0px) + clamp(4.25rem, 10vw, 5.5rem) + var(--mf-banner-content-gap));
+    max-height: calc(100vh - 6rem);
+    overflow-y: auto;
+  }
+}
+
+.mf-submission-layout__main,
+.mf-submission-layout__side {
+  display: flex;
+  flex-direction: column;
+  gap: var(--mf-space-4);
+  min-width: 0;
+}
+
+/* Approve / reject stays reachable: its card sits first in the side column. */
+.mf-submission-layout__side .mf-submission-workflow-card {
+  border-color: var(--mf-border-strong);
+}
+
+/* ---------------------------------------------------------------- organization chooser (super admins) */
+.mf-org-choice {
+  max-width: 56rem;
+}
+
+.mf-org-choice__grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+  gap: var(--mf-space-3);
+}
+
+.mf-org-choice__card {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--mf-space-1);
+  padding: var(--mf-space-4);
+  text-align: start;
+  background: var(--mf-surface);
+  border: 1px solid var(--mf-border);
+  border-radius: var(--mf-radius-md);
+  font: inherit;
+  color: var(--mf-text-primary);
+  cursor: pointer;
+  transition: border-color var(--mf-motion) var(--mf-ease), background-color var(--mf-motion) var(--mf-ease);
+}
+
+.mf-org-choice__card:hover {
+  border-color: var(--mf-color-primary);
+}
+
+.mf-org-choice__card:focus-visible {
+  outline: none;
+  box-shadow: var(--mf-focus-ring);
+}
+
+.mf-org-choice__name {
+  font-weight: 600;
+  font-size: var(--mf-font-heading);
+}
+
+.mf-org-choice__meta {
+  color: var(--mf-text-muted);
+  font-size: var(--mf-font-caption);
+}
+
+/* ---------------------------------------------------------------- top bar: current organization (super admins) */
+.mf-manage-scope-current {
+  display: inline-flex;
+  align-items: baseline;
+  gap: var(--mf-space-2);
+  min-width: 0;
+  font-size: var(--mf-font-caption);
+}
+
+.mf-manage-scope-current__label {
+  color: var(--mf-text-muted);
+}
+
+.mf-manage-scope-current__name {
+  font-weight: 600;
+  color: var(--mf-text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 18rem;
+}
+
+.mf-manage-scope-current__switch {
+  color: var(--mf-color-primary);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.mf-manage-scope-current__switch:hover {
+  text-decoration: underline;
+}
+
+/* ---------------------------------------------------------------- studio footer (end of every workspace page) */
+.mf-studio-footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--mf-space-2) var(--mf-space-4);
+  margin-top: var(--mf-space-6);
+  padding-top: var(--mf-space-4);
+  border-top: 1px solid var(--mf-border);
+  font-size: var(--mf-font-caption);
+  color: var(--mf-text-muted);
+}
+
+.mf-studio-footer__brand {
+  display: inline-flex;
+  align-items: baseline;
+  gap: var(--mf-space-3);
+  margin: 0;
+}
+
+.mf-brand-wordmark--small {
+  font-size: 1rem;
+}
+
+.mf-brand-wordmark--small .mf-brand-wordmark__swap,
+.mf-brand-wordmark--small .mf-brand-wordmark__forms {
+  color: var(--mf-text-muted);
+}
+
+.mf-studio-footer a {
+  color: var(--mf-text-muted);
+  text-decoration: none;
+}
+
+.mf-studio-footer a:hover {
+  color: var(--mf-text-primary);
+  text-decoration: underline;
+}
+
+.mf-studio-footer__links {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: var(--mf-space-4);
+}
+
+/* ---------------------------------------------------------------- submission page: document first, side panel hidable */
+.mf-submission-doc-details--always-open > .mf-submission-doc-details__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--mf-space-3);
+}
+
+.mf-read-document-card .mf-pdfsign__pages,
+.mf-read-document-card .mf-doc-viewer-wrap {
+  margin-inline: auto;
+  width: 100%;
+  max-width: 60rem;
+}
+
+html[data-mf-side="hidden"] .mf-submission-layout {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+html[data-mf-side="hidden"] .mf-submission-layout__side {
+  display: none;
+}

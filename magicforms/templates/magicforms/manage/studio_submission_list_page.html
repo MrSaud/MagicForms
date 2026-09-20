@@ -1,0 +1,16 @@
+{% extends "magicforms/manage/base_manage.html" %}
+
+{% block manage_content %}
+<section class="mf-manage-section mf-stack mf-manage-section--studio-list-compact">
+  <header class="mf-page-head">
+    <div>
+      <h1 class="mf-page-head__title">{% block studio_list_heading %}{% endblock %}</h1>
+      <p class="mf-page-head__meta">{% block studio_list_lead %}{% endblock %}</p>
+    </div>
+  </header>
+  {% block studio_list_filters %}{% endblock %}
+  {% block studio_list_summary %}{% endblock %}
+  {% block studio_list_body %}{% endblock %}
+  {% block studio_list_footer %}{% endblock %}
+</section>
+{% endblock %}

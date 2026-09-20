@@ -1,0 +1,132 @@
+{% extends "magicforms/manage/base_manage.html" %}
+{% load static i18n %}
+
+{% block manage_title %}{% if mode == 'add' %}{% trans "Add field" %}{% else %}{% trans "Edit field" %}{% endif %}{% endblock %}
+
+{% block manage_content %}
+<section class="mf-manage-section mf-stack">
+  <h1 class="mf-display mf-display--small">{% if mode == 'add' %}{% trans "Add field" %}{% else %}{% trans "Edit field" %}{% endif %}</h1>
+  <form method="post" class="mf-form mf-form--wide" id="mf-field-editor-form">
+    {% csrf_token %}
+    {% if form.non_field_errors %}<div class="mf-alert mf-alert--error">{{ form.non_field_errors }}</div>{% endif %}
+    {% for hidden in form.hidden_fields %}{{ hidden }}{% endfor %}
+
+    <div class="mf-manage-field-group mf-card mf-card--glass mf-stack">
+      <h2 class="mf-heading mf-heading--section">{% trans "Field basics" %}</h2>
+      <p class="mf-muted mf-mb-text">{% trans "Type and label shown to respondents. An internal name is assigned automatically." %}</p>
+      {% include "magicforms/manage/includes/studio_bound_field.html" with bound=form.field_type %}
+      {% if "mapping_key" in form.fields and not form.fields.mapping_key.widget.is_hidden %}
+        {% include "magicforms/manage/includes/studio_bound_field.html" with bound=form.mapping_key %}
+      {% endif %}
+      {% include "magicforms/manage/includes/studio_bound_field.html" with bound=form.label %}
+    </div>
+
+    <div class="mf-manage-field-group mf-card mf-card--glass mf-stack">
+      <h2 class="mf-heading mf-heading--section">{% trans "Presentation" %}</h2>
+      <p class="mf-muted mf-mb-text">{% trans "Behavior and helper text on the live form." %}</p>
+      {% if "required" in form.fields and not form.fields.required.widget.is_hidden %}
+        {% include "magicforms/manage/includes/studio_bound_field.html" with bound=form.required %}
+      {% endif %}
+      {% if "inline" in form.fields and not form.fields.inline.widget.is_hidden %}
+        {% include "magicforms/manage/includes/studio_bound_field.html" with bound=form.inline %}
+      {% endif %}
+      {% include "magicforms/manage/includes/studio_bound_field.html" with bound=form.hint %}
+      {% if "help_text" in form.fields and not form.fields.help_text.widget.is_hidden %}
+        {% include "magicforms/manage/includes/studio_bound_field.html" with bound=form.help_text %}
+      {% endif %}
+      {% if "placeholder" in form.fields and not form.fields.placeholder.widget.is_hidden %}
+        {% include "magicforms/manage/includes/studio_bound_field.html" with bound=form.placeholder %}
+      {% endif %}
+      {% include "magicforms/manage/includes/studio_bound_field.html" with bound=form.section %}
+      <div
+        id="mf-choices-wrap"
+        class="mf-field mf-manage-field-group__choices{% if 'choices_text' not in form.fields %} is-hidden{% endif %}"
+        data-has-server-field="{% if 'choices_text' in form.fields %}1{% else %}0{% endif %}"
+      >
+        {% if 'choices_text' in form.fields %}
+          {% with ch=form.choices_text %}
+            {{ ch.errors }}
+            <label class="mf-label" for="{{ ch.id_for_label }}">{{ ch.label }}</label>
+            {{ ch }}
+            {% if ch.help_text %}<p class="mf-hint">{{ ch.help_text }}</p>{% endif %}
+          {% endwith %}
+        {% endif %}
+      </div>
+      <div
+        id="mf-options-layout-wrap"
+        class="mf-field mf-manage-field-group__options-layout{% if 'options_layout' not in form.fields %} is-hidden{% endif %}"
+        data-has-server-field="{% if 'options_layout' in form.fields %}1{% else %}0{% endif %}"
+      >
+        {% if 'options_layout' in form.fields %}
+          {% with ol=form.options_layout %}
+            {{ ol.errors }}
+            <label class="mf-label" for="{{ ol.id_for_label }}">{{ ol.label }}</label>
+            {{ ol }}
+            {% if ol.help_text %}<p class="mf-hint">{{ ol.help_text }}</p>{% endif %}
+          {% endwith %}
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="mf-manage-field-group mf-card mf-card--glass mf-stack">
+      <h2 class="mf-heading mf-heading--section">{% trans "Conditional visibility" %}</h2>
+      <p class="mf-muted mf-mb-text">{% trans "Show this field only when another control field matches specific values." %}</p>
+      {% include "magicforms/manage/includes/studio_bound_field.html" with bound=form.visibility_control_field %}
+      {% include "magicforms/manage/includes/studio_bound_field.html" with bound=form.visibility_show_when_values %}
+    </div>
+
+    {% if "validation_min_length" in form.fields %}
+    <details
+      id="mf-field-validation-details"
+      class="mf-manage-field-group mf-card mf-card--glass mf-stack mf-field-validation-details"
+    >
+      <summary class="mf-field-validation-details__summary">
+        <span class="mf-heading mf-heading--section">{% trans "Optional validation" %}</span>
+        <span class="mf-muted mf-field-validation-details__lead">
+          {% blocktrans trimmed %}
+            Extra checks on submissions. Applies by field type as described below; leave blank to skip.
+          {% endblocktrans %}
+        </span>
+      </summary>
+      <div class="mf-field-validation-details__body mf-stack">
+        {% include "magicforms/manage/includes/studio_bound_field.html" with bound=form.validation_min_length %}
+        {% include "magicforms/manage/includes/studio_bound_field.html" with bound=form.validation_max_length %}
+        {% include "magicforms/manage/includes/studio_bound_field.html" with bound=form.validation_must_contain %}
+        {% include "magicforms/manage/includes/studio_bound_field.html" with bound=form.validation_must_not_contain %}
+        {% include "magicforms/manage/includes/studio_bound_field.html" with bound=form.validation_must_equal %}
+        {% include "magicforms/manage/includes/studio_bound_field.html" with bound=form.validation_regex %}
+        {% include "magicforms/manage/includes/studio_bound_field.html" with bound=form.validation_unique_value %}
+        <hr class="mf-manage-field-group__divider" aria-hidden="true" />
+        <p class="mf-manage-field-group__subheading">{% trans "Numbers and dates" %}</p>
+        {% include "magicforms/manage/includes/studio_bound_field.html" with bound=form.validation_integer_only %}
+        {% include "magicforms/manage/includes/studio_bound_field.html" with bound=form.validation_decimal_min %}
+        {% include "magicforms/manage/includes/studio_bound_field.html" with bound=form.validation_decimal_max %}
+        {% include "magicforms/manage/includes/studio_bound_field.html" with bound=form.validation_date_after %}
+        {% include "magicforms/manage/includes/studio_bound_field.html" with bound=form.validation_date_before %}
+      </div>
+    </details>
+    {% endif %}
+
+    <div class="mf-actions">
+      <button type="submit" class="mf-button mf-button--primary">{% trans "Save" %}</button>
+      <a class="mf-link mf-link--muted" href="{% url 'manage:field_list' form_obj.pk %}">{% trans "Cancel" %}</a>
+    </div>
+  </form>
+  {% if mode == "edit" and field_obj %}
+  <div class="mf-actions">
+    <form method="post" action="{% url 'manage:field_duplicate' form_obj.pk field_obj.pk %}" class="mf-inline-form">
+      {% csrf_token %}
+      <button type="submit" class="mf-button mf-button--secondary">{% trans "Duplicate field" %}</button>
+    </form>
+  </div>
+  {% endif %}
+  <script src="{% static 'magicforms/js/manage_field_choices.js' %}"></script>
+  <script>
+    (function () {
+      var d = document.getElementById("mf-field-validation-details");
+      if (!d || !d.querySelector(".errorlist")) return;
+      d.open = true;
+    })();
+  </script>
+</section>
+{% endblock %}

@@ -1,0 +1,81 @@
+{% load i18n %}
+{# Expects: pdf_inline_path, print_can_view_pdf, print_is_docx, print_has_odt_secondary, form_obj, submission #}
+{% if document_always_open %}
+<div class="mf-submission-doc-details mf-submission-doc-details--merged mf-submission-doc-details--always-open">
+{% else %}
+<details class="mf-submission-doc-details mf-submission-doc-details--merged">
+  <summary class="mf-submission-doc-details__summary mf-submission-doc-details__summary--thumb">
+    {% if print_can_view_pdf and pdf_inline_path %}
+      <div class="mf-doc-thumb">
+        <div class="mf-doc-thumb__frame-wrap" aria-hidden="true">
+          <div class="mf-doc-thumb-loading" role="status" aria-live="polite" aria-busy="true">
+            <div class="mf-doc-thumb-loading__track" aria-hidden="true">
+              <div class="mf-doc-thumb-loading__bar"></div>
+            </div>
+            <p class="mf-doc-thumb-loading__text">{% trans "Loading preview…" %}</p>
+          </div>
+          <iframe
+            class="mf-doc-thumb-iframe"
+            data-pdf-src="{{ pdf_inline_path }}"
+            title=""
+            tabindex="-1"
+          ></iframe>
+        </div>
+        <span class="mf-doc-thumb__label">{% trans "View full document" %}</span>
+      </div>
+    {% else %}
+      <div class="mf-doc-thumb mf-doc-thumb--placeholder">
+        <span class="mf-doc-thumb__icon" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" width="32" height="40" viewBox="0 0 32 40" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M8 2h11l9 9v27H8V2z" />
+            <path d="M19 2v9h9" />
+            <path d="M11 18h14M11 24h14M11 30h10" />
+          </svg>
+        </span>
+        <span class="mf-doc-thumb__label">{% trans "View document" %}</span>
+      </div>
+    {% endif %}
+    <span class="mf-doc-thumb__collapse-label">{% trans "Collapse document" %}</span>
+  </summary>
+{% endif %}
+  <div class="mf-submission-doc-details__body mf-stack">
+    {% if print_can_view_pdf and sign_urls %}
+      {% if not sign_lock_reason %}
+      <p class="mf-muted mf-m0">{% trans "Right-click a spot on the page (press and hold on touch screens) to draw a signature there. Signatures are stamped into the merged PDF." %}</p>
+      {% endif %}
+      {% include "magicforms/includes/pdf_sign_widget.html" %}
+    {% elif print_can_view_pdf %}
+      <div class="mf-doc-viewer-wrap">
+        <div class="mf-doc-viewer-loading" role="status" aria-live="polite" aria-busy="true">
+          <div class="mf-doc-viewer-loading__track" aria-hidden="true">
+            <div class="mf-doc-viewer-loading__bar"></div>
+          </div>
+          <p class="mf-doc-viewer-loading__text">{% trans "Loading document…" %}</p>
+        </div>
+        <iframe
+          class="mf-doc-viewer"
+          title="{% trans 'Merged PDF' %}"
+          data-pdf-src="{{ pdf_inline_path }}"
+        ></iframe>
+      </div>
+    {% elif print_is_docx or print_has_odt_secondary %}
+      <p class="mf-body-text mf-muted">
+        {% blocktrans trimmed %}
+          In-page preview needs LibreOffice on the server (<code class="mf-code">soffice</code>) to convert DOCX/ODT to PDF.
+          Install it or set <code class="mf-code">MAGIFORM_SOFFICE</code> to the binary path, then restart the app. Use download below until then.
+        {% endblocktrans %}
+      </p>
+    {% endif %}
+    <div class="mf-actions mf-submission-doc-downloads">
+      {% if print_can_view_pdf %}
+        <a class="mf-button mf-button--secondary mf-button--small" href="{% url 'manage:submission_merge_document' form_obj.pk submission.pk 'pdf' %}" data-mf-no-busy="true">{% trans "Download PDF" %}</a>
+      {% endif %}
+      {% if print_is_docx %}
+        <a class="mf-button mf-button--secondary mf-button--small" href="{% url 'manage:submission_merge_document' form_obj.pk submission.pk 'docx' %}" data-mf-no-busy="true">{% trans "Download DOCX" %}</a>
+      {% endif %}
+      {% if print_has_odt_secondary %}
+        <a class="mf-button mf-button--secondary mf-button--small" href="{% url 'manage:submission_merge_document' form_obj.pk submission.pk 'odt' %}" data-mf-no-busy="true">{% trans "Download ODT" %}</a>
+      {% endif %}
+    </div>
+  </div>
+{% if document_always_open %}</div>{% else %}</details>{% endif %}

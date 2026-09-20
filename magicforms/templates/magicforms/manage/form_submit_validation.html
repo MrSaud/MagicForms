@@ -1,0 +1,148 @@
+{% extends "magicforms/manage/base_manage.html" %}
+{% load i18n %}
+
+{% block manage_title %}{% trans "Validate by API" %} · {{ form_obj.title }}{% endblock %}
+
+{% block manage_content %}
+<div class="mf-stack mf-stack--lg">
+  <p class="mf-muted mf-body-text">
+    <a class="mf-link" href="{% url 'manage:form_detail' form_obj.pk %}">← {{ form_obj.title }}</a>
+  </p>
+  <h1 class="mf-display mf-display--small">{% trans "Validate by API" %}</h1>
+  <p class="mf-lead">
+    {% blocktrans trimmed %}
+      Before a submission is saved, MagicForms POSTs the respondent’s answers to your endpoint.
+      Only HTTP 200–299 allows an immediate submit. Configure what happens when the API returns
+      any other status or cannot be reached.
+    {% endblocktrans %}
+  </p>
+
+  <form method="post" class="mf-form mf-stack mf-stack--lg">
+    {% csrf_token %}
+    {{ config_form.non_field_errors }}
+
+    <section class="mf-card mf-card--glass mf-stack">
+      <h2 class="mf-heading">{% trans "Connection" %}</h2>
+      <div class="mf-field">
+        <label class="mf-check-label">{{ config_form.is_active }} <span>{{ config_form.is_active.label }}</span></label>
+        {{ config_form.is_active.errors }}
+      </div>
+      <div class="mf-field">
+        <label class="mf-label" for="{{ config_form.endpoint_url.id_for_label }}">{{ config_form.endpoint_url.label }}</label>
+        {{ config_form.endpoint_url }}
+        {{ config_form.endpoint_url.errors }}
+      </div>
+      <div class="mf-grid mf-grid--2">
+        <div class="mf-field">
+          <label class="mf-label" for="{{ config_form.timeout_seconds.id_for_label }}">{{ config_form.timeout_seconds.label }}</label>
+          {{ config_form.timeout_seconds }}
+        </div>
+        <div class="mf-field">
+          <label class="mf-label" for="{{ config_form.auth_type.id_for_label }}">{{ config_form.auth_type.label }}</label>
+          {{ config_form.auth_type }}
+        </div>
+      </div>
+      <div class="mf-field">
+        <label class="mf-label" for="{{ config_form.auth_header_name.id_for_label }}">{{ config_form.auth_header_name.label }}</label>
+        {{ config_form.auth_header_name }}
+      </div>
+      <div class="mf-field">
+        <label class="mf-label" for="{{ config_form.secret_plain.id_for_label }}">{{ config_form.secret_plain.label }}</label>
+        {{ config_form.secret_plain }}
+        <p class="mf-hint">{{ config_form.secret_plain.help_text }}</p>
+        {{ config_form.secret_plain.errors }}
+      </div>
+      <div class="mf-field">
+        <label class="mf-label" for="{{ config_form.hmac_header_name.id_for_label }}">{{ config_form.hmac_header_name.label }}</label>
+        {{ config_form.hmac_header_name }}
+      </div>
+      <div class="mf-field">
+        <label class="mf-label" for="{{ config_form.payload_root_key.id_for_label }}">{{ config_form.payload_root_key.label }}</label>
+        {{ config_form.payload_root_key }}
+        <p class="mf-hint">{{ config_form.payload_root_key.help_text }}</p>
+      </div>
+      <div class="mf-field">
+        <label class="mf-label" for="{{ config_form.custom_headers_json.id_for_label }}">{% trans "Custom headers (JSON object)" %}</label>
+        {{ config_form.custom_headers_json }}
+        {{ config_form.custom_headers_json.errors }}
+      </div>
+    </section>
+
+    <section class="mf-card mf-card--glass mf-stack">
+      <h2 class="mf-heading">{% trans "When validation fails" %}</h2>
+      <div class="mf-field">
+        <label class="mf-label" for="{{ config_form.failure_action.id_for_label }}">{{ config_form.failure_action.label }}</label>
+        {{ config_form.failure_action }}
+        <p class="mf-hint">{{ config_form.failure_action.help_text }}</p>
+        {{ config_form.failure_action.errors }}
+      </div>
+      <ul class="mf-hint mf-stack">
+        <li>{% trans "Block submit — the respondent cannot complete the form until the API accepts (HTTP 200–299)." %}</li>
+        <li>{% trans "Let the respondent choose — show a warning with a second “Submit anyway” action." %}</li>
+      </ul>
+    </section>
+
+    <section class="mf-card mf-card--glass mf-stack">
+      <h2 class="mf-heading">{% trans "Applicant messages" %}</h2>
+      <p class="mf-hint">
+        {% trans "Customize what respondents see when validation fails. Leave a field blank to use the built-in default." %}
+        {% blocktrans with ph=message_placeholders trimmed %}
+          For rejections use placeholders <code class="mf-code">{{ ph }}</code>. The api_message placeholder is filled from the API response when possible (JSON fields message, detail, error).
+        {% endblocktrans %}
+      </p>
+      <div class="mf-field">
+        <label class="mf-label" for="{{ config_form.message_rejected.id_for_label }}">{{ config_form.message_rejected.label }}</label>
+        {{ config_form.message_rejected }}
+        <p class="mf-hint">{{ config_form.message_rejected.help_text }}</p>
+        {{ config_form.message_rejected.errors }}
+      </div>
+      <div class="mf-field">
+        <label class="mf-label" for="{{ config_form.message_unreachable.id_for_label }}">{{ config_form.message_unreachable.label }}</label>
+        {{ config_form.message_unreachable }}
+        <p class="mf-hint">{{ config_form.message_unreachable.help_text }}</p>
+        {{ config_form.message_unreachable.errors }}
+      </div>
+      <div class="mf-field">
+        <label class="mf-label" for="{{ config_form.message_error.id_for_label }}">{{ config_form.message_error.label }}</label>
+        {{ config_form.message_error }}
+        <p class="mf-hint">{{ config_form.message_error.help_text }}</p>
+        {{ config_form.message_error.errors }}
+      </div>
+    </section>
+
+    <section class="mf-card mf-card--soft mf-stack">
+      <h2 class="mf-heading">{% trans "Request body (preview)" %}</h2>
+      <p class="mf-hint">{% trans "JSON POST on each submit attempt (field internal names → values). File fields send the filename only." %}</p>
+      <p class="mf-code mf-body-text">{{ payload_preview_keys|join:", " }}</p>
+    </section>
+
+    <div class="mf-actions">
+      <button type="submit" class="mf-button mf-button--primary">{% trans "Save" %}</button>
+      <a class="mf-link mf-link--muted" href="{% url 'manage:form_detail' form_obj.pk %}">{% trans "Cancel" %}</a>
+    </div>
+  </form>
+
+  <section class="mf-card mf-card--glass mf-stack">
+    <h2 class="mf-heading">{% trans "Test validation API" %}</h2>
+    <p class="mf-hint">{% trans "Sends sample field values. Save settings first." %}</p>
+    <form method="post" action="{% url 'manage:form_submit_validation_test' form_obj.pk %}">
+      {% csrf_token %}
+      <button type="submit" class="mf-button mf-button--secondary">{% trans "Send test request" %}</button>
+    </form>
+    {% if test_result %}
+    <div class="mf-stack mf-mt">
+      {% if test_result.ok %}
+      <p class="mf-alert mf-alert--success">{% trans "HTTP" %} {{ test_result.status_code }} — {% trans "OK" %}</p>
+      {% elif test_result.error %}
+      <p class="mf-alert mf-alert--error">{{ test_result.error }}</p>
+      {% else %}
+      <p class="mf-alert mf-alert--warn">{% trans "HTTP" %} {{ test_result.status_code }}</p>
+      {% endif %}
+      {% if test_result.response_body %}
+      <pre class="mf-code-block">{{ test_result.response_body }}</pre>
+      {% endif %}
+    </div>
+    {% endif %}
+  </section>
+</div>
+{% endblock %}

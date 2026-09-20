@@ -1,0 +1,63 @@
+{% load i18n magicforms_i18n %}
+{% if ff.field_type == 'hint' %}
+  <div class="mf-field mf-field--hint-only{% if inline %} mf-field--hint-only--inline{% endif %}" role="note">
+    {% if ff.label %}
+      <p class="mf-field-hint-only__title">{{ ff.label|mf_trans }}</p>
+    {% endif %}
+    {% if ff.hint %}
+      <div class="mf-field-hint-only__body">{{ ff.hint|mf_trans|linebreaksbr }}</div>
+    {% elif ff.help_text %}
+      <div class="mf-field-hint-only__body">{{ ff.help_text|mf_trans|linebreaksbr }}</div>
+    {% endif %}
+  </div>
+{% elif ff.field_type == 'label' %}
+  <div class="mf-field mf-field--label-only{% if inline %} mf-field--label-only--inline{% endif %}">
+    {% if ff.label %}
+      <p class="mf-field-label-only__text">{{ ff.label|mf_trans|linebreaksbr }}</p>
+    {% endif %}
+    {% if ff.hint %}
+      <p class="mf-field-label-only__sub">{{ ff.hint|mf_trans|linebreaksbr }}</p>
+    {% endif %}
+  </div>
+{% elif ff.field_type == 'break' %}
+  <div class="mf-field mf-field--break" aria-hidden="true"></div>
+{% elif ff.field_type == 'checklist' %}
+  <div
+    class="mf-checklist-group mf-field--checklist{% if inline %} mf-field--inline-checklist{% endif %} mf-choice-layout--{{ ff.options_layout }}"
+    role="group"
+    aria-labelledby="mf-cl-{{ ff.pk }}"
+  >
+    <div id="mf-cl-{{ ff.pk }}" class="mf-label mf-checklist-group__heading">{{ field.label }}</div>
+    {% if ff.hint %}<p class="mf-hint mf-hint--under-label">{{ ff.hint|mf_trans|linebreaksbr }}</p>{% endif %}
+    {{ field }}
+    {% if field.errors %}
+      <div class="mf-live-error mf-live-error--field" role="alert">{{ field.errors }}</div>
+    {% endif %}
+    {% if field.help_text %}<p class="mf-hint">{{ field.help_text }}</p>{% endif %}
+  </div>
+{% elif ff.field_type == 'radio' %}
+  <div class="mf-choice-layout mf-choice-layout--{{ ff.options_layout }}">
+    <label class="mf-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+    {% if ff.hint %}<p class="mf-hint mf-hint--under-label">{{ ff.hint|mf_trans|linebreaksbr }}</p>{% endif %}
+    {{ field }}
+    {% if field.errors %}
+      <div class="mf-live-error mf-live-error--field" role="alert">{{ field.errors }}</div>
+    {% endif %}
+    {% if field.help_text %}<p class="mf-hint">{{ field.help_text }}</p>{% endif %}
+  </div>
+{% elif field.field.widget.input_type == 'checkbox' %}
+  <label class="mf-check-label" for="{{ field.id_for_label }}">{{ field }} <span>{{ field.label }}</span></label>
+  {% if ff.hint %}<p class="mf-hint mf-hint--under-label">{{ ff.hint|mf_trans|linebreaksbr }}</p>{% endif %}
+  {% if field.errors %}
+    <div class="mf-live-error mf-live-error--field" role="alert">{{ field.errors }}</div>
+  {% endif %}
+  {% if field.help_text %}<p class="mf-hint">{{ field.help_text }}</p>{% endif %}
+{% else %}
+  <label class="mf-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+  {% if ff.hint %}<p class="mf-hint mf-hint--under-label">{{ ff.hint|mf_trans|linebreaksbr }}</p>{% endif %}
+  {{ field }}
+  {% if field.errors %}
+    <div class="mf-live-error mf-live-error--field" role="alert">{{ field.errors }}</div>
+  {% endif %}
+  {% if field.help_text %}<p class="mf-hint">{{ field.help_text }}</p>{% endif %}
+{% endif %}

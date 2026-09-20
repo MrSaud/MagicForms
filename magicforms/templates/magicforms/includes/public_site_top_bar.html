@@ -1,0 +1,6 @@
+{% load i18n %}
+{% if not user.is_authenticated %}
+  {% if not request.resolver_match or request.resolver_match.url_name != "home" %}
+  <a href="{{ studio_login_next_here }}" class="mf-button mf-button--primary mf-shell-top-login">{% trans "Log in" %}</a>
+  {% endif %}
+{% endif %}

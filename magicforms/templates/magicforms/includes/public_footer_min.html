@@ -1,0 +1,20 @@
+{% load i18n portal_urls %}
+<footer class="mf-public-footer-min" role="contentinfo">
+  <div class="mf-public-footer-min__inner">
+    <nav class="mf-public-footer-min__account" aria-label="{% trans 'Account' %}">
+      <a class="mf-link mf-public-footer-min__link" href="{% portal_url 'magicforms:submission_track' %}">{% trans "Track a submission" %}</a>
+      {% if user.is_authenticated %}
+        {% if studio_available %}
+          <a class="mf-link mf-public-footer-min__link" href="{{ studio_dashboard_url }}">{% trans "Workspace" %}</a>
+        {% else %}
+          <a class="mf-link mf-public-footer-min__link" href="{{ studio_login_next_dashboard }}">{% trans "Staff sign-in" %}</a>
+        {% endif %}
+      {% else %}
+        <a class="mf-link mf-public-footer-min__link" href="{{ studio_login_next_here }}">{% trans "Log in" %}</a>
+      {% endif %}
+    </nav>
+    <div class="mf-public-footer-min__lang">
+      {% include "magicforms/includes/lang_switch.html" %}
+    </div>
+  </div>
+</footer>

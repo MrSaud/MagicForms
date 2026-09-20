@@ -1,0 +1,26 @@
+{# Expects: icon — checklist | tags | answers | document | workflow | messages | email | forward | related | attachment | timeline #}
+<svg class="mf-heading__icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+  {% if icon == "checklist" %}
+  <path d="M9 11l3 3L22 4" /><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" />
+  {% elif icon == "tags" %}
+  <path d="M12 2H2v10l9.29 9.29a1 1 0 0 0 1.41 0L22 12V2z" /><circle cx="7" cy="7" r="1.5" />
+  {% elif icon == "answers" %}
+  <path d="M8 6h13" /><path d="M8 12h13" /><path d="M8 18h13" /><path d="M3 6h.01" /><path d="M3 12h.01" /><path d="M3 18h.01" />
+  {% elif icon == "document" %}
+  <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" /><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
+  {% elif icon == "workflow" %}
+  <circle cx="6" cy="6" r="3" /><circle cx="18" cy="12" r="3" /><circle cx="6" cy="18" r="3" /><path d="M8.59 7.51 15.42 10.5" /><path d="M8.59 16.49 15.42 13.5" />
+  {% elif icon == "messages" %}
+  <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+  {% elif icon == "email" %}
+  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" /><path d="m22 6-10 7L2 6" />
+  {% elif icon == "forward" %}
+  <path d="M15 3h6v6" /><path d="M10 14 21 3" /><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+  {% elif icon == "related" %}
+  <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" /><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
+  {% elif icon == "attachment" %}
+  <path d="M21.44 11.05l-9.19 9.19a6 6 0 1 1-8.49-8.49l9.19-9.19a4 4 0 1 1 5.66 5.66l-9.2 9.19a2 2 0 1 1-2.83-2.83l8.49-8.48" />
+  {% elif icon == "timeline" %}
+  <circle cx="12" cy="12" r="10" /><path d="M12 6v6l4 2" />
+  {% endif %}
+</svg>

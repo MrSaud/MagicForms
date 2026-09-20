@@ -1,0 +1,166 @@
+{% extends "magicforms/manage/base_manage.html" %}
+{% load i18n static %}
+
+{% block manage_title %}{% trans "Announcement page" %} · {{ form_obj.title }}{% endblock %}
+
+{% block extrahead %}
+  {{ block.super }}
+  {% if intro_slides|length > 1 %}
+  <script defer src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
+  <script defer src="{% static 'magicforms/js/manage_reorder.js' %}"></script>
+  {% endif %}
+{% endblock %}
+
+{% block manage_content %}
+<section class="mf-manage-section mf-stack">
+  <p class="mf-form-back">
+    <a class="mf-link" href="{% url 'manage:form_detail' form_obj.pk %}">← {% trans "Back to form" %}</a>
+  </p>
+  <h1 class="mf-display mf-display--small">{% trans "Announcement page" %}</h1>
+  <p class="mf-muted mf-body-text">
+    {% trans "Optional branding page before applicants apply. Enable it, add what you need, then save. Registration deadline is set under Form settings." %}
+  </p>
+
+  <form method="post" class="mf-form mf-form--wide mf-stack mf-stack--lg" enctype="multipart/form-data">
+    {% csrf_token %}
+    {% if form.non_field_errors %}<div class="mf-alert mf-alert--error">{{ form.non_field_errors }}</div>{% endif %}
+
+    <div class="mf-field">
+      {{ form.intro_page_enabled.errors }}
+      <label class="mf-check-label" for="{{ form.intro_page_enabled.id_for_label }}">
+        {{ form.intro_page_enabled }} <span>{{ form.intro_page_enabled.label }}</span>
+      </label>
+      {% if form.intro_page_enabled.help_text %}<p class="mf-hint">{{ form.intro_page_enabled.help_text }}</p>{% endif %}
+    </div>
+
+    <details class="mf-entity-form-details mf-card mf-card--glass mf-stack" open>
+      <summary class="mf-entity-form-details__summary"><span class="mf-heading mf-heading--section">{% trans "Headline & message" %}</span></summary>
+      <div class="mf-entity-form-details__body mf-stack">
+        {% include "magicforms/manage/_intro_field.html" with field=form.intro_title only %}
+        {% include "magicforms/manage/_intro_field.html" with field=form.intro_subtitle only %}
+        {% include "magicforms/manage/_intro_field.html" with field=form.intro_description only %}
+        {% include "magicforms/manage/_intro_field.html" with field=form.intro_video_url only %}
+        {% include "magicforms/manage/_intro_field.html" with field=form.intro_apply_button_label only %}
+      </div>
+    </details>
+
+    <details class="mf-entity-form-details mf-card mf-card--glass mf-stack" open>
+      <summary class="mf-entity-form-details__summary"><span class="mf-heading mf-heading--section">{% trans "Where & contact" %}</span></summary>
+      <div class="mf-entity-form-details__body mf-stack">
+        {% include "magicforms/manage/_intro_field.html" with field=form.intro_venue_type only %}
+        {% include "magicforms/manage/_intro_field.html" with field=form.intro_location only %}
+        {% include "magicforms/manage/_intro_field.html" with field=form.intro_map_url only %}
+        {% include "magicforms/manage/_intro_field.html" with field=form.intro_contact_name only %}
+        {% include "magicforms/manage/_intro_field.html" with field=form.intro_contact_email only %}
+        {% include "magicforms/manage/_intro_field.html" with field=form.intro_contact_phone only %}
+      </div>
+    </details>
+
+    <details class="mf-entity-form-details mf-card mf-card--glass mf-stack" open>
+      <summary class="mf-entity-form-details__summary"><span class="mf-heading mf-heading--section">{% trans "Registration & schedule" %}</span></summary>
+      <div class="mf-entity-form-details__body mf-stack">
+        {% if form_obj.submission_deadline %}
+          <p class="mf-hint">{% blocktrans with d=form_obj.submission_deadline|date:"M j, Y" %}Register by date on the announcement page: <strong>{{ d }}</strong> (from form settings).{% endblocktrans %}</p>
+        {% else %}
+          <p class="mf-hint">{% trans "Set a submission deadline in Form settings to show “Register by” on the announcement page." %}</p>
+        {% endif %}
+        {% if form_obj.intro_capacity %}
+          <p class="mf-hint">
+            {% blocktrans with total=form_obj.intro_capacity count=form_obj.intro_seats_remaining %}
+            Capacity from form settings: <strong>{{ count }} of {{ total }} seats left</strong>.
+            {% endblocktrans %}
+          </p>
+        {% else %}
+          <p class="mf-hint">{% trans "Set capacity (seats) in Form settings to track registration limits." %}</p>
+        {% endif %}
+        <div class="mf-field">
+          {{ form.intro_show_capacity.errors }}
+          <label class="mf-check-label" for="{{ form.intro_show_capacity.id_for_label }}">
+            {{ form.intro_show_capacity }} <span>{{ form.intro_show_capacity.label }}</span>
+          </label>
+          {% if form.intro_show_capacity.help_text %}<p class="mf-hint">{{ form.intro_show_capacity.help_text }}</p>{% endif %}
+        </div>
+        {% include "magicforms/manage/_intro_field.html" with field=form.intro_fee only %}
+        {% include "magicforms/manage/_intro_field.html" with field=form.intro_event_start only %}
+        {% include "magicforms/manage/_intro_field.html" with field=form.intro_event_end only %}
+      </div>
+    </details>
+
+    <details class="mf-entity-form-details mf-card mf-card--glass mf-stack" open>
+      <summary class="mf-entity-form-details__summary"><span class="mf-heading mf-heading--section">{% trans "Highlights, brochure & guidelines" %}</span></summary>
+      <div class="mf-entity-form-details__body mf-stack">
+        {% include "magicforms/manage/_intro_field.html" with field=form.intro_details_list_style only %}
+        {% include "magicforms/manage/_intro_field.html" with field=form.intro_details only %}
+        {% include "magicforms/manage/_intro_field.html" with field=form.intro_attachment only %}
+        {% if form_obj.intro_attachment %}
+          <p class="mf-hint"><a class="mf-link" href="{{ form_obj.intro_attachment.url }}" target="_blank" rel="noopener">{% trans "Current brochure (PDF)" %}</a></p>
+        {% endif %}
+        {% include "magicforms/manage/_intro_field.html" with field=form.intro_rules_list_style only %}
+        {% include "magicforms/manage/_intro_field.html" with field=form.intro_rules only %}
+      </div>
+    </details>
+
+    <div class="mf-actions mf-actions--wrap">
+      <button type="submit" class="mf-button mf-button--primary">{% trans "Save announcement" %}</button>
+      <a class="mf-button mf-button--secondary" href="{% url 'manage:form_intro_preview' form_obj.pk %}" target="_blank" rel="noopener">{% trans "Preview" %}</a>
+      {% if form_obj.intro_page_enabled %}
+        <a class="mf-button mf-button--secondary" href="{{ public_intro_url }}" target="_blank" rel="noopener">{% trans "Open public link" %}</a>
+      {% endif %}
+    </div>
+  </form>
+
+  <details class="mf-entity-form-details mf-card mf-card--glass mf-stack mf-mt" open>
+    <summary class="mf-entity-form-details__summary"><span class="mf-heading mf-heading--section">{% trans "Gallery" %}</span></summary>
+    <div class="mf-entity-form-details__body mf-stack">
+      <p class="mf-hint mf-body-text">
+        {% blocktrans with max=intro_slide_max %}Optional. Up to {{ max }} images in a slideshow. Drag to reorder.{% endblocktrans %}
+      </p>
+      <aside class="mf-card mf-card--soft mf-stack" role="note">
+        <p class="mf-m0 mf-body-text">
+          <strong>{% trans "Recommended image size" %}</strong>
+        </p>
+        <ul class="mf-mt-1 mf-list-tight mf-hint mf-body-text" >
+          <li>{% trans "Best: 1920 × 1080 px (16:9 widescreen) — fills the gallery with no cropping." %}</li>
+          <li>{% trans "Also fine: 1600 × 900 or 1280 × 720 (keep the same 16:9 ratio)." %}</li>
+          <li>{% trans "Portrait or square photos are centered but may be cropped at the top and bottom." %}</li>
+          <li>{% trans "Formats: PNG, JPEG, WebP, or GIF. Aim for under 2 MB per image for faster loading." %}</li>
+        </ul>
+      </aside>
+      {% if intro_slides %}
+        {% url 'manage:intro_slide_reorder' form_obj.pk as reorder_url %}
+        <div class="mf-sort-root mf-card mf-card--glass" data-sortable data-reorder-url="{{ reorder_url }}">
+          <ul class="mf-sort-list" data-sortable-list>
+            {% for slide in intro_slides %}
+              <li class="mf-sort-item mf-logo-manage-row" data-id="{{ slide.pk }}">
+                <span class="drag-handle" aria-hidden="true">⠿</span>
+                <div class="mf-logo-manage-preview">
+                  <img src="{{ slide.image.url }}" alt="" loading="lazy" decoding="async" />
+                </div>
+                <div class="mf-logo-manage-meta">
+                  {% if slide.caption %}<span class="mf-manage-row-title">{{ slide.caption }}</span>{% else %}<span class="mf-muted">{% trans "No caption" %}</span>{% endif %}
+                </div>
+                <div class="mf-manage-row-actions">
+                  <form method="post" action="{% url 'manage:intro_slide_delete' form_obj.pk slide.pk %}" class="mf-inline-form">
+                    {% csrf_token %}
+                    <button type="submit" class="mf-link mf-link--danger">{% trans "Remove" %}</button>
+                  </form>
+                </div>
+              </li>
+            {% endfor %}
+          </ul>
+        </div>
+      {% else %}
+        <p class="mf-muted mf-body-text">{% trans "No gallery images yet." %}</p>
+      {% endif %}
+      {% if can_add_intro_slide %}
+        <form method="post" action="{% url 'manage:intro_slide_add' form_obj.pk %}" class="mf-form mf-stack" enctype="multipart/form-data">
+          {% csrf_token %}
+          {% include "magicforms/manage/_intro_field.html" with field=slide_form.image only %}
+          {% include "magicforms/manage/_intro_field.html" with field=slide_form.caption only %}
+          <button type="submit" class="mf-button mf-button--secondary">{% trans "Add gallery image" %}</button>
+        </form>
+      {% endif %}
+    </div>
+  </details>
+</section>
+{% endblock %}

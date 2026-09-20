@@ -1,0 +1,95 @@
+{% extends "magicforms/manage/base_manage.html" %}
+{% load i18n %}
+
+{% block manage_title %}{% trans "Email notification templates" %} · {{ entity.name }}{% endblock %}
+
+{% block manage_content %}
+<section class="mf-manage-section mf-stack">
+  <div class="mf-manage-toolbar">
+    <div>
+      <h1 class="mf-display mf-display--small">{% trans "Email notification templates" %}</h1>
+      <p class="mf-muted">{{ entity.name }} · <code class="mf-code">{{ entity.slug }}</code></p>
+    </div>
+    <a class="mf-link mf-link--muted" href="{{ cancel_url }}">{% trans "Back" %}</a>
+  </div>
+
+  {% if not smtp_ok %}
+  <p class="mf-alert mf-alert--warn">{{ smtp_message }}</p>
+  <p class="mf-muted mf-body-text">
+    {% if user.is_superuser %}
+      {% blocktrans trimmed %}
+        Configure SMTP and From address under organization settings before automatic emails can be sent.
+      {% endblocktrans %}
+      <a class="mf-link" href="{% url 'manage:entity_edit' entity.pk %}">{% trans "Organization settings" %}</a>
+    {% elif manage_can_manage_entity_settings %}
+      {% blocktrans trimmed %}
+        Configure SMTP and From address under organization settings before automatic emails can be sent.
+      {% endblocktrans %}
+      <a class="mf-link" href="{% url 'manage:organization_settings_general' entity.pk %}">{% trans "Organization settings" %}</a>
+    {% else %}
+      {% trans "Ask a superuser to configure organization SMTP and From address before automatic emails can be sent." %}
+    {% endif %}
+  </p>
+  {% endif %}
+
+  <form method="post" class="mf-form mf-form--wide mf-stack mf-stack--lg">
+    {% csrf_token %}
+    {% if form.non_field_errors %}<div class="mf-alert mf-alert--error">{{ form.non_field_errors }}</div>{% endif %}
+
+    <details class="mf-card mf-card--glass mf-stack" open>
+      <summary class="mf-heading mf-heading--section">{% trans "When to send" %}</summary>
+      <div class="mf-mt mf-stack mf-stack--md" >
+        <p class="mf-hint">{% trans "Automatic emails use the templates below and your organization SMTP. They are only sent when notifications and email are enabled for the organization." %}</p>
+        {% for field in form %}
+          {% if field.name == "notify_on_submit" or field.name == "notify_on_accept" or field.name == "notify_on_reject" or field.name == "notify_on_step_approved" or field.name == "staff_contact_use_template" %}
+            <div class="mf-field mf-field--check">
+              {{ field.errors }}
+              <label class="mf-check-label">
+                {{ field }}
+                <span>{{ field.label }}</span>
+              </label>
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+    </details>
+
+    <p class="mf-hint">
+      {% blocktrans trimmed %}
+        Placeholders in subject and body (plain text):
+      {% endblocktrans %}
+      <code class="mf-code">{{ placeholder_help }}</code>
+    </p>
+
+    {% for section in template_sections %}
+    <details class="mf-card mf-card--soft mf-stack" open>
+      <summary class="mf-heading mf-heading--section">{{ section.label }}</summary>
+      <div class="mf-mt mf-stack mf-stack--md" >
+        <div class="mf-field mf-field--check">
+          {{ section.active.errors }}
+          <label class="mf-check-label">
+            {{ section.active }}
+            <span>{{ section.active.label }}</span>
+          </label>
+        </div>
+        <div class="mf-field">
+          {{ section.subject.errors }}
+          <label class="mf-label" for="{{ section.subject.id_for_label }}">{{ section.subject.label }}</label>
+          {{ section.subject }}
+        </div>
+        <div class="mf-field">
+          {{ section.body.errors }}
+          <label class="mf-label" for="{{ section.body.id_for_label }}">{{ section.body.label }}</label>
+          {{ section.body }}
+        </div>
+      </div>
+    </details>
+    {% endfor %}
+
+    <div class="mf-actions">
+      <button type="submit" class="mf-button mf-button--primary">{% trans "Save" %}</button>
+      <a class="mf-link mf-link--muted" href="{{ cancel_url }}">{% trans "Cancel" %}</a>
+    </div>
+  </form>
+</section>
+{% endblock %}

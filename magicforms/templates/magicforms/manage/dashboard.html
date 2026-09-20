@@ -1,0 +1,575 @@
+{% extends "magicforms/manage/base_manage.html" %}
+{% load i18n magicforms_i18n magicforms_pagination %}
+
+{% block manage_title %}{% if dashboard_archive_view %}{% trans "Deleted forms" %}{% else %}{% trans "Forms" %}{% endif %}{% endblock %}
+
+{% block manage_content %}
+<section class="mf-manage-section mf-stack">
+  <header class="mf-page-head">
+    <div>
+      <h1 class="mf-page-head__title">{% if dashboard_archive_view %}{% trans "Deleted forms" %}{% else %}{% trans "Forms" %}{% endif %}</h1>
+      <p class="mf-page-head__meta">
+        {% if dashboard_archive_view %}
+          {% if forms_search_q %}{% blocktrans with n=forms_list.paginator.count q=forms_search_q trimmed %}{{ n }} deleted form(s) match “{{ q }}”.{% endblocktrans %}
+          {% elif archived_forms_total %}{% blocktrans with total=archived_forms_total trimmed %}{{ total }} deleted form(s). Restore one to bring it back.{% endblocktrans %}
+          {% else %}{% trans "No deleted forms." %}{% endif %}
+        {% elif forms_search_q %}
+          {% blocktrans with n=forms_list.paginator.count q=forms_search_q trimmed %}{{ n }} form(s) match “{{ q }}”.{% endblocktrans %}
+        {% elif dashboard_applicant_mode %}
+          {% trans "Published forms for your organization." %}
+        {% else %}
+          {% blocktrans count counter=stat_total_forms trimmed %}{{ counter }} form, recently updated first.{% plural %}{{ counter }} forms, recently updated first.{% endblocktrans %}
+        {% endif %}
+      </p>
+    </div>
+    <div class="mf-page-head__actions">
+      {% if user.is_superuser or user.is_staff %}{% if not dashboard_applicant_mode and not dashboard_archive_view %}
+        <a class="mf-button mf-button--primary" href="{% url 'manage:form_create' %}">{% trans "New form" %}</a>
+        {% if ai_features_enabled %}<a class="mf-button mf-button--secondary" href="{% url 'manage:form_generate_from_text' %}">{% trans "Create with AI" %}</a>{% endif %}
+      {% endif %}{% endif %}
+      {% if dashboard_can_archive %}
+        {% if dashboard_archive_view %}
+          <a class="mf-button mf-button--quiet mf-button--icon" href="{% url 'manage:dashboard' %}" aria-label="{% trans 'Back to active forms' %}" title="{% trans 'Back to active forms' %}">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+          </a>
+        {% else %}
+          <a class="mf-button mf-button--quiet mf-button--icon" href="{% url 'manage:dashboard' %}?archive=1" aria-label="{% trans 'Deleted forms' %}{% if archived_forms_total %} ({{ archived_forms_total }}){% endif %}" title="{% trans 'Deleted forms' %}{% if archived_forms_total %} ({{ archived_forms_total }}){% endif %}">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+            {% if archived_forms_total %}<span class="mf-button__badge" aria-hidden="true">{{ archived_forms_total }}</span>{% endif %}
+          </a>
+        {% endif %}
+      {% endif %}
+    </div>
+  </header>
+  {% if undo_form %}
+  <div class="mf-alert mf-alert--info mf-undo-banner" role="status">
+    <span>{% blocktrans with title=undo_form.title trimmed %}“{{ title }}” was moved to Deleted forms.{% endblocktrans %}</span>
+    <form method="post" action="{% url 'manage:form_restore' undo_form.pk %}" class="mf-inline-form" data-mf-no-busy="true">
+      {% csrf_token %}
+      <input type="hidden" name="next" value="{% url 'manage:dashboard' %}">
+      <button type="submit" class="mf-button mf-button--secondary mf-button--small">{% trans "Undo" %}</button>
+    </form>
+  </div>
+  {% endif %}
+
+  <form method="get" class="mf-toolbar" action="" role="search">
+    {% if dashboard_archive_view %}<input type="hidden" name="archive" value="1" />{% endif %}
+    <input type="hidden" name="per_page" value="{{ per_page }}" />
+    <input type="hidden" name="layout" value="{{ forms_layout }}" />
+    <label class="mf-toolbar__search">
+      <span class="mf-visually-hidden">{% trans "Search forms" %}</span>
+      <input id="mf-dashboard-forms-q" class="mf-input" type="search" name="q" value="{{ forms_search_q }}" maxlength="200" placeholder="{% trans 'Search forms' %}" autocomplete="off" />
+    </label>
+    <button type="submit" class="mf-button mf-button--secondary">{% trans "Search" %}</button>
+    {% if forms_search_q %}<a class="mf-button mf-button--quiet" href="{{ dashboard_clear_search_url }}">{% trans "Clear" %}</a>{% endif %}
+    <div class="mf-toolbar__end mf-dashboard-forms-layout" role="group" aria-label="{% trans 'Forms display' %}">
+      <button type="button" class="mf-button mf-button--quiet mf-button--small" data-dashboard-forms-layout="list" aria-pressed="{% if forms_layout == 'list' %}true{% else %}false{% endif %}">{% trans "List" %}</button>
+      <button type="button" class="mf-button mf-button--quiet mf-button--small" data-dashboard-forms-layout="grid" aria-pressed="{% if forms_layout == 'grid' %}true{% else %}false{% endif %}">{% trans "Grid" %}</button>
+    </div>
+  </form>
+</section>
+
+{% if forms_list %}
+{% if forms_list.paginator.num_pages > 1 %}{% include "magicforms/manage/includes/studio_pagination.html" with page_obj=forms_list %}{% endif %}
+<div class="mf-dashboard-forms mf-dashboard-forms--{{ forms_layout }}">
+<ul class="mf-manage-table mf-card mf-card--glass">
+  {% for f in forms_list %}
+    <li class="mf-manage-row mf-manage-row--dashboard-form">
+      <div class="mf-dashboard-form-row-inner">
+        <div class="mf-manage-row-main">
+          <div class="mf-dashboard-form-title-row">
+            {% if dashboard_applicant_mode %}
+            <a class="mf-manage-row-title" href="{% url 'magicforms:form_public' entity_slug=f.entity.slug slug=f.slug %}{% if f.public_share_key %}?share={{ f.public_share_key }}{% endif %}">{{ f.title|mf_trans }}</a>
+            {% else %}
+            <a class="mf-manage-row-title" href="{% url 'manage:form_detail' f.pk %}">{{ f.title|mf_trans }}</a>
+            {% endif %}
+            {% if f.deleted_at %}
+            <span class="mf-pill mf-pill--form-status mf-pill--form-archived" role="status">{% trans "Deleted" %}</span>
+            {% elif f.is_published %}
+            <span class="mf-pill mf-pill--form-status mf-pill--form-published" role="status">{% trans "Published" %}</span>
+            {% else %}
+            <span class="mf-pill mf-pill--form-status mf-pill--form-draft" role="status">{% trans "Draft" %}</span>
+            {% endif %}
+          </div>
+          <p class="mf-dashboard-form-meta mf-muted">
+            {{ f.entity.name }}{% if f.category %} · {{ f.category.name }}{% endif %}
+          </p>
+          {% if f.submission_deadline %}
+          <p class="mf-dashboard-form-due">
+            {% trans "Due" %} <time datetime="{{ f.submission_deadline|date:'Y-m-d' }}">{{ f.submission_deadline|date:"M j, Y" }}</time>
+          </p>
+          {% endif %}
+          {% with steps=f.workflow_steps.all %}
+          <p class="mf-dashboard-form-workflow">
+            <span class="mf-dashboard-form-workflow-label">{% trans "Workflow" %}</span>
+            {% if steps %}
+              <span class="mf-dashboard-form-workflow-path">
+                {% for step in steps %}
+                <span class="mf-dashboard-form-workflow-segment">
+                  {% if not forloop.first %}<span class="mf-dashboard-form-workflow-sep" aria-hidden="true">→</span>{% endif %}
+                  <span class="mf-dashboard-form-workflow-step-text">{{ step.label|mf_trans }}</span>
+                </span>
+                {% endfor %}
+              </span>
+            {% else %}
+              <span class="mf-dashboard-form-workflow-empty">{% trans "No steps yet" %}</span>
+            {% endif %}
+          </p>
+          {% endwith %}
+        </div>
+        {% if f.deleted_at and dashboard_can_archive %}
+        <div class="mf-manage-row-actions">
+          <form method="post" action="{% url 'manage:form_restore' f.pk %}" class="mf-inline-form" data-mf-no-busy="true">
+            {% csrf_token %}
+            <input type="hidden" name="next" value="{% url 'manage:dashboard' %}?archive=1">
+            <button type="submit" class="mf-button mf-button--secondary mf-button--small">{% trans "Restore" %}</button>
+          </form>
+        </div>
+        {% endif %}
+        {% if not f.deleted_at %}
+        <div class="mf-manage-row-actions">
+          {% if not dashboard_applicant_mode and not f.is_published %}
+          <a href="{% url 'manage:form_preview' f.pk %}" target="_blank" rel="noopener">{% trans "Preview" %}</a>
+          {% endif %}
+          {% if f.is_published %}
+          <a href="{% url 'magicforms:form_public' entity_slug=f.entity.slug slug=f.slug %}{% if f.public_share_key %}?share={{ f.public_share_key }}{% endif %}">{% trans "Submit now" %}</a>
+          {% endif %}
+        </div>
+        {% endif %}
+      </div>
+      {% if f.is_published and not f.deleted_at and not dashboard_applicant_mode %}
+      <a href="{% url 'manage:form_qrcode' f.pk %}" class="mf-dashboard-form-qr-link" title="{% trans 'Share QR' %}">
+        <img
+          class="mf-dashboard-form-qr"
+          src="{% url 'manage:form_qrcode_image' f.pk %}?v={{ f.updated_at|date:'U' }}"
+          alt=""
+          width="56"
+          height="56"
+          loading="eager"
+        />
+      </a>
+      {% endif %}
+    </li>
+  {% endfor %}
+</ul>
+</div>
+{% include "magicforms/manage/includes/studio_pagination.html" with page_obj=forms_list studio_pagination_footer=1 %}
+{% else %}
+<div class="mf-empty">
+  <p class="mf-empty__text">
+  {% if dashboard_archive_view %}
+    {% trans "No deleted forms yet." %}
+  {% elif forms_search_q %}
+    {% trans "No forms match this search." %}
+    {% if has_sample_forms %}
+      <span class="mf-muted"> {% trans "Unclaimed starters are in the section above." %}</span>
+    {% endif %}
+  {% elif dashboard_applicant_mode %}
+    {% trans "No published forms are available for your organizations yet." %}
+  {% elif has_sample_forms %}
+    {% trans "No forms in your list yet. Add a starter template above or create a new form." %}
+  {% else %}
+    {% trans "No forms yet. Create one to get started." %}
+  {% endif %}
+  </p>
+</div>
+{% endif %}
+<script>
+(function () {
+  var root = document.querySelector(".mf-dashboard-forms");
+  var buttons = document.querySelectorAll("[data-dashboard-forms-layout]");
+  if (!buttons.length) return;
+
+  function applyLayout(layout) {
+    if (root) {
+      root.classList.remove("mf-dashboard-forms--list", "mf-dashboard-forms--grid");
+      root.classList.add("mf-dashboard-forms--" + layout);
+    }
+    buttons.forEach(function (btn) {
+      var on = btn.getAttribute("data-dashboard-forms-layout") === layout;
+      btn.classList.toggle("mf-button--active", on);
+      btn.setAttribute("aria-pressed", on ? "true" : "false");
+    });
+    var hidden = document.querySelector('input[name="layout"]');
+    if (hidden) hidden.value = layout;
+    var params = new URLSearchParams(window.location.search);
+    params.set("layout", layout);
+    params.delete("page");
+    var qs = params.toString();
+    history.replaceState(null, "", qs ? "?" + qs : window.location.pathname);
+    fetch(window.location.pathname + (qs ? "?" + qs : ""), {
+      credentials: "same-origin",
+      headers: { "X-Requested-With": "XMLHttpRequest" },
+    }).catch(function () {});
+  }
+
+  buttons.forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      applyLayout(btn.getAttribute("data-dashboard-forms-layout"));
+    });
+  });
+
+  var params = new URLSearchParams(window.location.search);
+  if (!params.has("layout")) {
+    var layout = root && root.classList.contains("mf-dashboard-forms--grid") ? "grid" : "list";
+    params.set("layout", layout);
+    history.replaceState(null, "", "?" + params.toString());
+  }
+})();
+</script>
+
+{% if shared_timelines %}
+<section
+  id="mf-shared-timelines"
+  class="mf-manage-section mf-stack"
+  aria-label="{% trans 'Shared timelines' %}"
+>
+  <h2 class="mf-heading">{% trans "Shared timelines" %}</h2>
+  <p class="mf-muted mf-body-text">
+    {% trans "Submission timelines shared with you. Open one to read the history; you do not get the full manage submission page unless you already have workflow or search access." %}
+  </p>
+  {% if shared_timelines %}
+  <ul class="mf-manage-table mf-card mf-card--soft">
+    {% for row in shared_timelines %}
+      <li class="mf-manage-row{% if not row.first_viewed_at %} mf-manage-row--unread{% endif %}">
+        <div class="mf-manage-row-main mf-stack">
+          <div>
+            {% if not row.first_viewed_at %}
+            <span class="mf-green-star mf-timeline-share-star" aria-hidden="true" title="{% trans 'Not opened yet' %}">★</span>
+            {% endif %}
+            <a
+              class="mf-manage-row-title"
+              href="{% url 'manage:submission_timeline' row.submission.form_id row.submission_id %}"
+            >{{ row.submission.form.title|mf_trans }}</a>
+            <span class="mf-muted">
+              · <code class="mf-code">{{ row.submission.reference_token }}</code>
+              · {{ row.submission.form.entity.name|mf_trans }}
+              {% if row.shared_by %}
+                · {% blocktrans with who=row.shared_by.get_username %}Shared by {{ who }}{% endblocktrans %}
+              {% endif %}
+            </span>
+          </div>
+          {% if row.share_message %}
+          <p class="mf-body-text mf-muted mf-timeline-share-preview">{{ row.share_message|truncatechars:160 }}</p>
+          {% endif %}
+        </div>
+        <div class="mf-manage-row-actions mf-manage-row-actions--links">
+          <a class="mf-link" href="{% url 'manage:submission_timeline' row.submission.form_id row.submission_id %}">{% trans "Open timeline" %}</a>
+          <form
+            method="post"
+            action="{% url 'manage:submission_timeline_dismiss' row.submission.form_id row.submission_id %}"
+            class="mf-inline-form"
+            data-mf-no-busy="true"
+          >
+            {% csrf_token %}
+            <button type="submit" class="mf-manage-row-action-link">{% trans "Remove" %}</button>
+          </form>
+        </div>
+      </li>
+    {% endfor %}
+  </ul>
+  {% else %}
+  <p class="mf-body-text mf-muted">{% trans "No timelines shared with you yet." %}</p>
+  {% endif %}
+</section>
+{% endif %}
+
+{% if not dashboard_applicant_mode %}
+<section class="mf-dashboard-stats" aria-label="{% trans 'Summary statistics' %}">
+  <article class="mf-dashboard-stat mf-card mf-card--glass">
+    <p class="mf-dashboard-stat-value">{{ stat_total_forms }}</p>
+    <p class="mf-dashboard-stat-label">{% trans "Forms" %}</p>
+  </article>
+  <article class="mf-dashboard-stat mf-card mf-card--glass">
+    <p class="mf-dashboard-stat-value">{{ stat_total_submissions }}</p>
+    <p class="mf-dashboard-stat-label">{% trans "Submissions" %}</p>
+  </article>
+  <article class="mf-dashboard-stat mf-card mf-card--glass">
+    <p class="mf-dashboard-stat-value">{{ stat_inbox }}</p>
+    <p class="mf-dashboard-stat-label">{% trans "Your inbox" %}</p>
+  </article>
+  <article class="mf-dashboard-stat mf-card mf-card--glass">
+    <p class="mf-dashboard-stat-value">{{ stat_submissions_in_progress }}</p>
+    <p class="mf-dashboard-stat-label">{% trans "In progress" %}</p>
+  </article>
+</section>
+{% endif %}
+
+{% if not dashboard_applicant_mode %}
+<details class="mf-dashboard-charts-details mf-card mf-card--glass">
+  <summary class="mf-dashboard-charts-summary">
+    <span>{% trans "Submission charts" %}</span>
+    <span class="mf-muted mf-dashboard-charts-summary-hint">{% trans "Show trends" %}</span>
+  </summary>
+  <div class="mf-dashboard-charts-inner">
+    <section class="mf-dashboard-stats mf-dashboard-stats--secondary" aria-label="{% trans 'More statistics' %}">
+  <article class="mf-dashboard-stat mf-card mf-card--glass">
+    <p class="mf-dashboard-stat-value">{{ stat_published_forms }}</p>
+    <p class="mf-dashboard-stat-label">{% trans "Published" %}</p>
+  </article>
+  <article class="mf-dashboard-stat mf-card mf-card--glass">
+    <p class="mf-dashboard-stat-value">{{ stat_draft_forms }}</p>
+    <p class="mf-dashboard-stat-label">{% trans "Drafts" %}</p>
+  </article>
+  <article class="mf-dashboard-stat mf-card mf-card--glass">
+    <p class="mf-dashboard-stat-value">{{ stat_submissions_completed }}</p>
+    <p class="mf-dashboard-stat-label">{% trans "Completed" %}</p>
+  </article>
+  <article class="mf-dashboard-stat mf-card mf-card--glass">
+    <p class="mf-dashboard-stat-value">{{ stat_submissions_rejected }}</p>
+    <p class="mf-dashboard-stat-label">{% trans "Rejected" %}</p>
+  </article>
+    </section>
+    <section class="mf-dashboard-charts mf-stack" aria-label="{% trans 'Charts' %}">
+      <div class="mf-dashboard-chart-card mf-stack">
+        <h2 class="mf-heading">{% trans "Submissions over time" %}</h2>
+        <p class="mf-muted mf-dashboard-chart-sub">{% trans "Last 30 days (by submit date, site time zone)." %}</p>
+        <div class="mf-dashboard-chart-canvas-wrap">
+          <canvas id="mf-chart-daily" width="400" height="220" aria-label="{% trans 'Line chart of submissions per day' %}"></canvas>
+        </div>
+      </div>
+      <div class="mf-dashboard-chart-card mf-stack">
+        <h2 class="mf-heading">{% trans "Submissions by workflow state" %}</h2>
+        <p class="mf-muted mf-dashboard-chart-sub">{% trans "All time." %}</p>
+        <div class="mf-dashboard-chart-canvas-wrap mf-dashboard-chart-canvas-wrap--doughnut">
+          <canvas id="mf-chart-state" width="280" height="220" aria-label="{% trans 'Doughnut chart of submission counts by state' %}"></canvas>
+        </div>
+      </div>
+    </section>
+  </div>
+</details>
+
+{{ chart_data|json_script:"mf-dashboard-chart-data" }}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script>
+(function () {
+  var el = document.getElementById("mf-dashboard-chart-data");
+  if (!el || typeof Chart === "undefined") return;
+  var details = document.querySelector(".mf-dashboard-charts-details");
+  var ran = false;
+
+  function initCharts() {
+    if (ran) return;
+    ran = true;
+    var data;
+    try {
+      data = JSON.parse(el.textContent);
+    } catch (e) {
+      return;
+    }
+    var accent = "rgb(59, 95, 143)";
+    var accentSoft = "rgba(59, 95, 143, 0.12)";
+    var grid = "rgba(0, 0, 0, 0.06)";
+    var tick = "rgba(29, 29, 31, 0.55)";
+
+    var dailyCtx = document.getElementById("mf-chart-daily");
+    if (dailyCtx) {
+      new Chart(dailyCtx, {
+        type: "line",
+        data: {
+          labels: data.dailyLabels,
+          datasets: [
+            {
+              label: data.chartDatasetLabel || "Submissions",
+              data: data.dailyCounts,
+              borderColor: accent,
+              backgroundColor: accentSoft,
+              fill: true,
+              tension: 0.25,
+              pointRadius: 2,
+              pointHoverRadius: 4,
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: {
+            x: {
+              ticks: { maxRotation: 45, minRotation: 0, color: tick, maxTicksLimit: 12 },
+              grid: { color: grid },
+            },
+            y: {
+              beginAtZero: true,
+              ticks: { precision: 0, color: tick },
+              grid: { color: grid },
+            },
+          },
+        },
+      });
+    }
+
+    var stateCtx = document.getElementById("mf-chart-state");
+    if (stateCtx) {
+      new Chart(stateCtx, {
+        type: "doughnut",
+        data: {
+          labels: data.stateLabels,
+          datasets: [
+            {
+              data: data.stateCounts,
+              backgroundColor: [
+                "rgba(59, 95, 143, 0.85)",
+                "rgba(52, 199, 89, 0.85)",
+                "rgba(255, 59, 48, 0.78)",
+              ],
+              borderWidth: 0,
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          cutout: "58%",
+          plugins: {
+            legend: {
+              position: "bottom",
+              labels: { color: tick, boxWidth: 12, padding: 14 },
+            },
+          },
+        },
+      });
+    }
+  }
+
+  function tryInit() {
+    if (!details || !details.open) return;
+    requestAnimationFrame(function () {
+      initCharts();
+    });
+  }
+
+  if (!details) {
+    initCharts();
+    return;
+  }
+  details.addEventListener("toggle", tryInit);
+  if (details.open) tryInit();
+})();
+</script>
+{% endif %}
+
+{% if has_sample_forms and not dashboard_archive_view %}
+<details class="mf-dashboard-charts-details mf-dashboard-samples-details mf-card mf-card--glass"{% if sample_search_q or sample_category or sample_forms_page and sample_forms_page.number > 1 %} open{% endif %}>
+  <summary class="mf-dashboard-charts-summary">
+    <span>{% trans "Starter sample forms" %}</span>
+    <span class="mf-muted mf-dashboard-charts-summary-hint">{% trans "Expand to choose a template" %}</span>
+  </summary>
+  <div class="mf-dashboard-charts-inner mf-stack">
+    <p class="mf-m0 mf-body-text mf-muted">
+      {% blocktrans trimmed %}
+        Shared draft templates (HR, Finance, Operations, and more). Use “Add to my forms” on one you want—it moves to your Forms list as yours to edit and publish. Other staff keep seeing unclaimed templates here.
+      {% endblocktrans %}
+    </p>
+    <form method="get" class="mf-dashboard-samples-search mf-stack" action="{% url 'manage:dashboard' %}">
+      {% for key, value in request.GET.items %}
+        {% if key != "sample_q" and key != "sample_category" and key != "sample_page" %}
+        <input type="hidden" name="{{ key }}" value="{{ value }}" />
+        {% endif %}
+      {% endfor %}
+      <div class="mf-dashboard-samples-search-row">
+        <div class="mf-dashboard-samples-search-field mf-dashboard-samples-search-field--category">
+          <label class="mf-label" for="mf-dashboard-sample-cat">{% trans "Category" %}</label>
+          <div class="mf-dashboard-samples-select">
+            <select id="mf-dashboard-sample-cat" class="mf-input mf-input--select" name="sample_category">
+              <option value="">{% trans "All categories" %}</option>
+              {% for cat_slug, cat_name, cat_order in sample_category_choices %}
+              <option value="{{ cat_slug }}" {% if cat_slug == sample_category %}selected{% endif %}>{{ cat_name }}</option>
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+        <div class="mf-dashboard-samples-search-field">
+          <label class="mf-label" for="mf-dashboard-sample-q">{% trans "Filter by name" %}</label>
+          <input
+            id="mf-dashboard-sample-q"
+            class="mf-input"
+            type="search"
+            name="sample_q"
+            value="{{ sample_search_q }}"
+            maxlength="200"
+            placeholder="{% trans 'Form title…' %}"
+            autocomplete="off"
+          />
+        </div>
+        <div class="mf-dashboard-samples-search-actions mf-manage-row-actions mf-manage-row-actions--links">
+          <button type="submit" class="mf-manage-row-action-link">{% trans "Search" %}</button>
+          {% if sample_search_q or sample_category %}
+          <a class="mf-link" href="{% url 'manage:dashboard' %}{% if dashboard_qs_without_sample %}?{{ dashboard_qs_without_sample }}{% endif %}">{% trans "Clear" %}</a>
+          {% endif %}
+        </div>
+      </div>
+    </form>
+    {% if sample_search_q or sample_category %}
+    <p class="mf-m0 mf-body-text mf-muted">
+      {% if sample_forms_match_count %}
+        {% if sample_search_q and sample_category %}
+          {% blocktrans with si=sample_forms_page.start_index ei=sample_forms_page.end_index n=sample_forms_match_count q=sample_search_q cat=sample_category_label trimmed %}
+            Showing {{ si }}–{{ ei }} of {{ n }} starter form(s) in “{{ cat }}” matching “{{ q }}” (title).
+          {% endblocktrans %}
+        {% elif sample_search_q %}
+          {% blocktrans with si=sample_forms_page.start_index ei=sample_forms_page.end_index n=sample_forms_match_count q=sample_search_q trimmed %}
+            Showing {{ si }}–{{ ei }} of {{ n }} starter form(s) matching “{{ q }}” (title).
+          {% endblocktrans %}
+        {% else %}
+          {% blocktrans with si=sample_forms_page.start_index ei=sample_forms_page.end_index n=sample_forms_match_count cat=sample_category_label trimmed %}
+            Showing {{ si }}–{{ ei }} of {{ n }} starter form(s) in “{{ cat }}”.
+          {% endblocktrans %}
+        {% endif %}
+      {% else %}
+        {% trans "No sample forms match your filters." %}
+      {% endif %}
+    </p>
+    {% endif %}
+    {% include "magicforms/manage/includes/studio_sample_pagination.html" %}
+    <ul class="mf-manage-table mf-card mf-card--soft">
+      {% for f in sample_forms_page %}
+      <li class="mf-manage-row mf-manage-row--dashboard-form">
+        <div class="mf-dashboard-form-row-inner">
+          <div class="mf-manage-row-main">
+            <div class="mf-dashboard-form-title-row">
+              <a class="mf-manage-row-title" href="{% url 'manage:form_detail' f.pk %}">{{ f.title|mf_trans }}</a>
+              <span class="mf-pill mf-pill--form-status mf-pill--form-draft" role="status">{% trans "Template" %}</span>
+            </div>
+            <p class="mf-mt-1 mf-muted mf-body-text" >
+              {{ f.entity.name|mf_trans }}
+              {% if f.category %}<span aria-hidden="true"> · </span>{{ f.category.name|mf_trans }}{% endif %}
+            </p>
+            {% with steps=f.workflow_steps.all %}
+            <p class="mf-dashboard-form-workflow">
+              <span class="mf-dashboard-form-workflow-label">{% trans "Workflow" %}</span>
+              {% if steps %}
+                <span class="mf-dashboard-form-workflow-path">
+                  {% for step in steps %}
+                  <span class="mf-dashboard-form-workflow-segment">
+                    {% if not forloop.first %}<span class="mf-dashboard-form-workflow-sep" aria-hidden="true">→</span>{% endif %}
+                    <span class="mf-dashboard-form-workflow-step-text">{{ step.label|mf_trans }}</span>
+                  </span>
+                  {% endfor %}
+                </span>
+              {% else %}
+                <span class="mf-dashboard-form-workflow-empty">{% trans "No steps yet" %}</span>
+              {% endif %}
+            </p>
+            {% endwith %}
+          </div>
+          <div class="mf-manage-row-actions mf-manage-row-actions--links">
+            <a class="mf-link" href="{% url 'manage:form_preview' f.pk %}" target="_blank" rel="noopener">{% trans "Preview" %}</a>
+            <form method="post" action="{% url 'manage:sample_form_claim' f.pk %}" class="mf-inline-form">
+              {% csrf_token %}
+              <button type="submit" class="mf-manage-row-action-link">{% trans "Add to my forms" %}</button>
+            </form>
+          </div>
+        </div>
+      </li>
+      {% empty %}
+      <li class="mf-p-3 mf-body-text mf-muted" >{% trans "No sample forms match your filters." %}</li>
+      {% endfor %}
+    </ul>
+    {% include "magicforms/manage/includes/studio_sample_pagination.html" %}
+  </div>
+</details>
+{% endif %}
+
+{% endblock %}

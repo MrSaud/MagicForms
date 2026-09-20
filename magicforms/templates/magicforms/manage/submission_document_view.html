@@ -1,0 +1,57 @@
+{% extends "magicforms/manage/base_manage.html" %}
+{% load i18n magicforms_i18n %}
+
+{% block manage_title %}{% trans "Document" %} · {{ submission.reference_token }}{% endblock %}
+
+{% block manage_content %}
+<section class="mf-manage-section mf-stack">
+  <p class="mf-eyebrow">{{ form_obj.title|mf_trans }}</p>
+  <h1 class="mf-display mf-display--small">{% trans "Merged document" %}</h1>
+  <p class="mf-muted">{% trans "Reference" %} <code class="mf-code">{{ submission.reference_token }}</code></p>
+
+  {% if can_view_pdf %}
+    <p class="mf-body-text">
+      <a class="mf-link" href="{% url 'manage:submission_manage_detail' form_obj.pk submission.pk %}">← {% trans "Back to submission" %}</a>
+      ·
+      <a class="mf-link" href="{% url 'manage:submission_merge_document' form_obj.pk submission.pk 'pdf' %}">{% trans "Download PDF" %}</a>
+      {% if print_has_odt_secondary %}
+        ·
+        <a class="mf-link" href="{% url 'manage:submission_merge_document' form_obj.pk submission.pk 'odt' %}">{% trans "Download ODT for editing" %}</a>
+      {% endif %}
+    </p>
+    <div class="mf-doc-viewer-wrap">
+      <div class="mf-doc-viewer-loading" role="status" aria-live="polite" aria-busy="true">
+        <div class="mf-doc-viewer-loading__track" aria-hidden="true">
+          <div class="mf-doc-viewer-loading__bar"></div>
+        </div>
+        <p class="mf-doc-viewer-loading__text">{% trans "Loading document…" %}</p>
+      </div>
+      <iframe
+        class="mf-doc-viewer"
+        title="{% trans 'Merged PDF' %}"
+        data-pdf-src="{{ pdf_inline_path }}"
+      ></iframe>
+    </div>
+  {% else %}
+    <div class="mf-card mf-card--soft mf-stack">
+      <p class="mf-body-text">
+        {% blocktrans trimmed %}
+          In-page viewing needs a <strong>PDF</strong>. If your template is <strong>DOCX</strong>, install LibreOffice on the server
+          so <code class="mf-code">soffice</code> is available (or set <code class="mf-code">MAGIFORM_SOFFICE</code>), then the merged file can be converted and shown here.
+        {% endblocktrans %}
+      </p>
+      {% if show_docx_download %}
+        <p class="mf-body-text">
+          <a class="mf-button mf-button--secondary" href="{% url 'manage:submission_merge_document' form_obj.pk submission.pk 'docx' %}">{% trans "Download filled DOCX" %}</a>
+        </p>
+      {% endif %}
+      {% if show_odt_download %}
+        <p class="mf-body-text">
+          <a class="mf-button mf-button--secondary" href="{% url 'manage:submission_merge_document' form_obj.pk submission.pk 'odt' %}">{% trans "Download ODT for editing" %}</a>
+        </p>
+      {% endif %}
+      <p><a class="mf-link" href="{% url 'manage:submission_manage_detail' form_obj.pk submission.pk %}">← {% trans "Back to submission" %}</a></p>
+    </div>
+  {% endif %}
+</section>
+{% endblock %}

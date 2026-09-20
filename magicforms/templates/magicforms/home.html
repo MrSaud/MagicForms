@@ -1,0 +1,175 @@
+{% extends "magicforms/base.html" %}
+{% load i18n portal_urls %}
+
+{% block body_class %} mf-public-site mf-landing-page{% endblock %}
+
+{% block title %}{% trans "SwapForms" %} · {% trans "Forms, approvals and documents in one calm place" %}{% endblock %}
+
+{% block public_site_nav %}
+<nav class="mf-landing-nav" aria-label="{% trans 'Landing page' %}">
+  <a class="mf-brand-logo-link" href="{{ landing_page_url }}"><span class="mf-brand-wordmark" aria-label="SwapForms" translate="no"><span class="mf-brand-wordmark__swap">swap</span><span class="mf-brand-wordmark__forms">forms</span></span></a>
+  <div class="mf-landing-nav__links">
+    <a class="mf-landing-nav__link" href="#plans">{% trans "Plans" %}</a>
+    <a class="mf-landing-nav__link" href="{% portal_url 'magicforms:submission_track' %}">{% trans "Track a submission" %}</a>
+    <a class="mf-landing-nav__link" href="https://support.swapkuwait.com/" rel="noopener noreferrer" target="_blank">{% trans "Support" %}</a>
+    {% if user.is_authenticated and studio_available %}
+      <a class="mf-button mf-button--primary" href="{% url 'manage:dashboard' %}">{% trans "Open workspace" %}</a>
+    {% else %}
+      <a class="mf-button mf-button--secondary" href="{% url 'manage:login' %}?next={{ studio_login_next|urlencode }}">{% trans "Sign in" %}</a>
+    {% endif %}
+    {% include "magicforms/includes/lang_switch.html" %}
+  </div>
+</nav>
+{% endblock %}
+
+{% block content %}
+<section class="mf-landing-hero" aria-labelledby="mf-landing-title">
+  <div class="mf-landing-hero__copy">
+    <p class="mf-eyebrow">{% trans "SwapForms" %}</p>
+    <h1 class="mf-landing-hero__title" id="mf-landing-title">{% trans "Forms, approvals and documents. One calm place." %}</h1>
+    <p class="mf-landing-hero__lead">
+      {% blocktrans trimmed %}
+        Publish a form in minutes, route every submission through the right people, and give applicants a link they can follow. No code, no clutter.
+      {% endblocktrans %}
+    </p>
+    <div class="mf-landing-hero__actions">
+      {% if user.is_authenticated and studio_available %}
+        <a class="mf-button mf-button--primary" href="{% url 'manage:dashboard' %}">{% trans "Open workspace" %}</a>
+      {% else %}
+        <a class="mf-button mf-button--primary" href="{% url 'manage:login' %}?next={{ studio_login_next|urlencode }}">{% trans "Sign in to your workspace" %}</a>
+      {% endif %}
+      <a class="mf-button mf-button--secondary" href="{% portal_url 'magicforms:submission_track' %}">{% trans "Track a submission" %}</a>
+    </div>
+    <p class="mf-landing-hero__note">{% trans "Arabic and English, right-to-left ready, hosted in the cloud." %}</p>
+  </div>
+
+  {# A still of the inbox: real labels from the product, drawn in CSS so it stays crisp in both themes. #}
+  <div class="mf-landing-still" aria-hidden="true">
+    <div class="mf-landing-still__head">
+      <span class="mf-landing-still__title">{% trans "Inbox" %}</span>
+      <span class="mf-landing-still__meta">{% trans "3 submissions waiting for your action." %}</span>
+    </div>
+    <div class="mf-landing-still__row mf-landing-still__row--hl">
+      <span class="mf-landing-still__check"></span>
+      <span class="mf-landing-still__name">{% trans "Leave request" %}</span>
+      <span class="mf-landing-still__pill">{% trans "Manager review" %}</span>
+      <span class="mf-landing-still__actions"><span class="mf-landing-still__btn mf-landing-still__btn--primary">{% trans "Approve" %}</span><span class="mf-landing-still__btn">{% trans "Reject" %}</span></span>
+    </div>
+    <div class="mf-landing-still__row">
+      <span class="mf-landing-still__check"></span>
+      <span class="mf-landing-still__name">{% trans "Vendor registration" %}</span>
+      <span class="mf-landing-still__pill">{% trans "Finance" %}</span>
+      <span class="mf-landing-still__actions"><span class="mf-landing-still__btn mf-landing-still__btn--primary">{% trans "Approve" %}</span><span class="mf-landing-still__btn">{% trans "Reject" %}</span></span>
+    </div>
+    <div class="mf-landing-still__row">
+      <span class="mf-landing-still__check"></span>
+      <span class="mf-landing-still__name">{% trans "Training enrolment" %}</span>
+      <span class="mf-landing-still__pill mf-landing-still__pill--done">{% trans "Completed" %}</span>
+      <span class="mf-landing-still__actions"><span class="mf-landing-still__btn">{% trans "Document" %}</span></span>
+    </div>
+    <div class="mf-landing-still__timeline">
+      <span class="mf-landing-still__dot mf-landing-still__dot--done"></span><span>{% trans "Submitted" %}</span>
+      <span class="mf-landing-still__dot mf-landing-still__dot--done"></span><span>{% trans "Manager review" %}</span>
+      <span class="mf-landing-still__dot"></span><span>{% trans "Finance" %}</span>
+      <span class="mf-landing-still__dot"></span><span>{% trans "Signed PDF" %}</span>
+    </div>
+  </div>
+</section>
+
+<section class="mf-landing-steps" aria-labelledby="mf-landing-steps-title">
+  <h2 class="mf-landing-h2" id="mf-landing-steps-title">{% trans "How it works" %}</h2>
+  <ol class="mf-landing-steps__list">
+    <li>
+      <span class="mf-landing-steps__num">1</span>
+      <h3>{% trans "Build" %}</h3>
+      <p>{% trans "Add fields, sections and rules in the workspace. Start from a template or build it field by field." %}</p>
+    </li>
+    <li>
+      <span class="mf-landing-steps__num">2</span>
+      <h3>{% trans "Route" %}</h3>
+      <p>{% trans "Draw the approval path once. Each submission moves step by step to the right people, with delegation when someone is away." %}</p>
+    </li>
+    <li>
+      <span class="mf-landing-steps__num">3</span>
+      <h3>{% trans "Deliver" %}</h3>
+      <p>{% trans "Applicants follow progress from a reference link. Approved cases become merged PDF documents, signed in the browser." %}</p>
+    </li>
+  </ol>
+</section>
+
+<section class="mf-landing-features" aria-labelledby="mf-landing-features-title">
+  <h2 class="mf-landing-h2" id="mf-landing-features-title">{% trans "Built for organizations" %}</h2>
+  <ul class="mf-landing-features__grid">
+    <li><h3>{% trans "Approval workflows" %}</h3><p>{% trans "Ordered steps, assignees, delegation and undo. Every decision is logged." %}</p></li>
+    <li><h3>{% trans "Documents and signatures" %}</h3><p>{% trans "Upload a DOCX template with placeholders. Answers merge into a PDF that can be signed with a fingertip." %}</p></li>
+    <li><h3>{% trans "Arabic first" %}</h3><p>{% trans "Every form chooses its direction. Arabic text, dates and PDFs render correctly out of the box." %}</p></li>
+    <li><h3>{% trans "Announcement pages and QR" %}</h3><p>{% trans "Give a form its own page with capacity, deadline and a QR code for posters and screens." %}</p></li>
+    <li><h3>{% trans "Connects to your systems" %}</h3><p>{% trans "Validate answers against your API before submit, and post results to other systems on every step." %}</p></li>
+    <li><h3>{% trans "One workspace per organization" %}</h3><p>{% trans "Roles, members and branding stay separate for each organization, with one sign-in for staff." %}</p></li>
+  </ul>
+</section>
+
+<section class="mf-landing-plans" id="plans" aria-labelledby="mf-landing-plans-title">
+  <h2 class="mf-landing-h2" id="mf-landing-plans-title">{% trans "Plans" %}</h2>
+  <p class="mf-landing-plans__lead">{% trans "Start free, grow when your forms do. Applicants are always free." %}</p>
+  <ul class="mf-landing-plans__grid">
+    <li class="mf-landing-plan">
+      <h3 class="mf-landing-plan__name">{% trans "Free" %}</h3>
+      <p class="mf-landing-plan__price">$0 <span class="mf-landing-plan__period">{% trans "forever" %}</span></p>
+      <p class="mf-landing-plan__for">{% trans "Try SwapForms with one live form." %}</p>
+      <ul class="mf-landing-plan__list">
+        <li class="is-on">{% trans "1 organization" %}</li>
+        <li class="is-on">{% trans "1 form" %}</li>
+        <li class="is-on">{% trans "Submission tracking link" %}</li>
+        <li class="is-off">{% trans "Approval workflow" %}</li>
+        <li class="is-off">{% trans "Email notifications" %}</li>
+      </ul>
+      <a class="mf-button mf-button--secondary" href="{% url 'manage:login' %}?next={{ studio_login_next|urlencode }}">{% trans "Start free" %}</a>
+    </li>
+    <li class="mf-landing-plan">
+      <h3 class="mf-landing-plan__name">{% trans "Starter" %}</h3>
+      <p class="mf-landing-plan__price">$99 <span class="mf-landing-plan__period">{% trans "USD / month" %}</span></p>
+      <p class="mf-landing-plan__for">{% trans "For a team that runs a few forms." %}</p>
+      <ul class="mf-landing-plan__list">
+        <li class="is-on">{% trans "1 organization" %}</li>
+        <li class="is-on">{% trans "5 forms" %}</li>
+        <li class="is-on">{% trans "Submission tracking link" %}</li>
+        <li class="is-off">{% trans "Approval workflow" %}</li>
+        <li class="is-off">{% trans "Email notifications" %}</li>
+      </ul>
+      <a class="mf-button mf-button--secondary" href="https://support.swapkuwait.com/" rel="noopener noreferrer" target="_blank">{% trans "Talk to support" %}</a>
+    </li>
+    <li class="mf-landing-plan mf-landing-plan--featured">
+      <h3 class="mf-landing-plan__name">{% trans "Business" %}</h3>
+      <p class="mf-landing-plan__price">$399 <span class="mf-landing-plan__period">{% trans "USD / month" %}</span></p>
+      <p class="mf-landing-plan__for">{% trans "Everything, without limits." %}</p>
+      <ul class="mf-landing-plan__list">
+        <li class="is-on">{% trans "Unlimited organizations" %}</li>
+        <li class="is-on">{% trans "Unlimited forms" %}</li>
+        <li class="is-on">{% trans "Submission tracking link" %}</li>
+        <li class="is-on">{% trans "Approval workflow" %}</li>
+        <li class="is-on">{% trans "Email notifications" %}</li>
+        <li class="is-on">{% trans "Documents and signatures" %}</li>
+      </ul>
+      <a class="mf-button mf-button--primary" href="https://support.swapkuwait.com/" rel="noopener noreferrer" target="_blank">{% trans "Talk to support" %}</a>
+    </li>
+  </ul>
+</section>
+
+<section class="mf-landing-cta" aria-labelledby="mf-landing-cta-title">
+  <h2 class="mf-landing-h2" id="mf-landing-cta-title">{% trans "Ready when you are." %}</h2>
+  <p>{% trans "Staff sign in with their organization account. Applicants never need one." %}</p>
+  <div class="mf-landing-hero__actions">
+    {% if user.is_authenticated and studio_available %}
+      <a class="mf-button mf-button--primary" href="{% url 'manage:dashboard' %}">{% trans "Open workspace" %}</a>
+    {% else %}
+      <a class="mf-button mf-button--primary" href="{% url 'manage:login' %}?next={{ studio_login_next|urlencode }}">{% trans "Sign in" %}</a>
+    {% endif %}
+    <a class="mf-button mf-button--secondary" href="https://support.swapkuwait.com/" rel="noopener noreferrer" target="_blank">{% trans "Talk to support" %}</a>
+  </div>
+</section>
+{% endblock %}
+
+{% block site_footer %}
+  {% include "magicforms/includes/site_footer.html" %}
+{% endblock %}

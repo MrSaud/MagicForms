@@ -1,0 +1,55 @@
+{% extends "magicforms/base.html" %}
+{% load i18n magicforms_i18n %}
+
+{% block title %}{% trans "My drafts" %} · MagicForms{% endblock %}
+
+{% block content %}
+{% if messages %}
+<ul class="mf-messages">
+  {% for message in messages %}
+    <li class="mf-message mf-message--{{ message.level_tag }}">{{ message }}</li>
+  {% endfor %}
+</ul>
+{% endif %}
+<section class="mf-hero mf-hero--compact">
+  <h1 class="mf-display mf-display--small">{% trans "My drafts" %}</h1>
+  <p class="mf-muted">
+    {% blocktrans trimmed %}
+      Forms you saved without submitting. Resume any time — your answers are kept until you submit
+      or delete the draft. File uploads are not stored in drafts.
+    {% endblocktrans %}
+  </p>
+</section>
+
+{% if draft_rows %}
+<ul class="mf-manage-table mf-card mf-card--soft mf-stack">
+  {% for row in draft_rows %}
+  <li class="mf-manage-row mf-stack">
+    <div>
+      <span class="mf-manage-row-title">{{ row.draft.form.title|mf_trans }}</span>
+      <span class="mf-muted">
+        · {{ row.draft.form.entity.get_public_display_title|mf_trans }}
+        · {% blocktrans count counter=row.answers_count %}{{ counter }} answer saved{% plural %}{{ counter }} answers saved{% endblocktrans %}
+        · {% trans "Updated" %} {{ row.draft.updated_at|date:"M j, Y P" }}
+      </span>
+    </div>
+    <div class="mf-actions">
+      <a class="mf-button mf-button--primary" href="{{ row.resume_url }}">{% trans "Resume" %}</a>
+      <form method="post" class="mf-inline-form" onsubmit="return confirm('{% trans 'Delete this draft? Saved answers will be lost.' %}');">
+        {% csrf_token %}
+        <input type="hidden" name="delete_draft" value="{{ row.draft.resume_token }}" />
+        <button type="submit" class="mf-button mf-button--secondary">{% trans "Delete" %}</button>
+      </form>
+    </div>
+  </li>
+  {% endfor %}
+</ul>
+{% else %}
+<div class="mf-card mf-card--glass mf-stack">
+  <p class="mf-body-text mf-muted">
+    {% trans "No saved drafts. Use “Save draft” on any form to keep your progress." %}
+  </p>
+  <p class="mf-body-text mf-public-site-local-nav"><a class="mf-link" href="{{ portal_home_url }}">← {% trans "Home" %}</a></p>
+</div>
+{% endif %}
+{% endblock %}

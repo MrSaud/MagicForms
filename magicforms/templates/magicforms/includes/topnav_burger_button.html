@@ -1,0 +1,15 @@
+{% load i18n %}
+<button
+  type="button"
+  class="mf-topnav-burger"
+  aria-controls="{{ panel_id }}"
+  aria-expanded="false"
+  aria-label="{% trans 'Menu' %}"
+  data-mf-topnav-toggle
+>
+  <span class="mf-topnav-burger__bars" aria-hidden="true">
+    <span class="mf-topnav-burger__bar"></span>
+    <span class="mf-topnav-burger__bar"></span>
+    <span class="mf-topnav-burger__bar"></span>
+  </span>
+</button>

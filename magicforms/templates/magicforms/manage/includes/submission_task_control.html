@@ -1,0 +1,45 @@
+{% load i18n %}
+{# Expects: s, user_task_submission_ids (set), optional compact=1 #}
+{% with form_pk=s.form.pk sub_pk=s.pk %}
+<div class="mf-submission-task{% if compact %} mf-submission-task--compact{% endif %}">
+  {% if sub_pk in user_task_submission_ids %}
+  <form
+    method="post"
+    action="{% url 'manage:submission_task' form_pk sub_pk %}"
+    class="mf-inline-form mf-submission-task__form"
+    title="{% trans 'On your task list — remove' %}"
+  >
+    {% csrf_token %}
+    <input type="hidden" name="task_action" value="remove" />
+    <input type="hidden" name="next" value="{{ request.get_full_path }}" />
+    <button
+      type="submit"
+      class="mf-button mf-button--secondary mf-button--small mf-submission-task__btn mf-submission-task__btn--on"
+      aria-label="{% trans 'Remove from your task list' %}"
+    >
+      <span class="mf-submission-task__icon" aria-hidden="true">✓</span>
+      <span class="mf-submission-task__label">{% trans "On list" %}</span>
+    </button>
+  </form>
+  {% else %}
+  <form
+    method="post"
+    action="{% url 'manage:submission_task' form_pk sub_pk %}"
+    class="mf-inline-form mf-submission-task__form"
+    title="{% trans 'Add to your task list' %}"
+  >
+    {% csrf_token %}
+    <input type="hidden" name="task_action" value="add" />
+    <input type="hidden" name="next" value="{{ request.get_full_path }}" />
+    <button
+      type="submit"
+      class="mf-button mf-button--secondary mf-button--small mf-submission-task__btn"
+      aria-label="{% trans 'Add to your task list' %}"
+    >
+      <span class="mf-submission-task__icon" aria-hidden="true">+</span>
+      <span class="mf-submission-task__label">{% trans "Task" %}</span>
+    </button>
+  </form>
+  {% endif %}
+</div>
+{% endwith %}

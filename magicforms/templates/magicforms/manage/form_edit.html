@@ -1,0 +1,77 @@
+{% extends "magicforms/manage/base_manage.html" %}
+{% load i18n %}
+
+{% block manage_title %}{% trans "Form settings" %} · {{ form_obj.title }}{% endblock %}
+
+{% block manage_content %}
+<section class="mf-manage-section mf-stack mf-stack--lg">
+  <p class="mf-muted mf-body-text">
+    <a class="mf-link" href="{% url 'manage:form_detail' form_obj.pk %}">← {{ form_obj.title }}</a>
+  </p>
+  <h1 class="mf-display mf-display--small">{% trans "Form settings" %}</h1>
+
+  <form method="post" class="mf-form mf-form--wide mf-stack mf-stack--lg" enctype="multipart/form-data">
+    {% csrf_token %}
+    {% if form.non_field_errors %}<div class="mf-alert mf-alert--error">{{ form.non_field_errors }}</div>{% endif %}
+
+    <section class="mf-card mf-card--glass mf-stack">
+      <h2 class="mf-heading mf-heading--section">{% trans "Basics" %}</h2>
+      {% if form.entity %}{% include "magicforms/manage/includes/studio_bound_field.html" with bound=form.entity %}{% endif %}
+      {% include "magicforms/manage/includes/studio_bound_field.html" with bound=form.title %}
+      {% include "magicforms/manage/includes/studio_bound_field.html" with bound=form.description %}
+      {% include "magicforms/manage/includes/studio_bound_field.html" with bound=form.layout_direction %}
+      {% include "magicforms/manage/includes/studio_bound_field.html" with bound=form.category %}
+    </section>
+
+    <section class="mf-card mf-card--glass mf-stack">
+      <h2 class="mf-heading mf-heading--section">{% trans "Registration & deadline" %}</h2>
+      {% include "magicforms/manage/includes/studio_bound_field.html" with bound=form.submission_deadline %}
+      <p class="mf-hint mf-hint--tight">{% trans "Clear the date and save to remove the deadline." %}</p>
+      {% include "magicforms/manage/includes/studio_bound_field.html" with bound=form.intro_capacity %}
+    </section>
+
+    <section class="mf-card mf-card--glass mf-stack">
+      <h2 class="mf-heading mf-heading--section">{% trans "Print templates" %}</h2>
+      {% include "magicforms/manage/includes/studio_bound_field.html" with bound=form.print_template %}
+      {% if form_obj.print_template %}
+        <p class="mf-hint mf-mt">
+          <a class="mf-link" href="{% url 'manage:form_print_template_download' form_obj.pk %}">{% trans "Download current primary template" %}</a>
+          <span class="mf-muted"> — {% trans "edit locally, then choose a new file above and save." %}</span>
+        </p>
+      {% endif %}
+      <p class="mf-hint">{% trans "Accepted formats: DOCX or PDF." %}</p>
+      {% include "magicforms/manage/includes/studio_bound_field.html" with bound=form.print_template_odt %}
+      {% if form_obj.print_template_odt %}
+        <p class="mf-hint mf-mt">
+          <a class="mf-link" href="{% url 'manage:form_print_template_odt_download' form_obj.pk %}">{% trans "Download current ODT" %}</a>
+          <span class="mf-muted"> — {% trans "edit in LibreOffice, then upload again here and save." %}</span>
+        </p>
+      {% endif %}
+      <p class="mf-hint">{% trans "Optional ODT copy for staff editing in LibreOffice." %}</p>
+    </section>
+
+    <section class="mf-card mf-card--glass mf-stack">
+      <h2 class="mf-heading mf-heading--section">{% trans "Workflow routing" %}</h2>
+      {% if routing_mode_locked %}
+        <div class="mf-alert mf-alert--warn">{% trans "This form has a submission awaiting approval, so routing is locked until none are in progress." %}</div>
+      {% endif %}
+      {% include "magicforms/manage/includes/studio_bound_field.html" with bound=form.routing_mode %}
+      <p class="mf-hint"><a class="mf-link" href="{% url 'manage:workflow_list' form_obj.pk %}">{% trans "Steps and assignees are configured on the Workflow tab." %}</a></p>
+    </section>
+
+    <section class="mf-card mf-card--glass mf-stack">
+      <h2 class="mf-heading mf-heading--section">{% trans "Publishing & access" %}</h2>
+      {% include "magicforms/manage/includes/studio_bound_field.html" with bound=form.is_published %}
+      {% include "magicforms/manage/includes/studio_bound_field.html" with bound=form.one_time_submit %}
+      {% include "magicforms/manage/includes/studio_bound_field.html" with bound=form.is_for_public %}
+      {% include "magicforms/manage/includes/studio_bound_field.html" with bound=form.allow_submission_forward %}
+      {% include "magicforms/manage/includes/studio_bound_field.html" with bound=form.hide_from_form_lists %}
+    </section>
+
+    <div class="mf-actions">
+      <button type="submit" class="mf-button mf-button--primary">{% trans "Save" %}</button>
+      <a class="mf-link mf-link--muted" href="{% url 'manage:form_detail' form_obj.pk %}">{% trans "Cancel" %}</a>
+    </div>
+  </form>
+</section>
+{% endblock %}

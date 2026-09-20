@@ -1,0 +1,43 @@
+{% extends "magicforms/manage/base_manage.html" %}
+{% load i18n %}
+
+{% block manage_title %}{% trans "Logos" %} · {{ form_obj.title }}{% endblock %}
+
+{% block manage_content %}
+<section class="mf-manage-section mf-stack">
+  <div class="mf-manage-toolbar">
+    <div>
+      <h1 class="mf-display mf-display--small">{% trans "Form logos" %}</h1>
+      <p class="mf-muted">{% trans "Up to three images (PNG, JPEG, GIF, WebP, or SVG). Choose left, center (above title), or right for each." %}</p>
+    </div>
+    {% if can_add_logo %}
+      <a class="mf-button mf-button--primary" href="{% url 'manage:logo_add' form_obj.pk %}">{% trans "Add logo" %}</a>
+    {% endif %}
+  </div>
+
+  {% if logos %}
+  <ul class="mf-manage-table mf-card mf-card--glass mf-logo-manage-list">
+    {% for logo in logos %}
+      <li class="mf-manage-row mf-logo-manage-row">
+        <div class="mf-logo-manage-preview">
+          <img src="{{ logo.image.url }}" alt="" loading="lazy" decoding="async" />
+        </div>
+        <div class="mf-logo-manage-meta">
+          <span class="mf-manage-row-title">{{ logo.get_header_slot_display }}</span>
+          <span class="mf-muted">{{ logo.image.name|default:"logo" }}</span>
+        </div>
+        <div class="mf-manage-row-actions">
+          <a class="mf-link" href="{% url 'manage:logo_edit' form_obj.pk logo.pk %}">{% trans "Edit" %}</a>
+          <form method="post" action="{% url 'manage:logo_delete' form_obj.pk logo.pk %}" class="mf-inline-form">
+            {% csrf_token %}
+            <button type="submit" class="mf-link mf-link--danger">{% trans "Remove" %}</button>
+          </form>
+        </div>
+      </li>
+    {% endfor %}
+  </ul>
+  {% else %}
+  <p class="mf-body-text">{% trans "No logos yet. Add up to three for the live form header." %}</p>
+  {% endif %}
+</section>
+{% endblock %}

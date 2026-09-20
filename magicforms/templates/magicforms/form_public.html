@@ -1,0 +1,251 @@
+{% extends "magicforms/base.html" %}
+{% load opaque_ids static i18n magicforms_i18n portal_urls %}
+
+{% block html_dir %}{{ form_def.public_dir }}{% endblock %}
+
+{% block body_class %} mf-public-site mf-public-form-page{% endblock %}
+
+{% block title %}{% if studio_form_preview %}{% trans "Preview" %} · {% endif %}{{ form_def.title|mf_trans }} · {{ form_def.entity.get_public_display_title|mf_trans }}{% endblock %}
+
+{% block extrahead %}
+  {% if visibility_rules %}
+    {{ visibility_rules|json_script:"mf-visibility-rules" }}
+    <script defer src="{% static 'magicforms/js/form_visibility.js' %}"></script>
+  {% endif %}
+  <script defer src="{% static 'magicforms/js/form_section_disclosure.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+<div class="mf-public-form-layout">
+  <nav class="mf-breadcrumb-nav" aria-label="{% trans 'You are here' %}">
+    {% if studio_form_preview %}
+      <a class="mf-breadcrumb-nav__link" href="{% studio_manage_path '/manage/forms/' %}{{ form_def.pk|oid }}/">← {% trans "Back to form in workspace" %}</a>
+      <span class="mf-breadcrumb-nav__sep" aria-hidden="true">/</span>
+      <span class="mf-muted">{% trans "Preview" %}</span>
+    {% elif related_mode %}
+      <a class="mf-breadcrumb-nav__link" href="{% portal_url 'magicforms:entity_home' entity_slug=form_def.entity.slug %}">← {{ form_def.entity.get_public_display_title|mf_trans }}</a>
+    {% else %}
+      <a class="mf-breadcrumb-nav__link" href="{{ studio_inbox_url }}">{% trans "Inbox" %}</a>
+      <span class="mf-breadcrumb-nav__sep" aria-hidden="true">/</span>
+      <a class="mf-breadcrumb-nav__link" href="{% portal_url 'magicforms:entity_home' entity_slug=form_def.entity.slug %}">{{ form_def.entity.get_public_display_title|mf_trans }}</a>
+    {% endif %}
+  </nav>
+
+  {% if studio_form_preview %}
+  <aside class="mf-public-form-layout__notice mf-card mf-card--soft mf-stack" role="status">
+    <p class="mf-body-text">
+      <strong>{% trans "Preview mode" %}</strong>
+      — {% trans "Submissions are disabled. This is how applicants will see the form." %}
+    </p>
+  </aside>
+  {% endif %}
+
+  {% if related_mode %}
+  <aside class="mf-public-form-layout__notice mf-card mf-card--soft mf-stack">
+    <p class="mf-body-text">
+      {% blocktrans trimmed with title=related_parent_title hex=related_parent_token_hex %}
+        This is a <strong>related form</strong> for your main submission <strong>{{ title }}</strong> (reference …{{ hex }}).
+      {% endblocktrans %}
+    </p>
+  </aside>
+  {% endif %}
+
+  {% with logos=form_def.logos.all %}
+  <div class="mf-public-form-layout__card mf-card mf-card--glass" id="mf-public-form-main">
+    <header class="mf-public-form-layout__card-head">
+      {% if logos %}
+        <div class="mf-form-logo-strip mf-public-form-layout__logo-strip" role="group" aria-label="{% trans 'Form logos and title' %}">
+          <div class="mf-form-logo-strip__side mf-form-logo-strip__side--start">
+            {% for logo in logos %}
+              {% if logo.header_slot == 0 %}
+                <img class="mf-form-logo" src="{{ logo.image.url }}" alt="" loading="lazy" decoding="async" />
+              {% endif %}
+            {% endfor %}
+          </div>
+          <div class="mf-form-logo-strip__center">
+            <div class="mf-form-logo-strip__above-title">{% for logo in logos %}{% if logo.header_slot == 1 %}<img class="mf-form-logo" src="{{ logo.image.url }}" alt="" loading="lazy" decoding="async" />{% endif %}{% endfor %}</div>
+            <h1 class="mf-form-logo-strip__title">{{ form_def.title|mf_trans }}</h1>
+            {% if form_def.category %}
+              <span class="mf-form-logo-strip__subtitle">{{ form_def.category.name|mf_trans }}</span>
+            {% endif %}
+          </div>
+          <div class="mf-form-logo-strip__side mf-form-logo-strip__side--end">
+            {% for logo in logos %}
+              {% if logo.header_slot == 2 %}
+                <img class="mf-form-logo" src="{{ logo.image.url }}" alt="" loading="lazy" decoding="async" />
+              {% endif %}
+            {% endfor %}
+          </div>
+        </div>
+      {% else %}
+        <div class="mf-public-form-layout__title-stack">
+          {% if form_def.category %}
+            <p class="mf-public-form-layout__eyebrow">{{ form_def.category.name|mf_trans }}</p>
+          {% endif %}
+          <h1 class="mf-public-form-layout__form-title">{{ form_def.title|mf_trans }}</h1>
+        </div>
+      {% endif %}
+
+      {% if form_def.description %}
+        <p class="mf-public-form-layout__intro">{{ form_def.description|mf_trans }}</p>
+      {% endif %}
+      {% if form_def.submission_deadline %}
+        {% with dl=form_def.submission_deadline|date:"F j, Y" wl=form_def.submission_deadline|date:"l" %}
+        <p class="mf-public-form-layout__deadline" role="status">
+          {% blocktrans with d=dl w=wl trimmed %}Submit by <strong>{{ d }}</strong> (end of day, {{ w }}).{% endblocktrans %}
+        </p>
+        {% endwith %}
+      {% endif %}
+    </header>
+
+    <div class="mf-public-form-layout__card-body">
+      <form
+        id="mf-public-form"
+        method="post"
+        class="mf-form mf-public-form-layout__form"
+        enctype="multipart/form-data"
+        novalidate
+        data-mf-submitting-label="{% trans 'Submitting…' %}"
+        {% if studio_form_preview %}onsubmit="return false;"{% endif %}
+      >
+        {% csrf_token %}
+        {% if not studio_form_preview and form_def.public_share_key %}
+        <input type="hidden" name="share" value="{{ form_def.public_share_key }}" />
+        {% endif %}
+        {% if draft_obj %}
+        <input type="hidden" name="draft_token" value="{{ draft_obj.resume_token }}" />
+        {% endif %}
+
+        {% if draft_saved %}
+        <div class="mf-alert mf-alert--warn mf-draft-saved-notice" role="status">
+          <p class="mf-body-text"><strong>{% trans "Draft saved." %}</strong>
+            {% trans "Your answers are kept — you can come back and submit later." %}
+          </p>
+          {% if draft_missing_labels %}
+          <p class="mf-body-text">
+            {% trans "Still required before you can submit:" %}
+            <span class="mf-draft-missing-list">{% for lbl in draft_missing_labels %}{{ lbl|mf_trans }}{% if not forloop.last %}, {% endif %}{% endfor %}</span>
+          </p>
+          {% endif %}
+          <p class="mf-body-text">
+            {% trans "Resume link (save it if you do not have an account):" %}
+            <a class="mf-link mf-draft-resume-link" href="{{ draft_resume_url }}">{{ draft_resume_url }}</a>
+          </p>
+          <p class="mf-hint">
+            <a class="mf-link" href="{% portal_url 'magicforms:my_drafts' %}">{% trans "View all your drafts" %}</a>
+          </p>
+        </div>
+        {% endif %}
+
+        {% if form.non_field_errors %}
+          <div class="mf-live-error mf-live-error--banner" role="alert">
+            {{ form.non_field_errors }}
+          </div>
+        {% endif %}
+
+        {% for block in layout_blocks %}
+          {% if block.section %}
+            <div class="mf-section-host">
+            <section
+              class="mf-section{% if not block.section.starts_collapsed %} mf-section--open{% endif %}"
+              id="section-{{ block.section.pk }}"
+              aria-labelledby="mf-section-btn-{{ block.section.pk }}"
+            >
+              <button
+                type="button"
+                class="mf-section-summary"
+                id="mf-section-btn-{{ block.section.pk }}"
+                aria-expanded="{% if block.section.starts_collapsed %}false{% else %}true{% endif %}"
+                aria-controls="mf-section-panel-{{ block.section.pk }}"
+              >
+                <span class="mf-section-summary__label">{{ block.section.title|mf_trans }}</span>
+                <span class="mf-section-summary__chevron" aria-hidden="true"></span>
+              </button>
+              <div
+                class="mf-section-panel"
+                id="mf-section-panel-{{ block.section.pk }}"
+                role="region"
+                {% if block.section.starts_collapsed %}hidden{% endif %}
+              >
+                {% if block.section.description %}
+                  <p class="mf-section-desc">{{ block.section.description|mf_trans }}</p>
+                {% endif %}
+                <div class="mf-section-inner">
+          {% endif %}
+
+          {% for layout, pairs in block.groups %}
+            {% if layout == "inline" %}
+              <div class="mf-inline-row" role="group" aria-label="{% trans 'Inline fields' %}">
+                {% for ff, field in pairs %}
+                  <div
+                    class="mf-field-wrap{% if ff.visibility_control_field_id %} mf-field-wrap--conditional{% endif %}"
+                    data-mf-field-key="f_{{ ff.pk }}"
+                  >
+                    <div class="mf-field{% if ff.field_type != 'hint' %} mf-field--inline{% endif %}">
+                      {% include "magicforms/includes/public_form_field.html" with ff=ff field=field inline=True %}
+                    </div>
+                  </div>
+                {% endfor %}
+              </div>
+            {% else %}
+              {% for ff, field in pairs %}
+                <div
+                  class="mf-field-wrap{% if ff.field_type == 'break' %} mf-field-wrap--break{% endif %}{% if ff.visibility_control_field_id %} mf-field-wrap--conditional{% endif %}"
+                  data-mf-field-key="f_{{ ff.pk }}"
+                >
+                  <div class="mf-field{% if ff.field_type == 'break' %} mf-field--break-host{% endif %}">
+                    {% include "magicforms/includes/public_form_field.html" with ff=ff field=field inline=False %}
+                  </div>
+                </div>
+              {% endfor %}
+            {% endif %}
+          {% endfor %}
+
+          {% if block.section %}
+                </div>
+              </div>
+            </section>
+            </div>
+          {% endif %}
+        {% endfor %}
+
+        {% if validation_warning %}
+        <div class="mf-alert mf-alert--warn mf-public-form-validation" role="alert">
+          <p class="mf-body-text">{{ validation_warning }}</p>
+          {% if validation_can_force %}
+          <p class="mf-hint">{% trans "You can correct your answers and submit again, or submit without validation approval." %}</p>
+          {% endif %}
+        </div>
+        {% endif %}
+
+        <div class="mf-actions mf-public-form-layout__actions" aria-live="polite">
+          {% if studio_form_preview %}
+          <button type="button" class="mf-button mf-button--primary mf-public-form-layout__submit" disabled aria-disabled="true">{% trans "Submit" %}</button>
+          <a class="mf-button mf-button--secondary" href="{% studio_manage_path '/manage/forms/' %}{{ form_def.pk|oid }}/">{% trans "Close preview" %}</a>
+          {% else %}
+          <button type="submit" class="mf-button mf-button--primary mf-public-form-layout__submit">{% trans "Submit" %}</button>
+          {% if validation_can_force %}
+          <button type="submit" name="validation_force_submit" value="1" class="mf-button mf-button--secondary mf-public-form-layout__submit-anyway">{% trans "Submit anyway" %}</button>
+          {% endif %}
+          <button
+            type="submit"
+            name="save_draft"
+            value="1"
+            class="mf-button mf-button--secondary mf-public-form-layout__save-draft"
+            formnovalidate
+          >{% trans "Save draft" %}</button>
+          {% endif %}
+        </div>
+      </form>
+    </div>
+  </div>
+  {% endwith %}
+</div>
+{% endblock %}
+
+{% block footer_scripts %}
+  {{ block.super }}
+  {% if not studio_form_preview %}
+  <script src="{% static 'magicforms/js/public_form_submit.js' %}" defer></script>
+  {% endif %}
+{% endblock %}

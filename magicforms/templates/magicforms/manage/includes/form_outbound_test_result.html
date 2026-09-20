@@ -1,0 +1,45 @@
+{% load i18n %}
+<div class="mf-outbound-test-result__header">
+  <h3 class="mf-outbound-test-result__title">{% trans "Test result" %}</h3>
+  <span class="mf-outbound-test-result__badge" aria-hidden="true">
+    {% if test_result.ok %}{% trans "Success" %}{% else %}{% trans "Failed" %}{% endif %}
+  </span>
+</div>
+<p class="mf-outbound-test-result__meta">
+  <span class="mf-outbound-test-result__kind">{{ test_result.kind }}</span>
+  {% if test_result.status %}
+  <span class="mf-outbound-test-result__status">HTTP {{ test_result.status }}</span>
+  {% endif %}
+</p>
+{% if test_result.error and not test_result.ok %}
+<p class="mf-outbound-test-result__error">{{ test_result.error }}</p>
+{% endif %}
+{% if test_result.request_url %}
+<div class="mf-outbound-test-result__block">
+  <p class="mf-outbound-test-result__label">{% trans "URL" %}</p>
+  <p class="mf-outbound-test-result__url">{{ test_result.request_url }}</p>
+</div>
+{% endif %}
+{% if test_result.request_headers_display %}
+<div class="mf-outbound-test-result__block">
+  <p class="mf-outbound-test-result__label">{% trans "Request headers (redacted)" %}</p>
+  <pre class="mf-outbound-test-result__code">{{ test_result.request_headers_display }}</pre>
+</div>
+{% endif %}
+{% if test_result.request_body %}
+<div class="mf-outbound-test-result__block">
+  <p class="mf-outbound-test-result__label">{% trans "Request body" %}</p>
+  <pre class="mf-outbound-test-result__code">{{ test_result.request_body }}</pre>
+</div>
+{% endif %}
+<div class="mf-outbound-test-result__block mf-outbound-test-result__block--response">
+  <p class="mf-outbound-test-result__label">{% trans "Response" %}</p>
+  {% if test_result.response %}
+  <pre class="mf-outbound-test-result__code mf-outbound-test-result__code--response">{{ test_result.response }}</pre>
+  {% else %}
+  <p class="mf-outbound-test-result__empty">{% trans "No response body returned." %}</p>
+  {% endif %}
+</div>
+{% if not test_result.ok and test_result.status == 403 %}
+<p class="mf-outbound-test-result__hint">{% trans "403 Forbidden usually means your API rejected auth or the caller. Check auth type and secret, custom headers, IP allowlists, and HMAC signing against the exact JSON sent (including payload root wrap)." %}</p>
+{% endif %}

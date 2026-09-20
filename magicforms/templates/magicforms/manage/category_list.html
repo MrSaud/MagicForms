@@ -1,0 +1,33 @@
+{% extends "magicforms/manage/base_manage.html" %}
+{% load i18n %}
+
+{% block manage_title %}{% trans "Categories" %}{% endblock %}
+
+{% block manage_content %}
+<section class="mf-manage-section mf-stack">
+  <div class="mf-manage-toolbar">
+    <div>
+      <h1 class="mf-display mf-display--small">{% trans "Form categories" %}</h1>
+      <p class="mf-muted">{% trans "Group forms in the workspace and on the public list (e.g. HR, Finance)." %}</p>
+    </div>
+    <a class="mf-button mf-button--primary" href="{% url 'manage:category_add' %}">{% trans "Add category" %}</a>
+  </div>
+
+  {% if categories %}
+  {% include "magicforms/manage/includes/studio_pagination.html" with page_obj=categories %}
+  <ul class="mf-manage-table mf-card mf-card--glass">
+    {% for c in categories %}
+      <li class="mf-manage-row">
+        <div>
+          <span class="mf-manage-row-title">{{ c.name }}</span>
+          <span class="mf-muted">{{ c.entity.name }} · {{ c.slug }} · {% trans "order" %} {{ c.order }} · {% blocktrans count counter=c.form_count %}{{ counter }} form{% plural %}{{ counter }} forms{% endblocktrans %}</span>
+        </div>
+      </li>
+    {% endfor %}
+  </ul>
+  {% include "magicforms/manage/includes/studio_pagination.html" with page_obj=categories studio_pagination_footer=1 %}
+  {% else %}
+  <p class="mf-body-text">{% trans "No categories yet. Add HR, Finance, or any labels you use internally." %}</p>
+  {% endif %}
+</section>
+{% endblock %}

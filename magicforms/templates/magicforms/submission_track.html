@@ -1,0 +1,63 @@
+{% extends "magicforms/base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Track your submission" %} · MagicForms{% endblock %}
+
+{% block content %}
+<section class="mf-hero mf-hero--compact">
+  <h1 class="mf-display mf-display--small">{% trans "Track your submission" %}</h1>
+  <p class="mf-lead">
+    {% blocktrans trimmed %}
+      Enter the email you used on the form and the 5-digit track number shown after you submitted.
+    {% endblocktrans %}
+  </p>
+</section>
+
+<form method="post" class="mf-card mf-card--glass mf-stack mf-track-lookup" action="">
+  {% csrf_token %}
+  {% if track_error %}
+    <p class="mf-message mf-message--error" role="alert">{{ track_error }}</p>
+  {% endif %}
+  <div class="mf-track-lookup-fields">
+    <div class="mf-track-lookup-field">
+      <label class="mf-label" for="id_track_email">{% trans "Email" %}</label>
+      <input
+        id="id_track_email"
+        class="mf-input"
+        type="email"
+        name="email"
+        value="{{ track_email }}"
+        maxlength="254"
+        required
+        autocomplete="email"
+        placeholder="{% trans 'you@example.com' %}"
+      />
+    </div>
+    <div class="mf-track-lookup-field mf-track-lookup-field--code">
+      <label class="mf-label" for="id_track_code">{% trans "Track number" %}</label>
+      <input
+        id="id_track_code"
+        class="mf-input mf-track-code-input"
+        type="text"
+        name="code"
+        value="{{ track_code }}"
+        inputmode="numeric"
+        pattern="[0-9]{5}"
+        maxlength="5"
+        required
+        autocomplete="one-time-code"
+        placeholder="12345"
+      />
+    </div>
+  </div>
+  <p class="mf-actions">
+    <button type="submit" class="mf-button mf-button--primary">{% trans "Find my submission" %}</button>
+  </p>
+  <p class="mf-muted mf-body-text">
+    {% blocktrans trimmed %}
+      You will see the current status and the details of your request. If you lost your track
+      number, contact the organization that owns the form.
+    {% endblocktrans %}
+  </p>
+</form>
+{% endblock %}

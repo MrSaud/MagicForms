@@ -1,0 +1,59 @@
+{% extends "magicforms/manage/base_manage.html" %}
+{% load static i18n %}
+
+{% block extrahead %}
+{{ block.super }}
+<script defer src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
+<script defer src="{% static 'magicforms/js/manage_reorder.js' %}"></script>
+{% endblock %}
+
+{% block manage_title %}{% trans "Fields" %} · {{ form_obj.title }}{% endblock %}
+
+{% block manage_content %}
+<section class="mf-manage-section mf-stack">
+  <div class="mf-manage-toolbar">
+    <div>
+      <h1 class="mf-display mf-display--small">{% trans "Fields" %}</h1>
+      <p class="mf-muted">{{ form_obj.title }} — {% trans "drag rows to reorder (saved automatically)." %}</p>
+    </div>
+    <div class="mf-manage-toolbar-actions">
+      <a class="mf-button mf-button--primary" href="{% url 'manage:field_add' form_obj.pk %}">{% trans "Add field" %}</a>
+    </div>
+  </div>
+
+  {% url 'manage:field_reorder' form_obj.pk as reorder_url %}
+  <div
+    class="mf-sort-root mf-card mf-card--glass"
+    data-sortable
+    data-reorder-url="{{ reorder_url }}"
+  >
+    {% if fields %}
+    <ul class="mf-sort-list" data-sortable-list>
+      {% for f in fields %}
+        <li class="mf-sort-item" data-id="{{ f.pk }}">
+          <span class="drag-handle" aria-hidden="true">⠿</span>
+          <div class="mf-sort-body">
+            <strong>{{ f.label }}</strong>
+            <span class="mf-muted">{{ f.get_field_type_display }} · {{ f.name }}{% if f.mapping_key %} · {% trans "map" %}: {{ f.mapping_key }}{% endif %}{% if f.required %} · {% trans "required" %}{% endif %}{% if f.inline %} · {% trans "inline" %}{% endif %}{% if f.section_id %} · {{ f.section.title }}{% endif %}{% if f.visibility_control_field_id %} · {% trans "depends on" %} {{ f.visibility_control_field.label }}{% endif %}</span>
+          </div>
+          <div class="mf-sort-actions">
+            <a href="{% url 'manage:field_edit' form_obj.pk f.pk %}">{% trans "Edit" %}</a>
+            <form method="post" action="{% url 'manage:field_duplicate' form_obj.pk f.pk %}" class="mf-inline-form">
+              {% csrf_token %}
+      <button type="submit" class="mf-button mf-button--secondary mf-button--small">{% trans "Duplicate" %}</button>
+            </form>
+            <form method="post" action="{% url 'manage:field_delete' form_obj.pk f.pk %}" class="mf-inline-form" onsubmit="return confirm('{% trans "Remove this field?" %}');">
+              {% csrf_token %}
+              <button type="submit" class="mf-link mf-link--danger">{% trans "Remove" %}</button>
+            </form>
+          </div>
+        </li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <div class="mf-empty"><p class="mf-empty__title">{% trans "No fields yet" %}</p><p class="mf-empty__text">{% trans "Add your first field." %}</p></div>
+    {% endif %}
+  </div>
+
+</section>
+{% endblock %}

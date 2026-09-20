@@ -1,0 +1,316 @@
+{% extends "magicforms/base.html" %}
+{% load opaque_ids i18n static magicforms_i18n portal_urls %}
+
+{% block html_dir %}{{ form_def.public_dir }}{% endblock %}
+
+{% block body_class %} mf-public-site mf-public-form-page{% endblock %}
+
+{% block title %}{{ intro_title|mf_trans }} · {{ form_def.entity.get_public_display_title|mf_trans }}{% endblock %}
+
+{% block content %}
+<div class="mf-public-form-layout">
+  <nav class="mf-breadcrumb-nav" aria-label="{% trans 'You are here' %}">
+    {% if studio_intro_preview %}
+      <a class="mf-breadcrumb-nav__link" href="{% studio_manage_path '/manage/forms/' %}{{ form_def.pk|oid }}/intro/">← {% trans "Back to announcement editor" %}</a>
+      <span class="mf-breadcrumb-nav__sep" aria-hidden="true">/</span>
+      <span class="mf-muted">{% trans "Preview" %}</span>
+    {% else %}
+      <a class="mf-breadcrumb-nav__link" href="{% portal_url 'magicforms:entity_home' entity_slug=form_def.entity.slug %}">← {{ form_def.entity.get_public_display_title|mf_trans }}</a>
+    {% endif %}
+  </nav>
+
+  {% if studio_intro_preview %}
+  <aside class="mf-card mf-card--soft mf-stack" role="status">
+    <p class="mf-body-text">
+      <strong>{% trans "Preview" %}</strong>
+      — {% trans "This is how your announcement page will look to applicants." %}
+    </p>
+  </aside>
+  {% endif %}
+
+  <article class="mf-form-intro mf-card mf-card--glass mf-stack mf-stack--lg">
+    <header class="mf-form-intro__header mf-stack mf-stack--sm">
+      <h1 class="mf-display mf-display--small">{{ intro_title|mf_trans }}</h1>
+      {% if intro_subtitle %}
+        <p class="mf-lead">{{ intro_subtitle|mf_trans }}</p>
+      {% endif %}
+    </header>
+
+    {% if intro_slides %}
+      <section class="mf-form-intro__block mf-stack mf-stack--sm" aria-labelledby="mf-intro-gallery-heading">
+        {% trans "Gallery" as gallery_title %}
+        {% include "magicforms/includes/form_intro_section_heading.html" with icon="gallery" title=gallery_title heading_id="mf-intro-gallery-heading" %}
+        <div class="mf-form-intro-slideshow" data-mf-intro-slideshow tabindex="0">
+          <div class="mf-form-intro-slideshow__viewport">
+            <div class="mf-form-intro-slideshow__track" data-mf-intro-slideshow-track>
+              {% for slide in intro_slides %}
+                <figure class="mf-form-intro-slideshow__slide" data-mf-intro-slide{% if not forloop.first %} hidden{% endif %} aria-hidden="{% if forloop.first %}false{% else %}true{% endif %}">
+                  <div class="mf-form-intro-slideshow__media">
+                    <img src="{{ slide.url }}" alt="{{ slide.alt|mf_trans }}" loading="{% if forloop.first %}eager{% else %}lazy{% endif %}" decoding="async" />
+                  </div>
+                  {% if slide.caption %}
+                    <figcaption class="mf-form-intro-slideshow__caption">{{ slide.caption|mf_trans }}</figcaption>
+                  {% endif %}
+                </figure>
+              {% endfor %}
+            </div>
+          </div>
+          {% if intro_slides|length > 1 %}
+            <div class="mf-form-intro-slideshow__controls">
+              <button type="button" class="mf-form-intro-slideshow__nav" data-mf-intro-slideshow-prev aria-label="{% trans 'Previous image' %}">‹</button>
+              <ul class="mf-form-intro-slideshow__dots" role="tablist" aria-label="{% trans 'Gallery' %}">
+                {% for slide in intro_slides %}
+                  <li>
+                    <button type="button" class="mf-form-intro-slideshow__dot{% if forloop.first %} is-active{% endif %}" data-mf-intro-slideshow-dot role="tab" aria-selected="{% if forloop.first %}true{% else %}false{% endif %}" aria-label="{% blocktrans with num=forloop.counter %}Image {{ num }}{% endblocktrans %}"></button>
+                  </li>
+                {% endfor %}
+              </ul>
+              <button type="button" class="mf-form-intro-slideshow__nav" data-mf-intro-slideshow-next aria-label="{% trans 'Next image' %}">›</button>
+            </div>
+          {% endif %}
+        </div>
+      </section>
+    {% endif %}
+
+    {% if intro_video %}
+      <section class="mf-form-intro__block mf-stack mf-stack--sm" aria-labelledby="mf-intro-video-heading">
+        {% trans "Featured video" as video_title %}
+        {% include "magicforms/includes/form_intro_section_heading.html" with icon="video" title=video_title heading_id="mf-intro-video-heading" %}
+        {% if intro_video.embed_url %}
+          <div class="mf-form-intro-video">
+            <iframe src="{{ intro_video.embed_url }}" title="{% trans 'Featured video' %}" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>
+          </div>
+        {% endif %}
+        <p class="mf-form-intro-video__link">
+          <a class="mf-link" href="{{ intro_video.watch_url }}" target="_blank" rel="noopener noreferrer">{% trans "Open video" %}</a>
+        </p>
+      </section>
+    {% endif %}
+
+    {% if form_def.intro_description %}
+      <section class="mf-form-intro__block mf-stack mf-stack--sm" aria-labelledby="mf-intro-message-heading">
+        {% trans "About" as about_title %}
+        {% include "magicforms/includes/form_intro_section_heading.html" with icon="message" title=about_title heading_id="mf-intro-message-heading" %}
+        <div class="mf-form-intro__message mf-body-text mf-form-intro__rich">{{ form_def.intro_description|intro_html }}</div>
+      </section>
+    {% endif %}
+
+    {% if registration_deadline_label or intro_event_start or intro_event_end or intro_fee or intro_show_capacity %}
+      <section class="mf-form-intro__block mf-stack mf-stack--sm" aria-labelledby="mf-intro-registration-heading">
+        {% trans "Registration" as registration_title %}
+        {% include "magicforms/includes/form_intro_section_heading.html" with icon="registration" title=registration_title heading_id="mf-intro-registration-heading" %}
+        <dl class="mf-form-intro__dates">
+          {% if registration_deadline_label %}
+            <div class="mf-form-intro__date-row">
+              <dt>{% trans "Register by" %}</dt>
+              <dd><time datetime="{{ registration_deadline|date:'Y-m-d' }}">{{ registration_deadline_label }}</time></dd>
+            </div>
+          {% endif %}
+          {% if intro_fee %}
+            <div class="mf-form-intro__date-row">
+              <dt>{% trans "Fee" %}</dt>
+              <dd>{{ intro_fee|mf_trans }}</dd>
+            </div>
+          {% endif %}
+          {% if intro_show_capacity %}
+            <div class="mf-form-intro__date-row">
+              <dt>{% trans "Capacity" %}</dt>
+              <dd>
+                {% if intro_seats_remaining is not None %}
+                  {% blocktrans with left=intro_seats_remaining total=intro_capacity %}{{ left }} of {{ total }} seats left{% endblocktrans %}
+                {% else %}
+                  {{ intro_capacity }}
+                {% endif %}
+              </dd>
+            </div>
+          {% endif %}
+        </dl>
+      </section>
+    {% endif %}
+
+    {% if intro_event_start or intro_event_end %}
+      <section class="mf-form-intro__block mf-stack mf-stack--sm" aria-labelledby="mf-intro-schedule-heading">
+        {% trans "Schedule" as schedule_title %}
+        {% include "magicforms/includes/form_intro_section_heading.html" with icon="schedule" title=schedule_title heading_id="mf-intro-schedule-heading" %}
+        <dl class="mf-form-intro__dates">
+          {% if intro_event_start %}
+            <div class="mf-form-intro__date-row">
+              <dt>{% trans "Starts" %}</dt>
+              <dd><time datetime="{{ intro_event_start|date:'c' }}">{{ intro_event_start|date:"M j, Y, P" }}</time></dd>
+            </div>
+          {% endif %}
+          {% if intro_event_end %}
+            <div class="mf-form-intro__date-row">
+              <dt>{% trans "Ends" %}</dt>
+              <dd><time datetime="{{ intro_event_end|date:'c' }}">{{ intro_event_end|date:"M j, Y, P" }}</time></dd>
+            </div>
+          {% endif %}
+        </dl>
+      </section>
+    {% endif %}
+
+    {% if intro_venue_label or intro_location or intro_map_url %}
+      <section class="mf-form-intro__block mf-stack mf-stack--sm" aria-labelledby="mf-intro-where-heading">
+        {% trans "Where" as where_title %}
+        {% include "magicforms/includes/form_intro_section_heading.html" with icon="where" title=where_title heading_id="mf-intro-where-heading" %}
+        <dl class="mf-form-intro__dates">
+          {% if intro_venue_label %}
+            <div class="mf-form-intro__date-row">
+              <dt>{% trans "Format" %}</dt>
+              <dd>{{ intro_venue_label|mf_trans }}</dd>
+            </div>
+          {% endif %}
+          {% if intro_location %}
+            <div class="mf-form-intro__date-row">
+              <dt>{% trans "Location" %}</dt>
+              <dd>{{ intro_location|mf_trans|linebreaksbr }}</dd>
+            </div>
+          {% endif %}
+        </dl>
+        {% if intro_map_url %}
+          <p class="mf-form-intro__map-link">
+            <a class="mf-button mf-button--secondary mf-button--small" href="{{ intro_map_url }}" target="_blank" rel="noopener noreferrer">{% trans "View on map" %}</a>
+          </p>
+        {% endif %}
+      </section>
+    {% endif %}
+
+    {% if intro_contact_name or intro_contact_email or intro_contact_phone %}
+      <section class="mf-form-intro__block mf-stack mf-stack--sm" aria-labelledby="mf-intro-contact-heading">
+        {% trans "Get in touch" as contact_title %}
+        {% include "magicforms/includes/form_intro_section_heading.html" with icon="contact" title=contact_title heading_id="mf-intro-contact-heading" %}
+        <dl class="mf-form-intro__dates">
+          {% if intro_contact_name %}
+            <div class="mf-form-intro__date-row">
+              <dt>{% trans "Contact" %}</dt>
+              <dd>{{ intro_contact_name|mf_trans }}</dd>
+            </div>
+          {% endif %}
+          {% if intro_contact_email %}
+            <div class="mf-form-intro__date-row">
+              <dt>{% trans "Email" %}</dt>
+              <dd><a class="mf-link" href="mailto:{{ intro_contact_email }}">{{ intro_contact_email }}</a></dd>
+            </div>
+          {% endif %}
+          {% if intro_contact_phone %}
+            <div class="mf-form-intro__date-row">
+              <dt>{% trans "Phone" %}</dt>
+              <dd><a class="mf-link" href="tel:{{ intro_contact_phone }}">{{ intro_contact_phone }}</a></dd>
+            </div>
+          {% endif %}
+        </dl>
+      </section>
+    {% endif %}
+
+    {% if intro_details %}
+      <section class="mf-form-intro__block mf-stack mf-stack--sm" aria-labelledby="mf-intro-highlights-heading">
+        {% trans "Highlights" as highlights_title %}
+        {% include "magicforms/includes/form_intro_section_heading.html" with icon="highlights" title=highlights_title heading_id="mf-intro-highlights-heading" %}
+        {% if intro_details_ordered %}
+        <ol class="mf-form-intro__list">
+          {% for item in intro_details %}
+            <li>{{ item|mf_trans }}</li>
+          {% endfor %}
+        </ol>
+        {% else %}
+        <ul class="mf-form-intro__list">
+          {% for item in intro_details %}
+            <li>{{ item|mf_trans }}</li>
+          {% endfor %}
+        </ul>
+        {% endif %}
+      </section>
+    {% endif %}
+
+    {% if has_intro_attachment %}
+      <section class="mf-form-intro__block mf-form-intro__block--inline">
+        <p class="mf-form-intro__attachment">
+          <a class="mf-button mf-button--secondary mf-button--small" href="{{ intro_brochure_url }}">{% trans "Download brochure (PDF)" %}</a>
+        </p>
+      </section>
+    {% endif %}
+
+    {% if intro_rules %}
+      <section class="mf-form-intro__block mf-stack mf-stack--sm" aria-labelledby="mf-intro-guidelines-heading">
+        {% trans "Guidelines" as guidelines_title %}
+        {% include "magicforms/includes/form_intro_section_heading.html" with icon="guidelines" title=guidelines_title heading_id="mf-intro-guidelines-heading" %}
+        {% if intro_rules_ordered %}
+        <ol class="mf-form-intro__list">
+          {% for rule in intro_rules %}
+            <li>{{ rule|mf_trans }}</li>
+          {% endfor %}
+        </ol>
+        {% else %}
+        <ul class="mf-form-intro__list">
+          {% for rule in intro_rules %}
+            <li>{{ rule|mf_trans }}</li>
+          {% endfor %}
+        </ul>
+        {% endif %}
+      </section>
+    {% endif %}
+
+    <details class="mf-entity-form-details mf-card mf-card--glass mf-stack mf-form-intro__share-details">
+      <summary class="mf-entity-form-details__summary">
+        <span class="mf-form-intro__summary-row" id="mf-intro-share-heading">
+          <span class="mf-form-intro__heading-icon" aria-hidden="true">
+            {% include "magicforms/includes/form_intro_icon.html" with icon="share" only %}
+          </span>
+          <span class="mf-heading mf-heading--section">{% trans "Share" %}</span>
+        </span>
+      </summary>
+      <div class="mf-entity-form-details__body mf-stack mf-stack--sm">
+        <p class="mf-hint mf-body-text">{% trans "Invite others to view this announcement page." %}</p>
+        <div class="mf-form-intro__share-layout">
+          <div class="mf-form-intro__share-actions">
+            <a class="mf-button mf-button--secondary mf-button--small" href="{{ share_mailto }}">{% trans "Share by email" %}</a>
+            <a
+              class="mf-button mf-button--secondary mf-button--small"
+              href="{{ share_whatsapp }}"
+              target="_blank"
+              rel="noopener noreferrer"
+            >{% trans "Share via WhatsApp" %}</a>
+            <a
+              class="mf-button mf-button--secondary mf-button--small"
+              href="{{ intro_qrcode_url }}?download=1"
+              download="announcement-{{ form_def.slug }}-qr.png"
+            >{% trans "Download QR (PNG)" %}</a>
+          </div>
+          <figure class="mf-form-intro__qr">
+            <img
+              src="{{ intro_qrcode_url }}?v={{ form_def.updated_at|date:'U' }}"
+              width="200"
+              height="200"
+              alt="{% trans 'QR code for this announcement page' %}"
+              loading="lazy"
+              decoding="async"
+            />
+            <figcaption class="mf-hint">{% trans "Scan to open this page" %}</figcaption>
+          </figure>
+        </div>
+        <p class="mf-hint mf-form-intro__share-url">
+          <span class="mf-muted">{% trans "Link" %}:</span>
+          <a class="mf-link" href="{{ share_url }}">{{ share_url }}</a>
+        </p>
+      </div>
+    </details>
+
+    <footer class="mf-form-intro__actions">
+      {% if closed %}
+        <p class="mf-alert mf-alert--warning">{% trans "Registration is closed for this form." %}</p>
+      {% elif studio_intro_preview %}
+        <a class="mf-button mf-button--primary" href="{{ apply_url }}" target="_blank" rel="noopener">{{ intro_apply_label|mf_trans }}</a>
+      {% else %}
+        <a class="mf-button mf-button--primary" href="{{ apply_url }}">{{ intro_apply_label|mf_trans }}</a>
+      {% endif %}
+    </footer>
+  </article>
+</div>
+{% endblock %}
+
+{% block footer_scripts %}
+  {{ block.super }}
+  {% if intro_slides %}
+    <script src="{% static 'magicforms/js/form_intro_slideshow.js' %}" defer></script>
+  {% endif %}
+{% endblock %}

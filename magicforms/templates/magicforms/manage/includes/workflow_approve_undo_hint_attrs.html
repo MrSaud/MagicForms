@@ -1,0 +1,4 @@
+{% load i18n %}
+{% if workflow_undo_window_minutes %}
+data-mf-approve-undo-hint="{% blocktrans with minutes=workflow_undo_window_minutes %}You can undo this approval for {{ minutes }} minutes using Undo approve.{% endblocktrans %}"
+{% endif %}

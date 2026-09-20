@@ -1,0 +1,143 @@
+{% extends "magicforms/manage/base_manage.html" %}
+{% load opaque_ids i18n static magicforms_i18n %}
+
+{% block manage_title %}{% trans "Timeline" %} · {{ submission.reference_token }}{% endblock %}
+
+{% block manage_content %}
+<section class="mf-manage-section mf-stack">
+  <p class="mf-eyebrow">{{ form_obj.title|mf_trans }}</p>
+  <h1 class="mf-display mf-display--small">
+    {% include "magicforms/manage/includes/section_heading_icon.html" with icon="timeline" only %}
+    {% trans "Submission timeline" %}
+  </h1>
+  <p class="mf-muted">
+    {% trans "Reference" %} <code class="mf-code">{{ submission.reference_token }}</code>
+    · {% trans "Submitted" %} {{ submission.submitted_at|date:"M j, Y, P" }}
+  </p>
+
+  {% if my_timeline_share and my_timeline_share.share_message %}
+  <div class="mf-card mf-card--soft mf-stack mf-timeline-share-note">
+    <p class="mf-eyebrow">{% trans "Message from sharer" %}</p>
+    <p class="mf-body-text">{{ my_timeline_share.share_message|linebreaksbr }}</p>
+    {% if my_timeline_share.shared_by %}
+    <p class="mf-muted mf-body-text">— {{ my_timeline_share.shared_by.get_username }}</p>
+    {% endif %}
+  </div>
+  {% endif %}
+
+  <div class="mf-actions mf-actions--wrap">
+    {% if can_open_submission_manage %}
+      <a class="mf-button mf-button--secondary mf-button--small" href="{% url 'manage:submission_manage_detail' form_obj.pk submission.pk %}">← {% trans "Back to submission" %}</a>
+    {% else %}
+      <a class="mf-button mf-button--secondary mf-button--small" href="{% url 'manage:dashboard' %}">← {% trans "Back to home" %}</a>
+    {% endif %}
+    {% if can_dismiss_share %}
+    <form
+      method="post"
+      action="{% url 'manage:submission_timeline_dismiss' form_obj.pk submission.pk %}"
+      class="mf-inline-form"
+      data-mf-no-busy="true"
+    >
+      {% csrf_token %}
+      <button type="submit" class="mf-button mf-button--secondary mf-button--small">{% trans "Remove from my list" %}</button>
+    </form>
+    {% endif %}
+    {% if can_manage_sharing %}
+      <a
+        class="mf-button mf-button--secondary mf-button--small"
+        href="#mf-timeline-share"
+        data-mf-no-busy="true"
+        data-mf-open-timeline-share
+      >{% trans "Share timeline" %}</a>
+    {% endif %}
+  </div>
+
+  <div class="mf-card mf-card--soft mf-stack">
+    <ul class="mf-timeline mf-timeline--page">
+      {% for ev in events %}
+        <li class="mf-timeline-item">
+          <span class="mf-timeline-date">{{ ev.created_at|date:"M j, Y, P" }}</span>
+          <span class="mf-timeline-title">{{ ev|mf_timeline_kind }}</span>
+          {% if ev.step %}<span class="mf-timeline-step">{{ ev.step|mf_timeline_step }}</span>{% endif %}
+          {% if ev.created_by %}<span class="mf-muted"> · {{ ev.created_by }}</span>{% endif %}
+          {% if ev.message %}<p class="mf-body-text mf-timeline-msg">{{ ev|mf_timeline_message }}</p>{% endif %}
+        </li>
+      {% empty %}
+        <li class="mf-body-text">{% trans "No events." %}</li>
+      {% endfor %}
+    </ul>
+  </div>
+
+  {% if can_manage_sharing %}
+  <details
+    id="mf-timeline-share"
+    class="mf-card mf-card--soft mf-stack{% if open_share_panel %} mf-details--open{% endif %}"
+    {% if open_share_panel %}open{% endif %}
+  >
+    <summary class="mf-details__summary mf-heading mf-heading--small">{% trans "Share with colleagues" %}</summary>
+    <div class="mf-stack mf-mt">
+      <p class="mf-muted mf-body-text">
+        {% blocktrans trimmed %}
+          Grant anyone in this organization (staff or end users) access to this timeline page. They will not see the full submission manage screen unless they already have access through workflow or search.
+        {% endblocktrans %}
+      </p>
+      <p class="mf-muted mf-body-text">
+        {% trans "Shared colleagues see this timeline under Home → Shared timelines." %}
+      </p>
+      <form
+        method="post"
+        action="{% url 'manage:submission_timeline_share' form_obj.pk submission.pk %}"
+        class="mf-form mf-stack mf-timeline-share-form"
+      >
+        {% csrf_token %}
+        <input type="hidden" name="share_user_ids_sync" id="id_share_user_ids_sync" value="" />
+        <div class="mf-field">
+          <label class="mf-label" for="id_share_message">{% trans "Message for colleagues (optional)" %}</label>
+          <textarea
+            id="id_share_message"
+            class="mf-input"
+            name="share_message"
+            rows="3"
+            maxlength="500"
+            placeholder="{% trans 'e.g. Please review the approval history before our meeting.' %}"
+          >{{ timeline_share_message }}</textarea>
+          <p class="mf-muted mf-body-text">{% trans "Shown on their Home list and at the top of the timeline when they open it." %}</p>
+        </div>
+        <div class="mf-field">
+          <label class="mf-label" for="id_timeline_share_users">{% trans "People with timeline access" %}</label>
+          <select
+            id="id_timeline_share_users"
+            name="share_user_ids"
+            multiple
+            class="js-mf-grid-share-ts"
+            data-search-url="{% url 'manage:user_search' %}?form={{ form_obj.pk|oid }}&scope=entity"
+          >
+            {% for row in shared_with_users %}
+            <option value="{{ row.user.pk }}" selected>
+              {{ row.user.get_username }}{% if row.user.get_full_name %} — {{ row.user.get_full_name }}{% endif %}{% if row.user.email %} ({{ row.user.email }}){% endif %}
+            </option>
+            {% endfor %}
+          </select>
+          <p class="mf-muted mf-body-text mf-workflow-assignees">
+            {% trans "Type to search by username, email, or name. Pick someone from the list to add them; use × on a tag to remove." %}
+          </p>
+        </div>
+        <div class="mf-actions">
+          <button type="submit" class="mf-button mf-button--primary mf-button--small">{% trans "Update sharing" %}</button>
+        </div>
+      </form>
+    </div>
+  </details>
+  {% endif %}
+</section>
+{% endblock %}
+
+{% block footer_scripts %}
+{{ block.super }}
+{% if can_manage_sharing %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/css/tom-select.default.min.css" />
+<script src="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/js/tom-select.complete.min.js" defer></script>
+<script src="{% static 'magicforms/js/workflow_assignees_tomselect.js' %}" defer></script>
+<script src="{% static 'magicforms/js/timeline_share_panel.js' %}" defer></script>
+{% endif %}
+{% endblock %}

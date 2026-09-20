@@ -1,0 +1,56 @@
+{% load opaque_ids i18n magicforms_i18n %}
+<form method="get" id="mf-responses-grid-form" class="mf-card mf-card--glass mf-responses-grid__picker mf-stack">
+  <div class="mf-field">
+    <label class="mf-label" for="id_responses_form">{% trans "Form" %}</label>
+    <select class="mf-input mf-input--select" id="id_responses_form" name="form" data-mf-submit-form-on-change="true">
+      <option value="">{% trans "— Select a form —" %}</option>
+      {% for f in forms_for_select %}
+        <option value="{{ f.pk|oid }}" {% if selected_form and selected_form.pk == f.pk %}selected{% endif %}>
+          {{ f.entity.name|mf_trans }} — {{ f.title|mf_trans }}
+        </option>
+      {% endfor %}
+    </select>
+  </div>
+  {% if selected_form %}
+  {% if active_grid_view %}
+  <input type="hidden" name="view" value="{{ active_grid_view.pk|oid }}" />
+  {% elif active_column_keys_csv %}
+  <input type="hidden" name="cols" value="{{ active_column_keys_csv }}" />
+  {% endif %}
+  <input type="hidden" name="sort" value="{{ grid_sort_key }}" />
+  <input type="hidden" name="order" value="{% if grid_sort_desc %}desc{% else %}asc{% endif %}" />
+  <div class="mf-responses-grid__picker-dates">
+    <div class="mf-field">
+      <label class="mf-label" for="id_submitted_from">{% trans "Submitted from" %}</label>
+      <input class="mf-input" type="date" id="id_submitted_from" name="submitted_from" value="{{ responses_submitted_from }}" autocomplete="off" />
+    </div>
+    <div class="mf-field">
+      <label class="mf-label" for="id_submitted_to">{% trans "Submitted to" %}</label>
+      <input class="mf-input" type="date" id="id_submitted_to" name="submitted_to" value="{{ responses_submitted_to }}" autocomplete="off" />
+    </div>
+    <div class="mf-field mf-responses-grid__picker-search">
+      <label class="mf-label" for="id_responses_search">{% trans "Search" %}</label>
+      <input
+        class="mf-input"
+        type="search"
+        id="id_responses_search"
+        name="q"
+        value="{{ responses_search_q }}"
+        maxlength="200"
+        placeholder="{% trans 'Search all answers…' %}"
+        autocomplete="off"
+      />
+    </div>
+    <div class="mf-responses-grid__picker-dates-actions">
+      <button type="submit" class="mf-button mf-button--primary mf-button--small">{% trans "Apply" %}</button>
+      <a class="mf-button mf-button--secondary mf-button--small mf-responses-grid__clear-dates" href="?form={{ selected_form.pk|oid }}{% if active_grid_view %}&amp;view={{ active_grid_view.pk|oid }}{% elif active_column_keys_csv %}&amp;cols={{ active_column_keys_csv|urlencode }}{% endif %}{{ grid_sort_query }}{% if responses_search_q %}&amp;q={{ responses_search_q|urlencode }}{% endif %}">{% trans "Clear dates" %}</a>
+      {% if responses_search_q %}
+      <a class="mf-button mf-button--secondary mf-button--small" href="?form={{ selected_form.pk|oid }}{% if active_grid_view %}&amp;view={{ active_grid_view.pk|oid }}{% elif active_column_keys_csv %}&amp;cols={{ active_column_keys_csv|urlencode }}{% endif %}{{ grid_sort_query }}{% if responses_submitted_from %}&amp;submitted_from={{ responses_submitted_from }}{% endif %}{% if responses_submitted_to %}&amp;submitted_to={{ responses_submitted_to }}{% endif %}">{% trans "Clear search" %}</a>
+      {% endif %}
+    </div>
+  </div>
+  {% endif %}
+  <noscript>
+    <button type="submit" class="mf-button mf-button--primary">{% trans "Show" %}</button>
+  </noscript>
+</form>

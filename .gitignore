@@ -1,0 +1,21 @@
+__pycache__/
+*.py[cod]
+.venv/
+db.sqlite3
+.env
+*.sqlite3
+
+# Local-only settings (holds production DB credentials as fallback defaults)
+config/settings.py
+
+# Generated/collected assets and live user uploads (PII: signatures, documents)
+staticfiles/
+media/
+
+# Native build artifacts
+ios/build/
+ios/DerivedData/
+android/build/
+android/app/build/
+*.xcuserstate
+.venv-icon-export/

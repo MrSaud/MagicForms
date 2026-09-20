@@ -1,0 +1,4710 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-05-21 17:17+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: ar\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+
+msgid "PDF preview is not available for this file."
+msgstr "معاينة PDF غير متاحة لهذا الملف."
+
+msgid "This field is required."
+msgstr "هذه الخانة مطلوبه."
+
+#| msgid "Organization created."
+msgid "Organization not found."
+msgstr "لم تُعثر على المنظمة."
+
+msgid "Set a From address in organization email settings."
+msgstr "حدّد عنوان المرسل في إعدادات بريد المنظمة."
+
+#| msgid "Select at least one organization for this user."
+msgid "Set an SMTP host in organization email settings."
+msgstr "حدّد مضيف SMTP في إعدادات بريد المنظمة."
+
+msgid "Set a valid SMTP port (1–65535) in organization email settings."
+msgstr "حدّد منفذ SMTP صالحًا (1–65535) في إعدادات بريد المنظمة."
+
+msgid "The From address is not a valid email address."
+msgstr "عنوان المرسل ليس بريدًا إلكترونيًا صالحًا."
+
+msgid "Max length must be greater than or equal to min length."
+msgstr "يجب أن يكون الحد الأقصى للطول ≥ الحد الأدنى."
+
+msgid "Maximum must be greater than or equal to minimum."
+msgstr "يجب أن يكون الحد الأقصى ≥ الحد الأدنى."
+
+#| msgid "“Valid from” must be on or before “valid until”."
+msgid "“Not after” date must be on or after “Not before”."
+msgstr "يجب أن يكون تاريخ «ليس بعد» في أو بعد «ليس قبل»."
+
+#, python-format
+msgid "Invalid regular expression: %(err)s"
+msgstr "تعبير نمطي غير صالح: %(err)s"
+
+#, python-format
+msgid "Enter at least %(n)d characters."
+msgstr "أدخل %(n)d حرفًا على الأقل."
+
+#, python-format
+msgid "Enter at most %(n)d characters."
+msgstr "أدخل %(n)d حرفًا كحد أقصى."
+
+#, python-format
+msgid "This field must contain “%(text)s”."
+msgstr "يجب أن يحتوي هذا الحقل على «%(text)s»."
+
+#, python-format
+msgid "This field must not contain “%(text)s”."
+msgstr "يجب ألا يحتوي هذا الحقل على «%(text)s»."
+
+#| msgid "This field is required."
+msgid "This field must exactly match the required value."
+msgstr "يجب أن يطابق هذا الحقل القيمة المطلوبة بالضبط."
+
+msgid "This value does not match the required pattern."
+msgstr "هذه القيمة لا تطابق النمط المطلوب."
+
+msgid "Enter a whole number (no decimals)."
+msgstr "أدخل عددًا صحيحًا (بدون كسور)."
+
+#, python-format
+msgid "Enter a number greater than or equal to %(n)s."
+msgstr "أدخل رقمًا أكبر من أو يساوي %(n)s."
+
+#, python-format
+msgid "Enter a number less than or equal to %(n)s."
+msgstr "أدخل رقمًا أصغر من أو يساوي %(n)s."
+
+#, python-format
+msgid "Date must be on or after %(d)s."
+msgstr "يجب أن يكون التاريخ في %(d)s أو بعده."
+
+#, python-format
+msgid "Date must be on or before %(d)s."
+msgstr "يجب أن يكون التاريخ في %(d)s أو قبله."
+
+msgid "Searching your connected submissions for matching keywords."
+msgstr "جارٍ البحث في تقديماتك المرتبطة عن الكلمات المطابقة."
+
+msgid "Applicant"
+msgstr "مقدّم الطلب"
+
+msgid "Applicant (email)"
+msgstr "المقدّم (البريد)"
+
+#| msgid "Assignees"
+msgid "Assignee"
+msgstr "المكلّف"
+
+msgid "Workflow"
+msgstr "سير العمل"
+
+msgid "Thread"
+msgstr "السلسلة"
+
+#, python-format
+#| msgid "No submissions yet."
+msgid "Found %(n)s submission(s) you can open below."
+msgstr "وُجد %(n)s تقديمًا يمكنك فتحه أدناه."
+
+#, python-format
+msgid "Showing the first %(n)s."
+msgstr "عرض أول %(n)s."
+
+#, python-format
+msgid "Share: %(title)s"
+msgstr "مشاركة: %(title)s"
+
+msgid "In progress"
+msgstr "قيد التنفيذ"
+
+msgid "Completed"
+msgstr "مكتمل"
+
+msgid "Rejected"
+msgstr "مرفوض"
+
+msgid "Submissions"
+msgstr "التقديمات"
+
+msgid "That date range is invalid (from is after to). Filters were cleared."
+msgstr "نطاق التاريخ غير صالح (البداية بعد النهاية). تم مسح عوامل التصفية."
+
+msgid "Form not found or you do not have access."
+msgstr "النموذج غير موجود أو ليس لديك صلاحية الوصول."
+
+msgid "Choose a form first."
+msgstr "اختر نموذجًا أولاً."
+
+msgid "Enter a name for this view."
+msgstr "أدخل اسمًا لهذا العرض."
+
+msgid "Could not save this view. Try a different name."
+msgstr "تعذّر حفظ هذا العرض. جرّب اسمًا مختلفًا."
+
+#, python-format
+msgid "Saved view “%(name)s”."
+msgstr "تم حفظ العرض «%(name)s»."
+
+msgid "You can only delete views you created."
+msgstr "يمكنك حذف العروض التي أنشأتها فقط."
+
+msgid "Deleted saved view."
+msgstr "تم حذف العرض المحفوظ."
+
+msgid "Only the view owner can change sharing."
+msgstr "يمكن لمالك العرض فقط تغيير المشاركة."
+
+msgid "Sharing updated."
+msgstr "تم تحديث المشاركة."
+
+msgid "Unsupported format."
+msgstr "تنسيق غير مدعوم."
+
+msgid "Choose a form."
+msgstr "اختر نموذجًا."
+
+#| msgid "Attachment not found."
+msgid "Form not found."
+msgstr "لم يُعثر على النموذج."
+
+msgid "Select at least one organization for this user."
+msgstr "حدد مؤسسة واحدة على الأقل لهذا المستخدم."
+
+#, python-format
+msgid "Created account for %(username)s."
+msgstr "تم إنشاء حساب لـ %(username)s."
+
+#, python-format
+msgid "Each user can have at most %(max)d signature images."
+msgstr "يمكن لكل مستخدم %(max)d صورة توقيع كحد أقصى."
+
+msgid "Signature image added."
+msgstr "تمت إضافة صورة التوقيع."
+
+msgid "Primary signature updated."
+msgstr "تم تحديث التوقيع الأساسي."
+
+msgid "That signature was not found."
+msgstr "لم يتم العثور على هذا التوقيع."
+
+msgid "You cannot deactivate your own account here."
+msgstr "لا يمكنك إلغاء تنشيط حسابك الخاص هنا."
+
+msgid "User updated."
+msgstr "تم تحديث المستخدم."
+
+#| msgid "%(counter)s submission open in your inbox"
+#| msgid_plural "%(counter)s submissions open in your inbox"
+msgid "Enter a question to search your inbox."
+msgstr "أدخل سؤالًا للبحث في صندوق الوارد."
+
+msgid "Enter a valid deadline date."
+msgstr "أدخل تاريخ استحقاق صالحًا."
+
+msgid "Added to your task list."
+msgstr "أُضيف إلى قائمة مهامك."
+
+msgid "Already on your task list."
+msgstr "موجود بالفعل في قائمة مهامك."
+
+msgid "Removed from your task list."
+msgstr "أُزيل من قائمة مهامك."
+
+msgid "Not on your task list."
+msgstr "غير موجود في قائمة مهامك."
+
+msgid "Marked task as done."
+msgstr "تم وضع علامة «منجَز» على المهمة."
+
+msgid "Marked task as to do."
+msgstr "تم وضع علامة «قيد المتابعة» على المهمة."
+
+msgid "Deadline saved."
+msgstr "تم حفظ موعد الاستحقاق."
+
+msgid "Deadline cleared."
+msgstr "تم مسح موعد الاستحقاق."
+
+msgid "Unknown task action."
+msgstr "إجراء مهمة غير معروف."
+
+msgid "Form created."
+msgstr "تم إنشاء النموذج."
+
+msgid "Category created."
+msgstr "تم إنشاء الفئة."
+
+msgid "Describe your form and fields in the text area first."
+msgstr "قم بوصف النموذج والحقول الخاصة بك في منطقة النص أولاً."
+
+msgid "Choose which organization this draft form belongs to."
+msgstr "اختر المنظمة التي تنتمي إليها مسودة النموذج هذه."
+
+msgid " (copy)"
+msgstr " (نسخة)"
+
+#, python-format
+msgid "Form link: %(title)s"
+msgstr "رابط النموذج: %(title)s"
+
+msgid "A secure share link is already enabled."
+msgstr "رابط مشاركة آمن مفعّل بالفعل."
+
+msgid "Turn on a secure share link first, then you can rotate it."
+msgstr "فعّل رابط مشاركة آمن أولًا، ثم يمكنك تدويره."
+
+#| msgid "Take action"
+msgid "Unknown action."
+msgstr "إجراء غير معروف."
+
+#| msgid "Delegation saved."
+msgid "Related form link saved."
+msgstr "تم حفظ رابط النموذج المرتبط."
+
+#| msgid "Field removed."
+msgid "Related link removed."
+msgstr "أُزيل الرابط المرتبط."
+
+#| msgid "This field is required."
+msgid "This form is already archived."
+msgstr "هذا النموذج مؤرشف بالفعل."
+
+#| msgid "This form has no workflow steps."
+msgid "This form is not archived."
+msgstr "هذا النموذج غير مؤرشف."
+
+#, python-format
+msgid "The form “%(title)s” was restored from archive."
+msgstr "أُعيد النموذج «%(title)s» من الأرشيف."
+
+msgid "This form already has the maximum of three logos."
+msgstr "يحتوي هذا النموذج بالفعل على ثلاثة شعارات كحد أقصى."
+
+msgid "Logo added."
+msgstr "تمت إضافة الشعار."
+
+#| msgid "Logo added."
+msgid "Logo updated."
+msgstr "تم تحديث الشعار."
+
+msgid "Logo removed."
+msgstr "تمت إزالة الشعار."
+
+msgid "Saved."
+msgstr "تم الحفظ."
+
+msgid "Announcement page saved."
+msgstr "تم حفظ صفحة الإعلان."
+
+msgid "Gallery image added."
+msgstr "تمت إضافة صورة المعرض."
+
+msgid "Could not add image. Check the file and try again."
+msgstr "تعذّرت إضافة الصورة. تحقق من الملف وحاول مرة أخرى."
+
+msgid "Gallery image removed."
+msgstr "تمت إزالة صورة المعرض."
+
+msgid "This form has no primary print template to download."
+msgstr "لا يوجد قالب طباعة أساسي لهذا النموذج للتنزيل."
+
+msgid "Print template file is missing from storage."
+msgstr "ملف قالب الطباعة غير موجود في التخزين."
+
+msgid "This form has no ODT print template to download."
+msgstr "لا يوجد قالب طباعة ODT لهذا النموذج للتنزيل."
+
+msgid "ODT template file is missing from storage."
+msgstr "ملف قالب ODT غير موجود في التخزين."
+
+msgid "Publishing turned off until workflow has steps."
+msgstr "تم إيقاف النشر حتى يشتمل سير العمل على خطوات."
+
+msgid "Field added."
+msgstr "تمت إضافة الحقل."
+
+msgid "Field updated."
+msgstr "تم تحديث الحقل."
+
+msgid "Field removed."
+msgstr "تمت إزالة الحقل."
+
+msgid "Publishing turned off until you add at least one field."
+msgstr "تم إيقاف النشر حتى تقوم بإضافة حقل واحد على الأقل."
+
+msgid "Step added."
+msgstr "تمت إضافة الخطوة."
+
+msgid "Step updated."
+msgstr "تم تحديث الخطوة."
+
+msgid "Step removed."
+msgstr "تمت إزالة الخطوة."
+
+msgid "Section added."
+msgstr "تمت إضافة القسم."
+
+msgid "Section updated."
+msgstr "تم تحديث القسم."
+
+msgid "Section removed. Fields in it were set to no section."
+msgstr "تمت إزالة القسم. تم تعيين الحقول الموجودة فيه على أي قسم."
+
+#| msgid "User updated."
+msgid "Your tags were updated."
+msgstr "تم تحديث وسومك."
+
+msgid "Requested by:"
+msgstr "مقدّم الطلب:"
+
+msgid "Anonymous"
+msgstr "مجهول"
+
+#, python-format
+msgid "Submitted: %(date)s"
+msgstr "تاريخ التقديم: %(date)s"
+
+#, python-format
+msgid "Approved: %(date)s"
+msgstr "تاريخ الاعتماد: %(date)s"
+
+#, python-format
+msgid "On behalf of %(name)s · %(date)s"
+msgstr "نيابة عن %(name)s · %(date)s"
+
+msgid "Submission timeline"
+msgstr "سجل التقديم"
+
+msgid "Current step"
+msgstr "الخطوة الحالية"
+
+msgid "Entries"
+msgstr "السجلات"
+
+msgid "No timeline entries."
+msgstr "لا توجد سجلات في الجدول الزمني."
+
+msgid "Thread message"
+msgstr "رسالة في المحادثة"
+
+msgid "View full document"
+msgstr "عرض المستند كاملاً"
+
+msgid "Collapse document"
+msgstr "طي المستند"
+
+#| msgid "Logo removed."
+msgid "Tag removed."
+msgstr "أُزيل الوسم."
+
+msgid "Enter a message before posting."
+msgstr "أدخل رسالة قبل النشر."
+
+#, python-format
+msgid "Message is too long (%(n)d characters maximum)."
+msgstr "الرسالة طويلة جدًا (%(n)d حرفًا كحد أقصى)."
+
+msgid "Message posted."
+msgstr "نُشرت الرسالة."
+
+msgid "Attachment uploaded."
+msgstr "تم تحميل المرفق."
+
+#, python-format
+#| msgid "Attachment removed."
+msgid "Attachment removed (manage): %(name)s"
+msgstr "أُزيل المرفق (إدارة): %(name)s"
+
+msgid "Attachment removed."
+msgstr "تمت إزالة المرفق."
+
+msgid "Attachment not found."
+msgstr "لم يتم العثور على المرفق."
+
+#, python-format
+msgid "Email sent to applicant (%(addr)s): %(subject)s"
+msgstr "أُرسل البريد للمقدّم (%(addr)s): %(subject)s"
+
+#, python-format
+msgid "Email sent to %(addr)s."
+msgstr "أُرسل البريد إلى %(addr)s."
+
+msgid "Forwarding is not enabled for this form."
+msgstr "الإحالة غير مفعّلة لهذا النموذج."
+
+msgid "Submission forwarded (timeline updated)."
+msgstr "تمت إحالة التقديم (حُدّث الخط الزمني)."
+
+msgid "This page is out of date. Refresh and try again."
+msgstr "هذه الصفحة قديمة. حدّث وحاول مجددًا."
+
+msgid "Approval undone. The timeline records this change."
+msgstr "تم التراجع عن الاعتماد. يُسجّل الخط الزمني هذا التغيير."
+
+msgid "This form has no workflow steps."
+msgstr "لا يحتوي هذا النموذج على خطوات سير العمل."
+
+msgid "Enter a reason for rejection before submitting."
+msgstr "أدخل سبب الرفض قبل الإرسال."
+
+msgid "Invalid workflow action. Refresh the page and try again."
+msgstr "إجراء سير عمل غير صالح. حدّث الصفحة وحاول مجددًا."
+
+msgid "This submission is not awaiting approval."
+msgstr "هذا التقديم لا ينتظر الموافقة."
+
+msgid "Assign a workflow step before using approve or reject."
+msgstr "قم بتعيين خطوة سير العمل قبل استخدام الموافقة أو الرفض."
+
+msgid "Submission rejected; workflow stopped here."
+msgstr "تم رفض التقديم؛ توقف سير العمل هنا."
+
+msgid "Approved — workflow is complete."
+msgstr "تمت الموافقة - اكتمل سير العمل."
+
+#, python-format
+msgid "Approved — now at \"%(step)s\"."
+msgstr "مُعتمد — الآن عند «%(step)s»."
+
+msgid "Approval did not complete. Refresh the page and try again."
+msgstr "لم يكتمل الاعتماد. حدّث الصفحة وحاول مجددًا."
+
+msgid "Date & time"
+msgstr "التاريخ والوقت"
+
+msgid "Event"
+msgstr "حدث"
+
+msgid "Step"
+msgstr "خطوة"
+
+msgid "By"
+msgstr "بواسطة"
+
+msgid "Details"
+msgstr "التفاصيل"
+
+msgid "Timeline"
+msgstr "الجدول الزمني"
+
+msgid "Delegation saved."
+msgstr "تم حفظ التفويض."
+
+msgid "Delegation revoked."
+msgstr "تم إلغاء التفويض."
+
+#, python-format
+#| msgid "All organizations"
+msgid "Studio scope: %(name)s."
+msgstr "نطاق الاستوديو: %(name)s."
+
+#| msgid "All organizations"
+msgid "Studio scope: all organizations."
+msgstr "نطاق الاستوديو: كل المنظمات."
+
+#, python-format
+msgid "Organization created. %(n)d sample starter forms were added."
+msgstr "تم إنشاء المنظمة. أُضيف %(n)d نموذجًا تجريبيًا."
+
+msgid "Organization created."
+msgstr "تم إنشاء المنظمة."
+
+msgid "Email notification templates saved."
+msgstr "تم حفظ قوالب إشعارات البريد."
+
+msgid "Organization updated."
+msgstr "تم تحديث المنظمة."
+
+msgid "In person"
+msgstr "حضوري"
+
+msgid "Online"
+msgstr "عبر الإنترنت"
+
+msgid "Hybrid"
+msgstr "مختلط"
+
+msgid "Bullet points"
+msgstr "نقاط"
+
+msgid "Numbered list"
+msgstr "قائمة مرقّمة"
+
+msgid "Apply now"
+msgstr "قدّم الآن"
+
+msgid "Gallery image"
+msgstr "صورة المعرض"
+
+#| msgid "optional"
+msgid "Caption"
+msgstr "تسمية توضيحية"
+
+#| msgid ""
+#| "Optional. Manage categories under Categories in the studio nav."
+msgid "Optional text shown under the image in the slideshow."
+msgstr "نص اختياري يظهر تحت الصورة في العرض."
+
+msgid "Announcement gallery image"
+msgstr "صورة معرض الإعلان"
+
+msgid "Announcement gallery images"
+msgstr "صور معرض الإعلان"
+
+msgid "Left (beside title column)"
+msgstr "يسار (بجانب عمود العنوان)"
+
+msgid "Center (above title)"
+msgstr "وسط (فوق العنوان)"
+
+msgid "Right (beside title column)"
+msgstr "يمين (بجانب عمود العنوان)"
+
+msgid "Position in header"
+msgstr "الموضع في الترويسة"
+
+msgid "Where this image appears in the live form header."
+msgstr "أين تظهر هذه الصورة في ترويسة النموذج الحي."
+
+msgid "On form submit"
+msgstr "عند إرسال النموذج"
+
+msgid "On step approved"
+msgstr "عند الموافقة على الخطوة"
+
+msgid "On workflow completed"
+msgstr "عند اكتمال سير العمل"
+
+msgid "On workflow rejected"
+msgstr "عند رفض سير العمل"
+
+msgid "Form field"
+msgstr "حقل النموذج"
+
+msgid "Applicant (submitter account / profile)"
+msgstr "المقدّم (حساب / ملف المُرسِل)"
+
+msgid "System / workflow"
+msgstr "النظام / سير العمل"
+
+msgid "Constant"
+msgstr "ثابت"
+
+msgid "None"
+msgstr "بدون"
+
+msgid "ISO date/time"
+msgstr "تاريخ/وقت ISO"
+
+msgid "Yes / no"
+msgstr "نعم / لا"
+
+msgid "Split lines to JSON array"
+msgstr "تقسيم الأسطر إلى مصفوفة JSON"
+
+msgid "File: signed download URL"
+msgstr "ملف: رابط تنزيل موقّع"
+
+msgid "File: filename only"
+msgstr "ملف: اسم الملف فقط"
+
+msgid "File: object (filename + signed URL)"
+msgstr "ملف: كائن (اسم الملف + رابط موقّع)"
+
+msgid "Pending"
+msgstr "قيد الانتظار"
+
+msgid "Running"
+msgstr "قيد التنفيذ"
+
+msgid "Success"
+msgstr "نجاح"
+
+msgid "Dead"
+msgstr "فشل نهائي"
+
+msgid "Your submission to {{form_title}} was received"
+msgstr "استُلم تقديمك إلى {{form_title}}"
+
+msgid "Your submission to {{form_title}} was accepted"
+msgstr "قُبل تقديمك إلى {{form_title}}"
+
+msgid "Update on your submission to {{form_title}}"
+msgstr "تحديث بخصوص تقديمك إلى {{form_title}}"
+
+msgid "Message about your submission {{reference}}"
+msgstr "رسالة بخصوص تقديمك {{reference}}"
+
+msgid "Set the endpoint URL and save the integration first."
+msgstr "حدّد رابط النقطة واحفظ التكامل أولًا."
+
+msgid "Set an API secret and save the integration first."
+msgstr "حدّد سر الواجهة واحفظ التكامل أولًا."
+
+msgid "API secret"
+msgstr "سر الواجهة"
+
+msgid "Leave blank to keep the existing secret. Stored encrypted."
+msgstr "اتركه فارغًا للاحتفاظ بالسر الحالي. يُخزَّن مشفّرًا."
+
+msgid "Active"
+msgstr "نشط"
+
+msgid "Endpoint URL"
+msgstr "رابط النقطة"
+
+msgid "Timeout (seconds)"
+msgstr "المهلة (ثوانٍ)"
+
+msgid "Authentication"
+msgstr "المصادقة"
+
+msgid "Auth header name"
+msgstr "اسم ترويسة المصادقة"
+
+msgid "HMAC signature header"
+msgstr "ترويسة توقيع HMAC"
+
+msgid "Payload root key"
+msgstr "مفتاح جذر الحمولة"
+
+msgid "Custom headers (JSON object)"
+msgstr "ترويسات مخصصة (كائن JSON)"
+
+msgid "Full URL of your API endpoint."
+msgstr "الرابط الكامل لنقطة واجهة البرمجة الخاصة بك."
+
+msgid "Optional JSON wrapper key, e.g. \"data\"."
+msgstr "مفتاح JSON اختياري للتغليف، مثل \"data\"."
+
+msgid "A secret is saved. Enter a new value only to replace it."
+msgstr "يُخزَّن سر حاليًا. أدخل قيمة جديدة فقط لاستبداله."
+
+msgid "Use a full URL starting with https:// or http://."
+msgstr "استخدم رابطًا كاملاً يبدأ بـ https:// أو http://."
+
+msgid "Header name is too long."
+msgstr "اسم الترويسة طويل جدًا."
+
+msgid "Use a valid HTTP header name."
+msgstr "استخدم اسم ترويسة HTTP صالحًا."
+
+msgid "Custom headers must be valid JSON object."
+msgstr "يجب أن تكون الترويسات المخصصة كائن JSON صالحًا."
+
+msgid "Custom headers must be a JSON object."
+msgstr "يجب أن تكون الترويسات المخصصة كائن JSON."
+
+msgid "Required when integration is active."
+msgstr "مطلوب عندما تكون التكامل نشطًا."
+
+msgid "Set an API secret for this auth type."
+msgstr "حدّد سر الواجهة لهذا النوع من المصادقة."
+
+msgid "External JSON key"
+msgstr "مفتاح JSON خارجي"
+
+msgid "Transform"
+msgstr "تحويل"
+
+msgid "Required in payload"
+msgstr "مطلوب في الحمولة"
+
+msgid "— Select source —"
+msgstr "— اختر المصدر —"
+
+msgid "Form answers"
+msgstr "إجابات النموذج"
+
+msgid "Applicant (submitter)"
+msgstr "المقدّم (مُرسِل الطلب)"
+
+msgid "Submission & workflow"
+msgstr "التقديم وسير العمل"
+
+msgid "Other"
+msgstr "أخرى"
+
+msgid "Constant value"
+msgstr "قيمة ثابتة"
+
+msgid "Source"
+msgstr "المصدر"
+
+msgid "Constant value / override"
+msgstr "قيمة ثابتة / تجاوز"
+
+msgid "Select a source for each mapped field."
+msgstr "اختر مصدرًا لكل حقل معيّن."
+
+msgid "Unknown applicant field."
+msgstr "حقل مقدّم غير معروف."
+
+msgid "Unknown system field."
+msgstr "حقل نظام غير معروف."
+
+msgid "Enter the constant value."
+msgstr "أدخل القيمة الثابتة."
+
+msgid "Invalid source."
+msgstr "مصدر غير صالح."
+
+msgid "API health check"
+msgstr "فحص صحة الواجهة"
+
+msgid "Sample POST"
+msgstr "POST نموذجي"
+
+msgid "Custom JSON POST"
+msgstr "POST JSON مخصص"
+
+msgid "Submission POST"
+msgstr "POST تقديم"
+
+msgid "Test"
+msgstr "اختبار"
+
+#, python-format
+msgid "%(label)s succeeded (HTTP %(code)s)."
+msgstr "نجح %(label)s (HTTP %(code)s)."
+
+#, python-format
+msgid "%(label)s failed: %(err)s"
+msgstr "فشل %(label)s: %(err)s"
+
+msgid "unknown"
+msgstr "غير معروف"
+
+msgid "Integration deactivated. You can now edit and save settings."
+msgstr "تم إيقاف التكامل. يمكنك الآن التعديل والحفظ."
+
+msgid "Outbound integration saved."
+msgstr "تم حفظ تكامل الإرسال الخارجي."
+
+msgid "Add at least one submission to run this test."
+msgstr "أضف تقديمًا واحدًا على الأقل لتشغيل هذا الاختبار."
+
+msgid "Delivery succeeded."
+msgstr "نجح التسليم."
+
+#, python-format
+msgid "Delivery failed: %(err)s"
+msgstr "فشل التسليم: %(err)s"
+
+#| msgid "Add signature image"
+msgid "signature on file"
+msgstr "توقيع مسجّل"
+
+msgid "Merged DOCX requires a .docx file in the primary print template field."
+msgstr "يتطلب DOCX المدمج ملف .docx في حقل قالب الطباعة الأساسي."
+
+msgid "Unsupported output format."
+msgstr "صيغة إخراج غير مدعومة."
+
+msgid "Reference"
+msgstr "مرجع"
+
+msgid "Applicant name"
+msgstr "اسم مقدّم الطلب"
+
+#| msgid "Submit"
+msgid "Submitted"
+msgstr "تاريخ الإرسال"
+
+msgid "Email"
+msgstr "بريد إلكتروني"
+
+msgid "Account"
+msgstr "حساب"
+
+msgid "Organization"
+msgstr "المنظمة"
+
+msgid "Title"
+msgstr "العنوان"
+
+msgid "URL slug"
+msgstr "المعرّف في الرابط"
+
+msgid "Description"
+msgstr "الوصف"
+
+msgid "Submission deadline"
+msgstr "الموعد النهائي للإرسال"
+
+msgid "Capacity (seats)"
+msgstr "السعة (مقاعد)"
+
+msgid "Category"
+msgstr "الفئة"
+
+msgid "Print template (DOCX or PDF)"
+msgstr "قالب الطباعة (DOCX أو PDF)"
+
+msgid "Print template (ODT, optional)"
+msgstr "قالب الطباعة (ODT، اختياري)"
+
+msgid "Published"
+msgstr "منشور"
+
+msgid "One response per respondent"
+msgstr "رد واحد لكل مقدّم"
+
+msgid "Allow access without signing in"
+msgstr "السماح بالوصول دون تسجيل دخول"
+
+msgid "Allow forwarding submissions"
+msgstr "السماح بإعادة توجيه الطلبات"
+
+msgid "Hide from portal & home lists"
+msgstr "إخفاء من بوابة المنظمة وقوائم الصفحة الرئيسية"
+
+msgid "Optional. Shown on the form hub and public form when filled in."
+msgstr "اختياري. يظهر في صفحة النموذج والنموذج العام عند تعبئته."
+
+msgid "Optional maximum number of registrations for this form."
+msgstr "الحد الأقصى الاختياري لعدد التسجيلات في هذا النموذج."
+
+msgid "Optional. Manage categories under Categories in the studio nav."
+msgstr "اختياري. أدر الفئات من «الفئات» في شريط تنقل الاستوديو."
+
+msgid "— No category —"
+msgstr "— لا فئة —"
+
+msgid "Choose a file to upload"
+msgstr "اختر ملفًا للرفع"
+
+msgid "— Not specified —"
+msgstr "— غير محدد —"
+
+msgid "Show announcement page before applying"
+msgstr "عرض صفحة الإعلان قبل التقديم"
+
+msgid "Headline"
+msgstr "العنوان الرئيسي"
+
+msgid "Tagline"
+msgstr "السطر التعريفي"
+
+msgid "Message"
+msgstr "الرسالة"
+
+msgid "Featured video URL"
+msgstr "رابط الفيديو المميز"
+
+msgid "Apply button label"
+msgstr "نص زر التقديم"
+
+msgid "Format"
+msgstr "الشكل"
+
+msgid "Venue or location"
+msgstr "المكان أو الموقع"
+
+msgid "Map link"
+msgstr "رابط الخريطة"
+
+msgid "Contact name"
+msgstr "اسم جهة الاتصال"
+
+msgid "Contact email"
+msgstr "البريد الإلكتروني للاتصال"
+
+msgid "Contact phone"
+msgstr "هاتف الاتصال"
+
+msgid "Registration fee"
+msgstr "رسوم التسجيل"
+
+msgid "Show remaining seats on announcement page"
+msgstr "عرض المقاعد المتبقية في صفحة الإعلان"
+
+msgid "Schedule starts"
+msgstr "بداية الموعد"
+
+msgid "Schedule ends"
+msgstr "نهاية الموعد"
+
+msgid "Highlights"
+msgstr "أبرز النقاط"
+
+msgid "Highlights list style"
+msgstr "نمط قائمة أبرز النقاط"
+
+msgid "Brochure (PDF)"
+msgstr "كتيب (PDF)"
+
+msgid "Guidelines"
+msgstr "إرشادات"
+
+msgid "Guidelines list style"
+msgstr "نمط قائمة الإرشادات"
+
+msgid "Optional. Defaults to the form title if blank."
+msgstr "اختياري. يُستخدم عنوان النموذج إذا تُرك فارغًا."
+
+msgid "Optional short line under the headline."
+msgstr "سطر قصير اختياري تحت العنوان الرئيسي."
+
+msgid "Optional YouTube or Vimeo link."
+msgstr "رابط YouTube أو Vimeo اختياري."
+
+msgid "Optional, e.g. \"Register now\". Leave blank for \"Apply now\"."
+msgstr "اختياري، مثل «سجّل الآن». اتركه فارغًا لـ «قدّم الآن»."
+
+msgid "Optional. In person, online, or hybrid."
+msgstr "اختياري. حضوري أو عبر الإنترنت أو مختلط."
+
+msgid "Optional address, room, or how to join online."
+msgstr "عنوان أو قاعة أو طريقة الانضمام عبر الإنترنت (اختياري)."
+
+msgid "Optional Google Maps or directions link."
+msgstr "رابط Google Maps أو الاتجاهات (اختياري)."
+
+msgid "Optional organizer or help desk name."
+msgstr "اسم المنظّم أو مكتب المساعدة (اختياري)."
+
+msgid "Optional."
+msgstr "اختياري."
+
+msgid "Optional, e.g. \"Free\" or \"25 KWD\"."
+msgstr "اختياري، مثل «مجاني» أو «25 د.ك»."
+
+msgid "Optional. Must be after schedule start."
+msgstr "اختياري. يجب أن يكون بعد بداية الموعد."
+
+msgid "Optional. One highlight per line."
+msgstr "اختياري. نقطة بارزة واحدة في كل سطر."
+
+msgid "Bullet points or a numbered list on the announcement page."
+msgstr "نقاط أو قائمة مرقّمة في صفحة الإعلان."
+
+msgid "Optional PDF brochure."
+msgstr "كتيب PDF اختياري."
+
+msgid "Optional. One guideline per line."
+msgstr "اختياري. إرشاد واحد في كل سطر."
+
+msgid "Schedule end must be after schedule start."
+msgstr "يجب أن تكون نهاية الموعد بعد بدايته."
+
+msgid "Image"
+msgstr "صورة"
+
+msgid "Caption (optional)"
+msgstr "تسمية توضيحية (اختياري)"
+
+msgid "Optional caption under the image."
+msgstr "تسمية توضيحية اختيارية تحت الصورة."
+
+#| msgid "Organization"
+msgid "Organization logo"
+msgstr "شعار المنظمة"
+
+msgid "Outgoing sender. Use a display name plus address, or email only."
+msgstr "المرسل الصادر. اسم عرض مع عنوان، أو بريد فقط."
+
+#| msgid "Leave both fields blank to keep the current password."
+msgid "Leave blank when editing to keep the current SMTP password."
+msgstr "اتركه فارغًا عند التحرير للاحتفاظ بكلمة مرور SMTP الحالية."
+
+msgid "Use STARTTLS (common on port 587)."
+msgstr "استخدم STARTTLS (شائع على المنفذ 587)."
+
+msgid "Theme 1"
+msgstr "السمة 1"
+
+msgid "Theme 2"
+msgstr "السمة 2"
+
+msgid "Theme 3"
+msgstr "السمة 3"
+
+#| msgid "Public portal"
+msgid "Active on public portal"
+msgstr "نشط في البوابة العامة"
+
+#| msgid "Primary theme color"
+msgid "Primary color"
+msgstr "اللون الأساسي"
+
+msgid "Secondary accent"
+msgstr "لون ثانوي مميز"
+
+#| msgid "Background tint color"
+msgid "Background tint"
+msgstr "لون تظليل الخلفية"
+
+msgid "Use a full CSS hex color, e.g. #f5f5f7."
+msgstr "استخدم لونًا سداسيًا عشريًا كاملاً في CSS، على سبيل المثال. #f5f5f7."
+
+msgid "Set a From address when email notifications are enabled."
+msgstr "حدّد عنوان المرسل عند تفعيل إشعارات البريد."
+
+msgid "Use a valid address, e.g. \"Team <mail@yourorg.com>\"."
+msgstr "استخدم عنوانًا صالحًا، مثل \"الفريق <mail@yourorg.com>\"."
+
+msgid "Set an SMTP host when email notifications are enabled."
+msgstr "حدّد مضيف SMTP عند تفعيل إشعارات البريد."
+
+msgid "SMTP port must be between 1 and 65535."
+msgstr "منفذ SMTP يجب أن يكون بين 1 و65535."
+
+msgid "Choose either STARTTLS or SSL, not both."
+msgstr "اختر STARTTLS أو SSL، وليس كليهما."
+
+msgid "Set an SMTP password when a username is provided."
+msgstr "حدّد كلمة مرور SMTP عند إدخال اسم مستخدم."
+
+msgid "Set the directory API URL when directory login is active."
+msgstr "حدّد عنوان واجهة الدليل عند تفعيل دليل الدخول."
+
+msgid "Set the tenant ID when directory login is active."
+msgstr "حدّد معرّف المستأجر عند تفعيل دليل الدخول."
+
+msgid "Set an API secret when directory login is active."
+msgstr "حدّد سر API عند تفعيل دليل الدخول."
+
+msgid "Header name is too long (max 64 characters)."
+msgstr "اسم الترويسة طويل جدًا (64 حرفًا كحد أقصى)."
+
+msgid "Use a full URL starting with http:// or https://."
+msgstr "استخدم عنوان URL كاملًا يبدأ بـ http:// أو https://."
+
+msgid "Enter a whole-number tenant ID."
+msgstr "أدخل معرّف مستأجر (tenant) عددًا صحيحًا."
+
+msgid "Tenant ID must be at least 1."
+msgstr "يجب أن يكون معرّف المستأجر 1 على الأقل."
+
+msgid "This slug is already in use for this organization."
+msgstr "هذا الارتداد قيد الاستخدام بالفعل لهذه المؤسسة."
+
+msgid "e.g. 5"
+msgstr "مثل 5"
+
+msgid "e.g. 200"
+msgstr "مثل 200"
+
+msgid "e.g. \"@company\""
+msgstr "مثل \"@company\""
+
+msgid "Forbidden substring"
+msgstr "جزء نصي ممنوع"
+
+msgid "Exact required value"
+msgstr "القيمة المطلوبة بالضبط"
+
+msgid "Min number"
+msgstr "الحد الأدنى للرقم"
+
+msgid "Max number"
+msgstr "الحد الأقصى للرقم"
+
+msgid "Case-insensitive substring that must appear."
+msgstr "جزء نصي يجب أن يظهر (بلا تمييز حالة الأحرف)."
+
+msgid "Case-insensitive substring that must not appear."
+msgstr "جزء نصي يجب ألا يظهر (بلا تمييز حالة الأحرف)."
+
+msgid "Python regular expression tested against the full string (search)."
+msgstr "تعبير نمطي Python يُختبر على النص الكامل (بحث)."
+
+msgid "Numbers only: reject values with a decimal point."
+msgstr "أرقام فقط: رفض القيم التي تحتوي فاصلة عشرية."
+
+msgid "Minimum numeric value (inclusive)."
+msgstr "أدنى قيمة رقمية (شامل)."
+
+msgid "Maximum numeric value (inclusive)."
+msgstr "أقصى قيمة رقمية (شامل)."
+
+msgid "Earliest allowed date (inclusive)."
+msgstr "أبكر تاريخ مسموح (شامل)."
+
+msgid "Latest allowed date (inclusive)."
+msgstr "آخر تاريخ مسموح (شامل)."
+
+msgid "— None —"
+msgstr "- لا أحد -"
+
+msgid "— No section —"
+msgstr "- لا يوجد قسم -"
+
+msgid "Enter at least one value that shows this field."
+msgstr "أدخل قيمة واحدة على الأقل تظهر هذا الحقل."
+
+msgid "A field cannot depend on itself."
+msgstr "لا يمكن للمجال أن يعتمد على نفسه."
+
+msgid "Pick a control field or remove trigger values."
+msgstr "اختر حقل تحكم أو قم بإزالة قيم التشغيل."
+
+msgid "Add at least one checklist item (one per line)."
+msgstr "أضف عنصرًا واحدًا على الأقل في القائمة (سطر لكل عنصر)."
+
+msgid "New password"
+msgstr "كلمة المرور الجديدة"
+
+msgid "New password (again)"
+msgstr "كلمة المرور الجديدة (مرة أخرى)"
+
+msgid "The two password fields do not match."
+msgstr "حقلا كلمة المرور غير متطابقين."
+
+msgid "Delegator (assignee covered)"
+msgstr "المفوض (المتنازل إليه مشمول)"
+
+msgid "Delegate (acts on their behalf)"
+msgstr "مندوب (يعمل نيابة عنهم)"
+
+msgid "Delegator and delegate must be different users."
+msgstr "يجب أن يكون المفوض والمفوض مستخدمين مختلفين."
+
+msgid "This user is not a member of the selected organization."
+msgstr "هذا المستخدم ليس عضوًا في المؤسسة المحددة."
+
+msgid "“Valid from” must be on or before “valid until”."
+msgstr "\"صالح من\" يجب أن يكون في أو قبل \"صالح حتى\"."
+
+msgid "Manager"
+msgstr "مدير"
+
+#, python-format
+msgid "File must be %(mb)d MB or smaller."
+msgstr "يجب أن يكون الملف %(mb)d ميجابايت أو أصغر."
+
+#, python-format
+msgid "This submission already has the maximum of %(max)d attachments."
+msgstr "يحتوي هذا التقديم بالفعل على الحد الأقصى %(max)d من المرفقات."
+
+msgid "To"
+msgstr "إلى"
+
+#| msgid "Reject"
+msgid "Subject"
+msgstr "الموضوع"
+
+msgid "Write your message to the applicant…"
+msgstr "اكتب رسالتك للمقدّم…"
+
+msgid "Forward to"
+msgstr "إحالة إلى"
+
+#| msgid "optional"
+msgid "Optional note"
+msgstr "ملاحظة اختيارية"
+
+#| msgid "New form"
+msgid "Related form"
+msgstr "نموذج مرتبط"
+
+#| msgid "Who receives this submission at this step:"
+msgid "When submission reaches this step"
+msgstr "عند وصول التقديم لهذه الخطوة"
+
+msgid "A related link for this form and step already exists."
+msgstr "رابط مرتبط لهذا النموذج والخطوة موجود بالفعل."
+
+msgid "Send email when a form is submitted"
+msgstr "إرسال بريد عند تقديم النموذج"
+
+msgid "Send email when workflow is completed (accepted)"
+msgstr "إرسال بريد عند اكتمال سير العمل (قبول)"
+
+msgid "Send email when workflow is rejected"
+msgstr "إرسال بريد عند رفض سير العمل"
+
+msgid "Send email on each intermediate approval step"
+msgstr "إرسال بريد عند كل خطوة اعتماد وسيطة"
+
+msgid "Prefill manual “Email applicant” with staff contact template"
+msgstr "ملء «مراسلة المقدّم» يدويًا بقالب اتصال الموظفين"
+
+msgid "Body"
+msgstr "المحتوى"
+
+#| msgid "Organization"
+msgid "Organization username"
+msgstr "اسم مستخدم المنظمة"
+
+msgid "Enter your organization username (e.g. mosa-kuwait-jdoe)."
+msgstr "أدخل اسم مستخدم المنظمة (مثل mosa-kuwait-jdoe)."
+
+#| msgid "No action required from you on this submission."
+msgid "email on file for this submission"
+msgstr "البريد المسجّل لهذا التقديم"
+
+msgid "signed-in applicant account email"
+msgstr "بريد حساب المقدّم المسجّل"
+
+#, python-format
+msgid "form field “%(label)s”"
+msgstr "حقل النموذج «%(label)s»"
+
+msgid "Form"
+msgstr "استمارة"
+
+#, python-format
+msgid "Regarding your submission — %(form)s (%(ref)s)"
+msgstr "بخصوص تقديمك — %(form)s (%(ref)s)"
+
+#| msgid "Your answers"
+msgid "With answer"
+msgstr "مع إجابة"
+
+#| msgid "Your answers"
+msgid "No answer"
+msgstr "لا إجابة"
+
+msgid "Yes"
+msgstr "نعم"
+
+msgid "No"
+msgstr "لا"
+
+msgid "File uploaded"
+msgstr "ملف مرفوع"
+
+msgid "No file"
+msgstr "لا ملف"
+
+#| msgid "No events yet."
+msgid "No step"
+msgstr "لا خطوة"
+
+#, python-format
+msgid "The validation service did not accept your answers (HTTP %(status)s)."
+msgstr "خدمة التحقق لم تقبل إجاباتك (HTTP %(status)s)."
+
+msgid "Could not reach the validation service. Please try again later."
+msgstr "تعذّر الوصول إلى خدمة التحقق. يُرجى المحاولة لاحقًا."
+
+msgid "Validation service error. Please try again later."
+msgstr "خطأ في خدمة التحقق. يُرجى المحاولة لاحقًا."
+
+msgid "Validation endpoint URL"
+msgstr "رابط نقطة التحقق"
+
+msgid "When validation fails"
+msgstr "عند فشل التحقق"
+
+msgid "Message when API rejects (non-200)"
+msgstr "رسالة عند رفض الواجهة (غير 200)"
+
+msgid "Message when API is unreachable"
+msgstr "رسالة عند تعذّر الوصول إلى الواجهة"
+
+msgid "Message when validation request fails"
+msgstr "رسالة عند فشل طلب التحقق"
+
+msgid "Optional. Leave blank for the default."
+msgstr "اختياري. اتركه فارغًا للافتراضي."
+
+msgid "Block submit when the API does not return HTTP 200"
+msgstr "منع الإرسال عندما لا تُرجع الواجهة HTTP 200"
+
+msgid "Let the respondent choose to submit anyway"
+msgstr "السماح للمقدّم باختيار الإرسال على أي حال"
+
+msgid "Bearer token"
+msgstr "رمز Bearer"
+
+msgid "Custom header"
+msgstr "ترويسة مخصصة"
+
+msgid "Basic (secret is base64 user:pass or token)"
+msgstr "Basic (السر base64 لمستخدم:كلمة مرور أو رمز)"
+
+msgid "HMAC-SHA256 (secret + timestamp)"
+msgstr "HMAC-SHA256 (سر + طابع زمني)"
+
+msgid "Invalid JSON."
+msgstr "JSON غير صالح."
+
+msgid "Invalid custom headers."
+msgstr "ترويسات مخصصة غير صالحة."
+
+msgid "Set the validation endpoint URL."
+msgstr "حدّد رابط نقطة التحقق."
+
+msgid "Validate by API settings saved."
+msgstr "تم حفظ إعدادات التحقق عبر الواجهة."
+
+#, python-format
+msgid "Test call returned HTTP %(status)s — submissions would be accepted."
+msgstr "أعادت الاختبار HTTP %(status)s — سيتم قبول الإرسالات."
+
+#, python-format
+msgid "Test call returned HTTP %(status)s — check failure action settings."
+msgstr "أعادت الاختبار HTTP %(status)s — راجع إعدادات الإجراء عند الفشل."
+
+#, python-format
+msgid "Could not reach the validation endpoint: %(err)s"
+msgstr "تعذّر الوصول إلى نقطة التحقق: %(err)s"
+
+msgid "Test request failed."
+msgstr "فشل طلب الاختبار."
+
+#, python-format
+msgid "Related form submitted: \"%(title)s\"."
+msgstr "تم تقديم النموذج المرتبط: «%(title)s»."
+
+msgid "News & updates"
+msgstr "الأخبار والتحديثات"
+
+msgid "Open forms"
+msgstr "نماذج مفتوحة"
+
+msgid "Due"
+msgstr "مستحق"
+
+msgid "No steps yet"
+msgstr "لا توجد خطوات بعد."
+
+msgid "No open forms right now. Check back later."
+msgstr "لا نماذج مفتوحة الآن. عُد لاحقًا."
+
+#| msgid "Use all organizations"
+msgid "All organizations"
+msgstr "كل المنظمات"
+
+msgid "You are here"
+msgstr "أنت هنا"
+
+msgid "Back to announcement editor"
+msgstr "العودة إلى محرّر الإعلان"
+
+msgid "Preview"
+msgstr "معاينة"
+
+msgid "This is how your announcement page will look to applicants."
+msgstr "هكذا ستظهر صفحة الإعلان للمقدّمين."
+
+msgid "Gallery"
+msgstr "المعرض"
+
+msgid "Previous image"
+msgstr "الصورة السابقة"
+
+#, python-format
+msgid "Image %(num)s"
+msgstr "صورة %(num)s"
+
+msgid "Next image"
+msgstr "الصورة التالية"
+
+msgid "Featured video"
+msgstr "فيديو مميز"
+
+msgid "Open video"
+msgstr "فتح الفيديو"
+
+msgid "About"
+msgstr "نبذة"
+
+msgid "Registration"
+msgstr "التسجيل"
+
+msgid "Register by"
+msgstr "التسجيل قبل"
+
+msgid "Fee"
+msgstr "الرسوم"
+
+msgid "Capacity"
+msgstr "السعة"
+
+#, python-format
+msgid "%(left)s of %(total)s seats left"
+msgstr "متبقٍ %(left)s من %(total)s مقعدًا"
+
+msgid "Schedule"
+msgstr "الموعد"
+
+msgid "Starts"
+msgstr "يبدأ"
+
+msgid "Ends"
+msgstr "ينتهي"
+
+msgid "Where"
+msgstr "أين"
+
+msgid "Location"
+msgstr "الموقع"
+
+msgid "View on map"
+msgstr "عرض على الخريطة"
+
+msgid "Get in touch"
+msgstr "تواصل معنا"
+
+msgid "Contact"
+msgstr "جهة الاتصال"
+
+msgid "Phone"
+msgstr "الهاتف"
+
+msgid "Download brochure (PDF)"
+msgstr "تنزيل الكتيب (PDF)"
+
+msgid "Share"
+msgstr "مشاركة"
+
+msgid "Invite others to view this announcement page."
+msgstr "ادعُ الآخرين لعرض صفحة الإعلان هذه."
+
+msgid "Share by email"
+msgstr "مشاركة بالبريد"
+
+msgid "Share via WhatsApp"
+msgstr "مشاركة عبر واتساب"
+
+msgid "Download QR (PNG)"
+msgstr "تنزيل رمز QR (PNG)"
+
+msgid "QR code for this announcement page"
+msgstr "رمز QR لصفحة الإعلان هذه"
+
+msgid "Scan to open this page"
+msgstr "امسح لفتح هذه الصفحة"
+
+msgid "Link"
+msgstr "الرابط"
+
+msgid "Registration is closed for this form."
+msgstr "التسجيل مغلق لهذا النموذج."
+
+#| msgid "Back to form"
+msgid "Back to form in studio"
+msgstr "العودة إلى النموذج في الاستوديو"
+
+msgid "Inbox"
+msgstr "البريد الوارد"
+
+msgid "Preview mode"
+msgstr "وضع المعاينة"
+
+msgid "Submissions are disabled. This is how applicants will see the form."
+msgstr "التقديمات معطّلة. هكذا يرى المقدّمون النموذج."
+
+#| msgid "Form logos"
+msgid "Form logos and title"
+msgstr "شعارات النموذج والعنوان"
+
+#, python-format
+msgid "Submit by <strong>%(d)s</strong> (end of day, %(w)s)."
+msgstr "أرسل قبل <strong>%(d)s</strong> (نهاية اليوم، %(w)s)."
+
+msgid "Submitting…"
+msgstr "جارٍ الإرسال…"
+
+msgid "Inline fields"
+msgstr "الحقول المضمنة"
+
+msgid "Submit"
+msgstr "إرسال"
+
+#| msgid "Document"
+msgid "Close preview"
+msgstr "إغلاق المعاينة"
+
+msgid "Submit anyway"
+msgstr "إرسال على أي حال"
+
+msgid "Closed"
+msgstr "مغلق"
+
+msgid "Submissions are closed"
+msgstr "التقديمات مغلقة"
+
+#, python-format
+msgid "The submission period ended after <strong>%(d)s</strong> (%(w)s)."
+msgstr "انتهت فترة التقديم بعد <strong>%(d)s</strong> (%(w)s)."
+
+msgid "This form is no longer accepting responses."
+msgstr "هذا النموذج لم يعد يقبل الردود."
+
+msgid "Form logos"
+msgstr "شعارات النموذج"
+
+msgid "Already submitted"
+msgstr "قدمت بالفعل"
+
+msgid "You already submitted this form"
+msgstr "لقد أرسلت هذا النموذج بالفعل"
+
+msgid "Open inbox"
+msgstr "فتح صندوق الوارد"
+
+msgid "(studio — sign-in required)"
+msgstr "(الاستوديو — يتطلب تسجيل الدخول)"
+
+msgid "MagicForms"
+msgstr "MagicForms"
+
+msgid "Forms that feel native"
+msgstr "نماذج تبدو طبيعية"
+
+msgid "Open studio"
+msgstr "افتح الاستوديو"
+
+msgid "Manage forms and workflow for the organizations you belong to."
+msgstr "أدِر النماذج ومسارات سير العمل للمؤسسات التي تنتمي إليها."
+
+msgid "Staff sign in"
+msgstr "تسجيل دخول الموظفين"
+
+msgid "Username"
+msgstr "اسم المستخدم"
+
+msgid "Password"
+msgstr "كلمة المرور"
+
+msgid "Sign in"
+msgstr "تسجيل الدخول"
+
+#| msgid "Signatures"
+msgid "Features"
+msgstr "الميزات"
+
+msgid "Follow-up"
+msgstr "المتابعة"
+
+msgid "Compose"
+msgstr "إنشاء النماذج"
+
+msgid "Language"
+msgstr "اللغة"
+
+msgid "English"
+msgstr "الإنجليزية"
+
+msgid "Arabic"
+msgstr "العربية"
+
+#, python-format
+msgid "Inbox, %(counter)s open request"
+msgid_plural "Inbox, %(counter)s open requests"
+msgstr[0] "البريد الوارد، %(counter)s طلب مفتوح"
+msgstr[1] "البريد الوارد، %(counter)s طلبات مفتوحة"
+msgstr[2] "البريد الوارد، %(counter)s طلبات مفتوحة"
+msgstr[3] "البريد الوارد، %(counter)s طلبات مفتوحة"
+msgstr[4] "البريد الوارد، %(counter)s طلبات مفتوحة"
+msgstr[5] "البريد الوارد، %(counter)s طلبات مفتوحة"
+
+msgid "Log out"
+msgstr "تسجيل الخروج"
+
+#, python-format
+msgid "My tasks, %(counter)s open"
+msgid_plural "My tasks, %(counter)s open"
+msgstr[0] "مهامي، %(counter)s مفتوحة"
+msgstr[1] "مهامي، %(counter)s مفتوحة"
+msgstr[2] "مهامي، %(counter)s مفتوحة"
+msgstr[3] "مهامي، %(counter)s مفتوحة"
+msgstr[4] "مهامي، %(counter)s مفتوحة"
+msgstr[5] "مهامي، %(counter)s مفتوحة"
+
+msgid "My tasks"
+msgstr "مهامي"
+
+#| msgid "Submissions"
+msgid "Search submissions"
+msgstr "بحث التقديمات"
+
+msgid "Studio"
+msgstr "الاستوديو"
+
+msgid "Staff sign-in"
+msgstr "تسجيل دخول الطاقم"
+
+msgid "Site options"
+msgstr "خيارات الموقع"
+
+msgid "Log in"
+msgstr "تسجيل الدخول"
+
+msgid "Footer links"
+msgstr "روابط التذييل"
+
+msgid "Product"
+msgstr "المنتج"
+
+msgid "Home"
+msgstr "الرئيسية"
+
+msgid "Studio sign in"
+msgstr "تسجيل دخول الاستوديو"
+
+msgid "Partners & infrastructure"
+msgstr "الشركاء والبنية التحتية"
+
+msgid "Cloud"
+msgstr "السحابة"
+
+msgid "Amazon Web Services"
+msgstr "أمازون ويب سيرفيسز"
+
+#, python-format
+msgid "© %(year)s MagicForms. All rights reserved."
+msgstr "© %(year)s MagicForms. جميع الحقوق محفوظة."
+
+msgid "Menu"
+msgstr "القائمة"
+
+msgid "Manage"
+msgstr "إدارة"
+
+msgid "Studio navigation"
+msgstr "التنقل في الاستوديو"
+
+msgid "New form"
+msgstr "نموذج جديد"
+
+msgid "Create with AI"
+msgstr "إنشاء بالذكاء الاصطناعي"
+
+msgid "Use AI"
+msgstr "استخدام الذكاء الاصطناعي"
+
+msgid "Responses"
+msgstr "الردود"
+
+#, python-format
+msgid "Forms to complete as applicant, %(counter)s request"
+msgid_plural "Forms to complete as applicant, %(counter)s requests"
+msgstr[0] "نماذج لإكمالها كمتقدم، %(counter)s طلب"
+msgstr[1] "نماذج لإكمالها كمتقدم، %(counter)s طلبات"
+msgstr[2] "نماذج لإكمالها كمتقدم، %(counter)s طلبات"
+msgstr[3] "نماذج لإكمالها كمتقدم، %(counter)s طلبات"
+msgstr[4] "نماذج لإكمالها كمتقدم، %(counter)s طلبات"
+msgstr[5] "نماذج لإكمالها كمتقدم، %(counter)s طلبات"
+
+msgid "Forms to complete"
+msgstr "نماذج لإكمالها"
+
+msgid "People"
+msgstr "الأشخاص"
+
+msgid "Delegations"
+msgstr "التفويضات"
+
+msgid "Categories"
+msgstr "الفئات"
+
+msgid "Organizations"
+msgstr "المؤسسات"
+
+msgid "Public site"
+msgstr "الموقع العام"
+
+msgid "Help"
+msgstr "المساعدة"
+
+msgid "My signatures"
+msgstr "توقيعاتي"
+
+msgid "Organization scope"
+msgstr "نطاق المؤسسة"
+
+#| msgid "Use all organizations"
+msgid "All organizations (default)"
+msgstr "كل المنظمات (افتراضي)"
+
+#| msgid "Form"
+msgid "Form hub"
+msgstr "مركز النموذج"
+
+msgid "Back to form"
+msgstr "العودة إلى النموذج"
+
+msgid "Loading"
+msgstr "جارٍ التحميل"
+
+#| msgid "Upload document"
+msgid "Loading…"
+msgstr "جارٍ التحميل…"
+
+msgid "Add category"
+msgstr "أضف فئة"
+
+msgid "New category"
+msgstr "فئة جديدة"
+
+msgid "Create"
+msgstr "إنشاء"
+
+msgid "Cancel"
+msgstr "يلغي"
+
+msgid "Form categories"
+msgstr "فئات النموذج"
+
+msgid "Group forms in the studio and on the public list (e.g. HR, Finance)."
+msgstr ""
+"نماذج المجموعة في الاستوديو وفي القائمة العامة (مثل الموارد البشرية "
+"والمالية)."
+
+msgid "order"
+msgstr "طلب"
+
+#, python-format
+msgid "%(counter)s form"
+msgid_plural "%(counter)s forms"
+msgstr[0] "نموذج %(counter)s"
+msgstr[1] "نماذج %(counter)s"
+msgstr[2] "نماذج %(counter)s"
+msgstr[3] "نماذج %(counter)s"
+msgstr[4] "نماذج %(counter)s"
+msgstr[5] "نماذج %(counter)s"
+
+msgid "No categories yet. Add HR, Finance, or any labels you use internally."
+msgstr ""
+"لا توجد فئات بعد. أضف الموارد البشرية أو المالية أو أي تصنيفات تستخدمها "
+"داخليًا."
+
+msgid "Overview of forms and submissions."
+msgstr "نظرة عامة على النماذج والطلبات."
+
+msgid "Active forms"
+msgstr "النماذج النشطة"
+
+msgid "Archived forms"
+msgstr "النماذج المؤرشفة"
+
+msgid "Summary statistics"
+msgstr "إحصائيات موجزة"
+
+msgid "Forms"
+msgstr "النماذج"
+
+msgid "Drafts"
+msgstr "المسودات"
+
+msgid "Your inbox"
+msgstr "البريد الوارد الخاص بك"
+
+msgid "Submission charts"
+msgstr "مخططات التقديمات"
+
+msgid "Show trends"
+msgstr "عرض الاتجاهات"
+
+msgid "Charts"
+msgstr "الرسوم البيانية"
+
+msgid "Submissions over time"
+msgstr "التقديمات مع مرور الوقت"
+
+msgid "Last 30 days (by submit date, site time zone)."
+msgstr "آخر 30 يومًا (حسب تاريخ الإرسال والمنطقة الزمنية للموقع)."
+
+msgid "Line chart of submissions per day"
+msgstr "رسم بياني خطي لعمليات التقديم يوميًا"
+
+msgid "Submissions by workflow state"
+msgstr "التقديمات حسب حالة سير العمل"
+
+msgid "All time."
+msgstr "كل الوقت."
+
+msgid "Doughnut chart of submission counts by state"
+msgstr "مخطط دائري لأعداد التقديمات حسب الحالة"
+
+msgid "Starter sample forms"
+msgstr "نماذج تجريبية أولية"
+
+msgid "Expand to open draft templates"
+msgstr "افتح لعرض مسودات جاهزة"
+
+msgid "All categories"
+msgstr "كل الفئات"
+
+msgid "Filter by name"
+msgstr "التصفية بالاسم"
+
+msgid "Form title…"
+msgstr "عنوان النموذج…"
+
+msgid "Search"
+msgstr "البحث"
+
+msgid "Clear"
+msgstr "مسح"
+
+#, python-format
+msgid "Showing %(si)s–%(ei)s of %(n)s starter form(s) in “%(cat)s”."
+msgstr "عرض %(si)s–%(ei)s من %(n)s نموذجًا تجريبيًا في «%(cat)s»."
+
+msgid "No sample forms match your filters."
+msgstr "لا توجد نماذج تجريبية تطابق عوامل التصفية."
+
+msgid "Draft"
+msgstr "مسودة"
+
+msgid "Submit now"
+msgstr "إرسال الآن"
+
+msgid "Share QR"
+msgstr "مشاركة QR"
+
+#, python-format
+msgid "%(n)s archived form(s) match “%(q)s”, recently updated first."
+msgstr "تطابق %(n)s نموذجًا مؤرشفًا «%(q)s»، الأحدث تحديثًا أولًا."
+
+#, python-format
+msgid "%(total)s archived form(s). Super admins can open one and restore it."
+msgstr "%(total)s نموذجًا مؤرشفًا. يمكن للمسؤولين الأعلى فتح أحدها واستعادته."
+
+msgid "No archived forms."
+msgstr "لا توجد نماذج مؤرشفة."
+
+#, python-format
+msgid "%(n)s form(s) match “%(q)s”, recently updated first."
+msgstr "تطابق %(n)s نموذجًا «%(q)s»، الأحدث تحديثًا أولًا."
+
+#, python-format
+msgid "%(total)s forms total, recently updated first."
+msgstr "%(total)s نموذجًا إجمالًا، الأحدث تحديثًا أولًا."
+
+msgid "No published forms in your organizations yet."
+msgstr "لا توجد نماذج منشورة في مؤسساتك بعد."
+
+msgid "No forms in scope."
+msgstr "لا توجد نماذج في النطاق."
+
+msgid "Search forms"
+msgstr "بحث في النماذج"
+
+msgid "Title, slug, description, category, organization"
+msgstr "العنوان، المعرّف، الوصف، الفئة، المؤسسة"
+
+msgid "Clear search"
+msgstr "مسح البحث"
+
+msgid "Archived"
+msgstr "مؤرشف"
+
+msgid "No archived forms yet."
+msgstr "لا توجد نماذج مؤرشفة بعد."
+
+msgid "No forms match this search."
+msgstr "لا توجد نماذج تطابق هذا البحث."
+
+msgid "Starter samples are in the section above."
+msgstr "النماذج التجريبية الأولية في القسم أعلاه."
+
+msgid "No published forms are available for your organizations yet."
+msgstr "لا تتوفر نماذج منشورة لمؤسساتك بعد."
+
+msgid "No forms yet. Create one to get started."
+msgstr "لا توجد نماذج بعد. أنشئ نموذجًا للبدء."
+
+msgid "Add delegation"
+msgstr "إضافة تفويض"
+
+msgid "Save"
+msgstr "حفظ"
+
+msgid "Workflow delegations"
+msgstr "تفويضات سير العمل"
+
+msgid "Revoked"
+msgstr "تم إبطاله"
+
+msgid "from"
+msgstr "من"
+
+msgid "until"
+msgstr "حتى"
+
+msgid "created"
+msgstr "مخلوق"
+
+msgid "by"
+msgstr "بواسطة"
+
+msgid "Revoke"
+msgstr "إبطال"
+
+msgid "No delegations yet."
+msgstr "لا توجد وفود حتى الآن."
+
+#| msgid "Print templates"
+msgid "Email notification templates"
+msgstr "قوالب إشعارات البريد"
+
+msgid "Back"
+msgstr "خلف"
+
+#| msgid "Organization scope"
+msgid "Organization settings"
+msgstr "إعدادات المنظمة"
+
+msgid "When to send"
+msgstr "متى يُرسل"
+
+msgid "Placeholders in subject and body (plain text):"
+msgstr "عناصر نائبة في الموضوع والمحتوى (نص عادي):"
+
+msgid "New organization"
+msgstr "منظمة جديدة"
+
+msgid "Edit"
+msgstr "تحرير"
+
+msgid "Edit organization"
+msgstr "تحرير المنظمة"
+
+msgid "Identity"
+msgstr "هوية"
+
+msgid "Public portal"
+msgstr "البوابة العامة"
+
+msgid "Theme & behavior"
+msgstr "الموضوع والسلوك"
+
+#| msgid "Primary theme color"
+msgid "Theme 1 primary color"
+msgstr "اللون الأساسي للسمة 1"
+
+#| msgid "Secondary theme color"
+msgid "Theme 1 secondary color"
+msgstr "اللون الثانوي للسمة 1"
+
+#| msgid "Background tint color"
+msgid "Theme 1 background tint"
+msgstr "تظليل خلفية السمة 1"
+
+#| msgid "Primary theme color"
+msgid "Theme 2 primary color"
+msgstr "اللون الأساسي للسمة 2"
+
+#| msgid "Secondary theme color"
+msgid "Theme 2 secondary color"
+msgstr "اللون الثانوي للسمة 2"
+
+#| msgid "Background tint color"
+msgid "Theme 2 background tint"
+msgstr "تظليل خلفية السمة 2"
+
+#| msgid "Primary theme color"
+msgid "Theme 3 primary color"
+msgstr "اللون الأساسي للسمة 3"
+
+#| msgid "Secondary theme color"
+msgid "Theme 3 secondary color"
+msgstr "اللون الثانوي للسمة 3"
+
+#| msgid "Background tint color"
+msgid "Theme 3 background tint"
+msgstr "تظليل خلفية السمة 3"
+
+msgid "Email notifications"
+msgstr "إشعارات البريد"
+
+msgid "Login API"
+msgstr "واجهة تسجيل الدخول"
+
+msgid "Internal"
+msgstr "داخلي"
+
+msgid "inactive"
+msgstr "غير نشط"
+
+msgid "Settings"
+msgstr "الإعدادات"
+
+#| msgid "Print templates"
+msgid "Email templates"
+msgstr "قوالب البريد"
+
+msgid "No organizations yet."
+msgstr "لا توجد منظمات حتى الآن."
+
+msgid "Add field"
+msgstr "إضافة حقل"
+
+msgid "Edit field"
+msgstr "تحرير الحقل"
+
+#| msgid "Fields"
+msgid "Field basics"
+msgstr "أساسيات الحقل"
+
+msgid "Type, identifiers, and label shown to respondents."
+msgstr "النوع والمعرّفات والتسمية المعروضة للمستجيبين."
+
+#| msgid "Delegations"
+msgid "Presentation"
+msgstr "العرض"
+
+msgid "Behavior and helper text on the live form."
+msgstr "السلوك والنص المساعد في النموذج الحي."
+
+msgid "Conditional visibility"
+msgstr "إظهار مشروط"
+
+#| msgid "Studio navigation"
+msgid "Optional validation"
+msgstr "تحقق اختياري"
+
+#| msgid "News & updates"
+msgid "Numbers and dates"
+msgstr "الأرقام والتواريخ"
+
+#| msgid "Inline fields"
+msgid "Duplicate field"
+msgstr "نسخ الحقل"
+
+msgid "Fields"
+msgstr "الحقول"
+
+msgid "drag rows to reorder (saved automatically)."
+msgstr "اسحب الصفوف لإعادة ترتيبها (يتم حفظها تلقائيًا)."
+
+msgid "map"
+msgstr "رسم خريطة"
+
+msgid "required"
+msgstr "مطلوب"
+
+msgid "inline"
+msgstr "مضمنة"
+
+msgid "depends on"
+msgstr "يعتمد على"
+
+msgid "Duplicate"
+msgstr "نسخ"
+
+msgid "Remove this field?"
+msgstr "هل تريد إزالة هذا الحقل؟"
+
+msgid "Remove"
+msgstr "يزيل"
+
+msgid "No fields yet. Add your first field."
+msgstr "لا توجد حقول بعد. أضف الحقل الأول الخاص بك."
+
+msgid "Basics"
+msgstr "أساسيات"
+
+msgid "Registration & deadline"
+msgstr "التسجيل والموعد النهائي"
+
+msgid "Print templates"
+msgstr "قوالب الطباعة"
+
+msgid "Accepted formats: DOCX or PDF."
+msgstr "الصيغ المقبولة: DOCX أو PDF."
+
+msgid "Optional ODT copy for staff editing in LibreOffice."
+msgstr "نسخة ODT اختيارية لتحرير الموظفين في LibreOffice."
+
+msgid "Publishing & access"
+msgstr "النشر والوصول"
+
+msgid "Deadline passed"
+msgstr "انتهى الموعد النهائي"
+
+msgid "Has deadline"
+msgstr "له موعد نهائي"
+
+msgid "One response each"
+msgstr "رد واحد لكل مقدّم"
+
+msgid "Sign-in required"
+msgstr "يتطلب تسجيل الدخول"
+
+msgid "Forwarding"
+msgstr "إعادة التوجيه"
+
+msgid "Hidden from lists"
+msgstr "مخفي من القوائم"
+
+msgid "Secure share"
+msgstr "مشاركة آمنة"
+
+#, python-format
+msgid "%(left)s of %(total)s left"
+msgstr "متبقٍ %(left)s من %(total)s"
+
+msgid "shown on announcement page"
+msgstr "يُعرض في صفحة الإعلان"
+
+msgid "hidden on announcement page"
+msgstr "مخفي في صفحة الإعلان"
+
+msgid "Public form URL"
+msgstr "رابط النموذج العام"
+
+msgid "Copy"
+msgstr "نسخ"
+
+msgid "Form summary"
+msgstr "ملخص النموذج"
+
+msgid "Workflow steps"
+msgstr "خطوات سير العمل"
+
+msgid "Header logos"
+msgstr "شعارات الترويسة"
+
+msgid "Form shortcuts"
+msgstr "اختصارات النموذج"
+
+msgid "Shortcuts"
+msgstr "اختصارات"
+
+msgid "See the respondent layout before publishing"
+msgstr "معاينة تخطيط المقدّم قبل النشر"
+
+msgid "Title, access, print files, publish"
+msgstr "العنوان، الوصول، ملفات الطباعة، النشر"
+
+msgid "Announcement page"
+msgstr "صفحة الإعلان"
+
+msgid "Enabled — headline, gallery, apply button"
+msgstr "مفعّلة — عنوان، معرض، زر التقديم"
+
+msgid "Optional — off (direct to form)"
+msgstr "اختياري — معطّلة (مباشرة إلى النموذج)"
+
+msgid "Logos"
+msgstr "الشعارات"
+
+msgid "Left, center, right header"
+msgstr "يسار، وسط، يمين الترويسة"
+
+msgid "Questions and validation"
+msgstr "الأسئلة والتحقق"
+
+msgid "Sections"
+msgstr "الأقسام"
+
+msgid "Collapsible groups"
+msgstr "مجموعات قابلة للطي"
+
+msgid "Steps and assignees"
+msgstr "الخطوات والمكلّفون"
+
+msgid "Validate by API"
+msgstr "التحقق عبر الواجهة"
+
+msgid "Pre-submit validation (HTTP 200)"
+msgstr "تحقق قبل الإرسال (HTTP 200)"
+
+msgid "External POST"
+msgstr "إرسال خارجي (POST)"
+
+msgid "Outbound API on submit & workflow"
+msgstr "واجهة خارجية عند الإرسال وسير العمل"
+
+msgid "Related"
+msgstr "مرتبطة"
+
+msgid "Linked follow-up forms"
+msgstr "نماذج متابعة مرتبطة"
+
+msgid "All responses for this form"
+msgstr "جميع الردود لهذا النموذج"
+
+msgid "QR and share link tools"
+msgstr "أدوات QR ومشاركة الرابط"
+
+msgid "Responses grid"
+msgstr "جدول الإجابات"
+
+msgid "Table of all answers, export"
+msgstr "جدول بكل الإجابات، تصدير"
+
+msgid "Studio help"
+msgstr "مساعدة الاستوديو"
+
+msgid "DOCX placeholders, tips"
+msgstr "عناصر DOCX النائبة، نصائح"
+
+msgid "Primary"
+msgstr "أساسي"
+
+msgid "Download"
+msgstr "تنزيل"
+
+msgid "ODT (optional)"
+msgstr "ODT (اختياري)"
+
+msgid "Form actions"
+msgstr "إجراءات النموذج"
+
+msgid "Open live form"
+msgstr "فتح النموذج المباشر"
+
+msgid "Duplicate form"
+msgstr "تكرار النموذج"
+
+msgid "Archive form"
+msgstr "أرشفة النموذج"
+
+msgid "Restore form"
+msgstr "استعادة النموذج"
+
+msgid "Copied"
+msgstr "تم النسخ"
+
+msgid "Form settings"
+msgstr "إعدادات النموذج"
+
+msgid "Clear the date and save to remove the deadline."
+msgstr "امسح التاريخ واحفظ لإزالة موعد الاستحقاق."
+
+msgid "Download current primary template"
+msgstr "تنزيل القالب الأساسي الحالي"
+
+msgid "edit locally, then choose a new file above and save."
+msgstr "حرّره محليًا، ثم اختر ملفًا جديدًا أعلاه واحفظ."
+
+msgid "Download current ODT"
+msgstr "تنزيل ODT الحالي"
+
+msgid "edit in LibreOffice, then upload again here and save."
+msgstr "حرّره في LibreOffice، ثم ارفعه هنا مرة أخرى واحفظ."
+
+msgid "Generate form from text"
+msgstr "توليد النموذج من النص"
+
+msgid "How it works"
+msgstr "كيف يعمل"
+
+msgid "— Select —"
+msgstr "- يختار -"
+
+msgid "The draft form is created inside this organization."
+msgstr "يتم إنشاء مسودة النموذج داخل هذه المؤسسة."
+
+msgid "Form description"
+msgstr "وصف النموذج"
+
+msgid "Create draft form"
+msgstr "إنشاء مسودة النموذج"
+
+msgid "Headline & message"
+msgstr "العنوان والرسالة"
+
+msgid "Where & contact"
+msgstr "المكان والاتصال"
+
+msgid "Registration & schedule"
+msgstr "التسجيل والموعد"
+
+msgid "Set capacity (seats) in Form settings to track registration limits."
+msgstr "حدّد السعة (مقاعد) في إعدادات النموذج لتتبع حدود التسجيل."
+
+msgid "Highlights, brochure & guidelines"
+msgstr "أبرز النقاط والكتيب والإرشادات"
+
+msgid "Current brochure (PDF)"
+msgstr "الكتيب الحالي (PDF)"
+
+msgid "Save announcement"
+msgstr "حفظ الإعلان"
+
+msgid "Open public link"
+msgstr "فتح الرابط العام"
+
+#, python-format
+msgid "Optional. Up to %(max)s images in a slideshow. Drag to reorder."
+msgstr "اختياري. حتى %(max)s صورة في عرض شرائح. اسحب لإعادة الترتيب."
+
+msgid "Recommended image size"
+msgstr "حجم الصورة الموصى به"
+
+msgid "Also fine: 1600 × 900 or 1280 × 720 (keep the same 16:9 ratio)."
+msgstr "مناسب أيضًا: 1600 × 900 أو 1280 × 720 (نفس نسبة 16:9)."
+
+msgid "No caption"
+msgstr "بدون تسمية"
+
+msgid "No gallery images yet."
+msgstr "لا توجد صور في المعرض بعد."
+
+msgid "Add gallery image"
+msgstr "إضافة صورة للمعرض"
+
+msgid "Connection"
+msgstr "الاتصال"
+
+msgid "Triggers"
+msgstr "المحفّزات"
+
+msgid "Field mapping"
+msgstr "تعيين الحقول"
+
+#, python-format
+msgid "%(shown)s rows on this page (saved mappings plus empty rows)."
+msgstr "%(shown)s صفًا في هذه الصفحة (تعيينات محفوظة وصفوف فارغة)."
+
+msgid "Save (deactivate to edit)"
+msgstr "حفظ (أوقف التفعيل للتعديل)"
+
+msgid "Save integration"
+msgstr "حفظ التكامل"
+
+msgid "Failed"
+msgstr "فشل"
+
+msgid "Test result"
+msgstr "نتيجة الاختبار"
+
+msgid "URL"
+msgstr "الرابط"
+
+msgid "Request headers (redacted)"
+msgstr "ترويسات الطلب (مخفّاة)"
+
+msgid "Request body"
+msgstr "نص الطلب"
+
+msgid "Response"
+msgstr "الاستجابة"
+
+msgid "No response body returned."
+msgstr "لم تُرجع استجابة بنص."
+
+msgid "Sending request…"
+msgstr "جارٍ إرسال الطلب…"
+
+msgid "Test API"
+msgstr "اختبار الواجهة"
+
+msgid "Checking API health…"
+msgstr "جارٍ فحص صحة الواجهة…"
+
+msgid "Check API health"
+msgstr "فحص صحة الواجهة"
+
+msgid "Posting sample data…"
+msgstr "جارٍ إرسال بيانات نموذجية…"
+
+msgid "POST sample data"
+msgstr "POST بيانات نموذجية"
+
+msgid "Posting latest submission…"
+msgstr "جارٍ إرسال آخر تقديم…"
+
+msgid "POST latest submission"
+msgstr "POST آخر تقديم"
+
+msgid "Sending custom JSON…"
+msgstr "جارٍ إرسال JSON مخصص…"
+
+msgid "Custom JSON body"
+msgstr "نص JSON مخصص"
+
+msgid "Send custom JSON"
+msgstr "إرسال JSON مخصص"
+
+msgid "Recent deliveries"
+msgstr "عمليات التسليم الأخيرة"
+
+msgid "Retry"
+msgstr "إعادة المحاولة"
+
+msgid "No deliveries yet."
+msgstr "لا توجد عمليات تسليم بعد."
+
+#| msgid "New form"
+msgid "Share form"
+msgstr "مشاركة النموذج"
+
+msgid "QR code for this form"
+msgstr "رمز QR لهذا النموذج"
+
+msgid "Secure link & regenerate QR"
+msgstr "رابط آمن وإعادة توليد QR"
+
+msgid "Status"
+msgstr "الحالة"
+
+msgid "Secure link enabled"
+msgstr "الرابط الآمن مفعّل"
+
+msgid "Confirmation"
+msgstr "التأكيد"
+
+msgid "confirm"
+msgstr "confirm"
+
+msgid "Turn on secure share link"
+msgstr "تفعيل الرابط الآمن"
+
+msgid "Type confirm in the confirmation field, then submit again."
+msgstr "اكتب confirm في خانة التأكيد، ثم أرسل مرة أخرى."
+
+msgid "Regenerate secret (invalidate old QR)"
+msgstr "إعادة توليد السر (إبطال QR القديم)"
+
+msgid "Turn off secure link"
+msgstr "إيقاف الرابط الآمن"
+
+msgid "Scan to open"
+msgstr "امسح للفتح"
+
+msgid "QR code linking to the public form"
+msgstr "رمز استجابة سريعة يفتح رابط النموذج العام"
+
+msgid "Applicant messages"
+msgstr "رسائل المقدّم"
+
+msgid "Request body (preview)"
+msgstr "نص الطلب (معاينة)"
+
+msgid "Test validation API"
+msgstr "اختبار واجهة التحقق"
+
+msgid "Sends sample field values. Save settings first."
+msgstr "يرسل قيم حقول نموذجية. احفظ الإعدادات أولًا."
+
+msgid "Send test request"
+msgstr "إرسال طلب اختبار"
+
+msgid "HTTP"
+msgstr "HTTP"
+
+msgid "OK"
+msgstr "موافق"
+
+msgid "On this page"
+msgstr "في هذه الصفحة"
+
+msgid "Overview"
+msgstr "نظرة عامة"
+
+msgid "Who can use Studio"
+msgstr "من يمكنه استخدام الاستوديو"
+
+msgid "Building a form (A–Z)"
+msgstr "بناء نموذج (من الألف إلى الياء)"
+
+msgid "Print templates: DOCX, PDF, ODT"
+msgstr "قوالب الطباعة: DOCX وPDF وODT"
+
+msgid "DOCX and PDF placeholders"
+msgstr "عناصر DOCX وPDF النائبة"
+
+msgid "Signatures in merged documents"
+msgstr "التوقيعات في المستندات المدمجة"
+
+msgid "Workflow step signatures in DOCX"
+msgstr "توقيعات خطوات سير العمل في DOCX"
+
+msgid "Inbox, submissions, and search"
+msgstr "صندوق الوارد والطلبات والبحث"
+
+msgid "People, delegations, and categories"
+msgstr "الأشخاص والتفويضات والفئات"
+
+msgid "What respondents see"
+msgstr "ما يراه المستجيبون"
+
+msgid "Practical tips"
+msgstr "نصائح عملية"
+
+msgid "Home — list and search your forms, see high-level stats."
+msgstr "الرئيسية — عرض نماذجك والبحث فيها، وإحصاءات موجزة."
+
+msgid "Inbox — submissions waiting for an action on a step you can act on."
+msgstr "صندوق الوارد — طلبات تنتظر إجراءً في خطوة يمكنك التصرف فيها."
+
+msgid "Search — find submissions across your scope."
+msgstr "البحث — العثور على الطلبات ضمن نطاق صلاحياتك."
+
+msgid "Create the form."
+msgstr "أنشئ النموذج."
+
+msgid "Use"
+msgstr "استخدم"
+
+msgid "or"
+msgstr "أو"
+
+msgid "From text"
+msgstr "من نص"
+
+msgid "Built-in string variables (same names in DOCX and PDF text fields):"
+msgstr "متغيرات نصية مدمجة (نفس الأسماء في حقول DOCX وPDF النصية):"
+
+msgid "multiline history of events."
+msgstr "سجل متعدد الأسطر للأحداث."
+
+msgid "short line of approve/reject actions."
+msgstr "سطر قصير بإجراءات الموافقة/الرفض."
+
+msgid "all non-empty event messages."
+msgstr "كل رسائل الأحداث غير الفارغة."
+
+msgid "or loop"
+msgstr "أو كرّر"
+
+msgid "where you want the applicant’s signature block."
+msgstr "حيث تريد مكان توقيع المتقدم."
+
+msgid "Layout tips:"
+msgstr "نصائح للتخطيط:"
+
+msgid "A branded public form page (with your header logos if configured)."
+msgstr "صفحة نموذج عامة بعلامة تجارية (مع شعارات الترويسة إن وُجدت)."
+
+msgid "Keywords"
+msgstr "الكلمات المفتاحية"
+
+msgid "Title, slug, reference, email"
+msgstr "العنوان، المعرّف، المرجع، البريد"
+
+msgid "All forms"
+msgstr "جميع النماذج"
+
+msgid "All steps"
+msgstr "جميع الخطوات"
+
+msgid "Sort by"
+msgstr "الترتيب حسب"
+
+msgid "Submitted (newest)"
+msgstr "تاريخ الإرسال (الأحدث أولاً)"
+
+msgid "Submitted (oldest)"
+msgstr "تاريخ الإرسال (الأقدم أولاً)"
+
+msgid "Updated (newest)"
+msgstr "آخر تحديث (الأحدث أولاً)"
+
+msgid "Updated (oldest)"
+msgstr "آخر تحديث (الأقدم أولاً)"
+
+msgid "Form title (A–Z)"
+msgstr "عنوان النموذج (أ–ي)"
+
+msgid "Form title (Z–A)"
+msgstr "عنوان النموذج (ي–أ)"
+
+msgid "Apply"
+msgstr "تطبيق"
+
+msgid "Apply filters"
+msgstr "تطبيق المرشّحات"
+
+msgid "Searching your inbox…"
+msgstr "جارٍ البحث في صندوق الوارد…"
+
+msgid "Could not run the inbox assistant. Try again."
+msgstr "تعذّر تشغيل مساعد صندوق الوارد. حاول مجددًا."
+
+msgid "Open"
+msgstr "يفتح"
+
+#| msgid "No submissions yet."
+msgid "Open matching list in submission search"
+msgstr "فتح القائمة المطابقة في بحث التقديمات"
+
+msgid "New thread message"
+msgstr "رسالة جديدة في السلسلة"
+
+#| msgid "No submissions match your filters."
+msgid "No submissions matched. Try different words or use the filters above."
+msgstr "لا تقديمات مطابقة. جرّب كلمات أخرى أو المرشحات أعلاه."
+
+#, python-format
+msgid "%%(shown)s shown · %%(total)s total matches"
+msgstr "معروض %%(shown)s · إجمالي التطابقات %%(total)s"
+
+msgid "Inbox assistant"
+msgstr "مساعد صندوق الوارد"
+
+msgid "Search submissions you applied to or worked on"
+msgstr "ابحث في التقديمات التي قدّمتها أو عملت عليها"
+
+#| msgid "Sections"
+msgid "Question"
+msgstr "سؤال"
+
+msgid "e.g. pending TOEFL registrations from last week"
+msgstr "مثل: تسجيلات TOEFL المعلّقة من الأسبوع الماضي"
+
+msgid "Send question to inbox assistant"
+msgstr "إرسال السؤال لمساعد صندوق الوارد"
+
+#, python-format
+msgid "%(counter)s submission open in your inbox"
+msgid_plural "%(counter)s submissions open in your inbox"
+msgstr[0] "لا إرسالات مفتوحة في صندوق الوارد"
+msgstr[1] "إرسال واحد (%(counter)s) مفتوح في صندوق الوارد"
+msgstr[2] "إرسالان (%(counter)s) مفتوحان في صندوق الوارد"
+msgstr[3] "%(counter)s إرسالات مفتوحة في صندوق الوارد"
+msgstr[4] "%(counter)s إرسالًا مفتوحًا في صندوق الوارد"
+msgstr[5] "%(counter)s إرسالًا مفتوحًا في صندوق الوارد"
+
+#, python-format
+msgid "%(m)s match your filters"
+msgstr "النتائج المطابقة للمرشّحات: %(m)s"
+
+#, python-format
+msgid "showing %(lo)s–%(hi)s"
+msgstr "عرض %(lo)s–%(hi)s"
+
+msgid "Nothing in your inbox right now."
+msgstr "لا يوجد شيء في صندوق الوارد الخاص بك الآن."
+
+msgid "No submissions match your filters."
+msgstr "لا توجد عمليات إرسال تطابق مرشّحاتك."
+
+msgid "Clear filters"
+msgstr "إزالة المرشّحات"
+
+msgid "Columns & saved views"
+msgstr "الأعمدة والعروض المحفوظة"
+
+msgid "shared"
+msgstr "مشترك"
+
+#, python-format
+msgid "%(counter)s column"
+msgid_plural "%(counter)s columns"
+msgstr[0] "%(counter)s عمود"
+msgstr[1] "عمود %(counter)s"
+msgstr[2] "عمودان %(counter)s"
+msgstr[3] "%(counter)s أعمدة"
+msgstr[4] "%(counter)s أعمدة"
+msgstr[5] "%(counter)s أعمدة"
+
+msgid "Saved view"
+msgstr "عرض محفوظ"
+
+msgid "Custom column selection"
+msgstr "اختيار أعمدة مخصص"
+
+msgid "default"
+msgstr "افتراضي"
+
+msgid "Load view"
+msgstr "تحميل العرض"
+
+#, python-format
+msgid "Active view: <strong>%(n)s</strong> (you own this)"
+msgstr "العرض النشط: <strong>%(n)s</strong> (أنت المالك)"
+
+msgid "Share this view"
+msgstr "مشاركة هذا العرض"
+
+#, python-format
+msgid "Active view: <strong>%(n)s</strong> (shared by %(o)s)"
+msgstr "العرض النشط: <strong>%(n)s</strong> (مشارك من %(o)s)"
+
+msgid "Share a saved view with colleagues"
+msgstr "مشاركة عرض محفوظ مع الزملاء"
+
+msgid "Visible columns"
+msgstr "الأعمدة الظاهرة"
+
+msgid "Select all"
+msgstr "تحديد الكل"
+
+msgid "Apply columns"
+msgstr "تطبيق الأعمدة"
+
+msgid "Submission"
+msgstr "الإرسال"
+
+msgid "Form fields"
+msgstr "حقول النموذج"
+
+msgid "Save view"
+msgstr "حفظ العرض"
+
+msgid "View name"
+msgstr "اسم العرض"
+
+msgid "e.g. HR review — core fields"
+msgstr "مثال: مراجعة الموارد البشرية — الحقول الأساسية"
+
+msgid "Use as my default for this form"
+msgstr "استخدامه كافتراضي لهذا النموذج"
+
+msgid "Delete this saved view?"
+msgstr "حذف هذا العرض المحفوظ؟"
+
+msgid "Delete view"
+msgstr "حذف العرض"
+
+msgid "Share with colleagues"
+msgstr "مشاركة مع الزملاء"
+
+#, python-format
+msgid "%(counter)s person"
+msgid_plural "%(counter)s people"
+msgstr[0] "%(counter)s شخص"
+msgstr[1] "شخص %(counter)s"
+msgstr[2] "شخصان %(counter)s"
+msgstr[3] "%(counter)s أشخاص"
+msgstr[4] "%(counter)s أشخاص"
+msgstr[5] "%(counter)s أشخاص"
+
+msgid "View to share"
+msgstr "العرض المراد مشاركته"
+
+msgid "Colleagues with access"
+msgstr "الزملاء الذين لديهم وصول"
+
+msgid "Update sharing"
+msgstr "تحديث المشاركة"
+
+msgid "List pagination"
+msgstr "ترقيم الصفحات"
+
+msgid "Per page"
+msgstr "لكل صفحة"
+
+msgid "Results per page"
+msgstr "نتائج لكل صفحة"
+
+msgid "Previous"
+msgstr "السابق"
+
+#, python-format
+msgid "Page %(p)s of %(t)s"
+msgstr "صفحة %(p)s من %(t)s"
+
+msgid "Next"
+msgstr "التالي"
+
+msgid "Starter sample forms pagination"
+msgstr "ترقيم النماذج التجريبية الأولية"
+
+#| msgid "Section added."
+msgid "Action needed"
+msgstr "إجراء مطلوب"
+
+#| msgid "Workflow step"
+msgid "Workflow status"
+msgstr "حالة سير العمل"
+
+msgid "Approve"
+msgstr "يعتمد"
+
+#| msgid "Not approved"
+msgid "Undo approve"
+msgstr "التراجع عن الاعتماد"
+
+msgid "No action required"
+msgstr "لا إجراء مطلوب"
+
+#| msgid "Your answers"
+msgid "Your tags"
+msgstr "وسومك"
+
+msgid "Rejection reason"
+msgstr "سبب الرفض"
+
+#| msgid "No action required"
+msgid "Rejection reason (required)"
+msgstr "سبب الرفض (مطلوب)"
+
+msgid "Reject"
+msgstr "يرفض"
+
+msgid "On your task list — remove"
+msgstr "في قائمة مهامك — إزالة"
+
+msgid "Remove from your task list"
+msgstr "إزالة من قائمة مهامك"
+
+msgid "On list"
+msgstr "في القائمة"
+
+msgid "Add to your task list"
+msgstr "إضافة إلى قائمة مهامك"
+
+msgid "Task"
+msgstr "مهمة"
+
+msgid "Please correct the errors below."
+msgstr "صحّح الأخطاء أدناه."
+
+#| msgid "Add logo"
+msgid "Edit logo"
+msgstr "تحرير الشعار"
+
+msgid "Add logo"
+msgstr "إضافة شعار"
+
+msgid "Upload"
+msgstr "رفع"
+
+msgid "No logos yet. Add up to three for the live form header."
+msgstr "لا توجد شعارات بعد. أضف ما يصل إلى ثلاثة لرأس النموذج المباشر."
+
+#| msgid "New form"
+msgid "Related forms"
+msgstr "نماذج مرتبطة"
+
+#| msgid "Add delegation"
+msgid "Add link"
+msgstr "إضافة رابط"
+
+#| msgid "Last step"
+msgid "at step"
+msgstr "في الخطوة"
+
+#| msgid "Remove this field?"
+msgid "Remove this related link?"
+msgstr "إزالة هذا الرابط المرتبط؟"
+
+#| msgid "No events yet."
+msgid "No related forms linked yet."
+msgstr "لا نماذج مرتبطة بعد."
+
+#| msgid "Create draft form"
+msgid "Add related form"
+msgstr "إضافة نموذج مرتبط"
+
+#| msgid "Create draft form"
+msgid "Link a related form"
+msgstr "ربط نموذج مرتبط"
+
+msgid "The child form must belong to the same organization as this form."
+msgstr "يجب أن ينتمي النموذج الفرعي لنفس منظمة هذا النموذج."
+
+msgid "— Select a form —"
+msgstr "— اختر نموذجًا —"
+
+msgid "Submitted from"
+msgstr "من تاريخ"
+
+msgid "Submitted to"
+msgstr "إلى تاريخ"
+
+msgid "Clear dates"
+msgstr "مسح التواريخ"
+
+msgid "Show"
+msgstr "عرض"
+
+msgid "No forms with submitted answers are available in your studio scope."
+msgstr "لا توجد نماذج بإجابات مُرسلة ضمن نطاق استوديوك."
+
+msgid "Showing answers for"
+msgstr "عرض إجابات"
+
+msgid "Filtered by submit date"
+msgstr "مُصفّى حسب تاريخ الإرسال"
+
+msgid "to"
+msgstr "إلى"
+
+msgid "The table below is paginated. Click a column heading to sort."
+msgstr "الجدول أدناه مقسّم إلى صفحات. انقر عنوان عمود للفرز."
+
+msgid "Response statistics"
+msgstr "إحصائيات الردود"
+
+msgid "Statistics"
+msgstr "إحصائيات"
+
+msgid "Total submissions"
+msgstr "إجمالي الطلبات"
+
+msgid "Submitted in last 30 days"
+msgstr "مُرسَلة في آخر 30 يومًا"
+
+msgid "Unique signed-in accounts"
+msgstr "حسابات مسجّلة فريدة"
+
+msgid "Submissions by day (last 30 days)"
+msgstr "الطلبات حسب اليوم (آخر 30 يومًا)"
+
+msgid "Daily submission counts"
+msgstr "عدد الطلبات اليومية"
+
+msgid "By workflow state"
+msgstr "حسب حالة سير العمل"
+
+msgid "By current workflow step"
+msgstr "حسب خطوة سير العمل الحالية"
+
+msgid "No step data."
+msgstr "لا بيانات للخطوات."
+
+msgid "Field answer charts"
+msgstr "مخططات إجابات الحقول"
+
+#, python-format
+#| msgid "%(counter)s field"
+#| msgid_plural "%(counter)s fields"
+msgid "%%(counter)s field"
+msgid_plural "%%(counter)s fields"
+msgstr[0] "%%(counter)s حقل"
+msgstr[1] "حقل %%(counter)s"
+msgstr[2] "حقلان %%(counter)s"
+msgstr[3] "%%(counter)s حقول"
+msgstr[4] "%%(counter)s حقول"
+msgstr[5] "%%(counter)s حقول"
+
+msgid "Answer distribution"
+msgstr "توزيع الإجابة"
+
+msgid "This form has no fields yet."
+msgstr "لا حقول في هذا النموذج بعد."
+
+msgid "No submissions in this date range."
+msgstr "لا طلبات في هذا النطاق الزمني."
+
+msgid "No submissions yet."
+msgstr "لا طلبات بعد."
+
+msgid "Export Excel"
+msgstr "تصدير Excel"
+
+msgid "Export PDF"
+msgstr "تصدير PDF"
+
+msgid "Responses table"
+msgstr "جدول الردود"
+
+msgid "Responses (card view)"
+msgstr "الردود (عرض البطاقات)"
+
+msgid "Add section"
+msgstr "إضافة قسم"
+
+msgid "Edit section"
+msgstr "تحرير القسم"
+
+msgid "Starts collapsed"
+msgstr "يبدأ انهار"
+
+msgid "Starts open"
+msgstr "يبدأ مفتوحًا"
+
+msgid "Remove this section? Fields stay on the form with no section."
+msgstr "هل تريد إزالة هذا القسم؟ تبقى الحقول في النموذج بدون أي قسم."
+
+msgid "Document"
+msgstr "وثيقة"
+
+msgid "Merged document"
+msgstr "وثيقة مدمجة"
+
+msgid "Back to submission"
+msgstr "العودة إلى التقديم"
+
+msgid "Download PDF"
+msgstr "تحميل قوات الدفاع الشعبي"
+
+msgid "Download ODT for editing"
+msgstr "تنزيل ODT للتحرير"
+
+#| msgid "Upload document"
+msgid "Loading preview…"
+msgstr "جاري تحميل المعاينة…"
+
+msgid "Loading document…"
+msgstr "جارٍ تحميل المستند…"
+
+msgid "Merged PDF"
+msgstr "قوات الدفاع الشعبي المدمجة"
+
+msgid "Download filled DOCX"
+msgstr "قم بتنزيل DOCX المملوء"
+
+msgid "step"
+msgstr "خطوة"
+
+msgid "no step assigned"
+msgstr "لم يتم تعيين أي خطوة"
+
+msgid "Your task list"
+msgstr "قائمة مهامك"
+
+msgid "View all tasks"
+msgstr "عرض كل المهام"
+
+msgid "Done"
+msgstr "منجَز"
+
+msgid "To do"
+msgstr "قيد المتابعة"
+
+msgid "Deadline"
+msgstr "موعد الاستحقاق"
+
+msgid "Save deadline"
+msgstr "حفظ موعد الاستحقاق"
+
+msgid "Mark as to do"
+msgstr "وضع علامة قيد المتابعة"
+
+msgid "Mark as done"
+msgstr "وضع علامة منجَز"
+
+msgid "Remove from list"
+msgstr "إزالة من القائمة"
+
+#| msgid "optional"
+msgid "Note (optional)"
+msgstr "ملاحظة (اختياري)"
+
+msgid "e.g. call applicant Friday"
+msgstr "مثل: اتصال بالمقدّم يوم الجمعة"
+
+#| msgid "optional"
+msgid "Deadline (optional)"
+msgstr "الموعد النهائي (اختياري)"
+
+msgid "Add to my tasks"
+msgstr "إضافة إلى مهامي"
+
+#| msgid "Remove this attachment?"
+msgid "Remove this tag?"
+msgstr "إزالة هذا الوسم؟"
+
+#| msgid "Remove"
+msgid "Remove tag"
+msgstr "إزالة الوسم"
+
+#| msgid "Edit settings"
+msgid "Edit tags"
+msgstr "تحرير الوسوم"
+
+msgid "e.g. follow-up, legal, q1-2026"
+msgstr "مثل: متابعة، قانوني، q1-2026"
+
+#| msgid "Save changes"
+msgid "Save tags"
+msgstr "حفظ الوسوم"
+
+msgid "Read document section"
+msgstr "قراءة قسم الوثيقة"
+
+msgid "View document"
+msgstr "عرض الوثيقة"
+
+#| msgid "Download PDF"
+msgid "Download DOCX"
+msgstr "تنزيل DOCX"
+
+#| msgid "Download PDF"
+msgid "Download ODT"
+msgstr "تنزيل ODT"
+
+msgid "Update workflow"
+msgstr "تحديث سير العمل"
+
+msgid "Comment"
+msgstr "تعليق"
+
+msgid "Optional when approving; required when rejecting."
+msgstr "اختياري عند الاعتماد؛ مطلوب عند الرفض."
+
+msgid "This submission is no longer awaiting approval."
+msgstr "لم يعد هذا الطلب بانتظار الموافقة."
+
+msgid "Who receives this submission at this step:"
+msgstr "من يتلقى هذا الإرسال في هذه الخطوة:"
+
+msgid "Thread messages"
+msgstr "رسائل السلسلة"
+
+msgid "Discussion thread"
+msgstr "سلسلة النقاش"
+
+#| msgid "No events yet."
+msgid "No messages yet."
+msgstr "لا رسائل بعد."
+
+#| msgid "Add signature image"
+msgid "Add a message"
+msgstr "إضافة رسالة"
+
+#| msgid "No action required from you on this submission."
+msgid "Ask a question or leave a note for others on this submission…"
+msgstr "اطرح سؤالًا أو اترك ملاحظة للآخرين على هذا التقديم…"
+
+msgid "Post message"
+msgstr "نشر رسالة"
+
+msgid "Email applicant"
+msgstr "مراسلة المقدّم"
+
+#| msgid "No organizations yet."
+msgid "Configure organization email"
+msgstr "ضبط بريد المنظمة"
+
+#, python-format
+msgid "To is filled from %(src)s."
+msgstr "يُملأ «إلى» من %(src)s."
+
+#| msgid "Share by email"
+msgid "Send email"
+msgstr "إرسال بريد"
+
+msgid "Open in mail app"
+msgstr "فتح في تطبيق البريد"
+
+#| msgid "Track your submission"
+msgid "Forward submission"
+msgstr "إحالة التقديم"
+
+msgid "Forward"
+msgstr "إحالة"
+
+msgid "Same organization; base workflow does not block on these."
+msgstr "نفس المنظمة؛ سير العمل الأساسي لا ينتظرها."
+
+#| msgid "Already submitted"
+msgid "Not yet submitted"
+msgstr "لم يُرسل بعد"
+
+msgid "Applicant view"
+msgstr "عرض المقدّم"
+
+#| msgid "Open studio"
+msgid "Open submission (studio)"
+msgstr "فتح التقديم (الاستوديو)"
+
+msgid "Applicant link (token)"
+msgstr "رابط المقدّم (رمز)"
+
+msgid "Answers"
+msgstr "الإجابات"
+
+#| msgid "respondent"
+msgid "Respondent"
+msgstr "المستجيب"
+
+msgid "Anonymous (not signed in; no email stored)"
+msgstr "مجهول (غير مسجّل الدخول؛ لا بريد محفوظ)"
+
+msgid "Submission documents"
+msgstr "وثائق التقديم"
+
+msgid "Attachment documents"
+msgstr "مستندات المرفقات"
+
+msgid "respondent"
+msgstr "المستجيب"
+
+msgid "View as PDF"
+msgstr "عرض كـ PDF"
+
+#| msgid "Document"
+msgid "Document preview"
+msgstr "معاينة المستند"
+
+msgid "Remove this attachment?"
+msgstr "هل تريد إزالة هذا المرفق؟"
+
+msgid "No extra documents yet."
+msgstr "لا توجد وثائق إضافية حتى الآن."
+
+msgid "optional"
+msgstr "خياري"
+
+msgid "Upload document"
+msgstr "تحميل الوثيقة"
+
+#| msgid "Download PDF"
+msgid "Download timeline as PDF"
+msgstr "تنزيل الخط الزمني كـ PDF"
+
+msgid "No events."
+msgstr "لا توجد أحداث."
+
+msgid "Your private note"
+msgstr "ملاحظتك الخاصة"
+
+msgid "Private note"
+msgstr "ملاحظة خاصة"
+
+#| msgid "Save step"
+msgid "Saved text"
+msgstr "النص المحفوظ"
+
+msgid "Your private sticky note"
+msgstr "ملاحظتك اللاصقة الخاصة"
+
+msgid "Reminders, follow-ups, personal context…"
+msgstr "تذكيرات، متابعات، سياق شخصي…"
+
+#| msgid "Save step"
+msgid "Save note"
+msgstr "حفظ الملاحظة"
+
+#| msgid "Saved."
+msgid "Saved"
+msgstr "محفوظ"
+
+#| msgid "Last step"
+msgid "Last saved"
+msgstr "آخر حفظ"
+
+msgid "Title, slug, reference, email, username"
+msgstr "العنوان، المعرّف، المرجع، البريد، اسم المستخدم"
+
+#| msgid "Your answers"
+msgid "Your tag"
+msgstr "وسمك"
+
+msgid "Exact tag (your private labels)"
+msgstr "وسم دقيق (تسمياتك الخاصة)"
+
+#| msgid "All organizations"
+msgid "All connections"
+msgstr "كل الارتباطات"
+
+msgid "Applicant only"
+msgstr "للمقدّم فقط"
+
+msgid "Workflow only (assignee or timeline)"
+msgstr "سير العمل فقط (مكلّف أو خط زمني)"
+
+msgid "State"
+msgstr "الحالة"
+
+msgid "Any state"
+msgstr "أي حالة"
+
+#, python-format
+#| msgid "No submissions yet."
+msgid "%(n)s submission(s) match."
+msgstr "تطابق %(n)s تقديمًا."
+
+#, python-format
+msgid "Showing %(lo)s–%(hi)s"
+msgstr "عرض %(lo)s–%(hi)s"
+
+#| msgid "No submissions yet."
+msgid "No matching submissions."
+msgstr "لا تقديمات مطابقة."
+
+msgid "Submissions you marked to follow up. Only you see this list."
+msgstr "الطلبات التي وسمتها للمتابعة. أنت وحدك من يرى هذه القائمة."
+
+#, python-format
+msgid "%(counter)s open task"
+msgid_plural "%(counter)s open tasks"
+msgstr[0] "%(counter)s مهمة مفتوحة"
+msgstr[1] "مهمة %(counter)s مفتوحة"
+msgstr[2] "مهمتان %(counter)s مفتوحتان"
+msgstr[3] "%(counter)s مهام مفتوحة"
+msgstr[4] "%(counter)s مهام مفتوحة"
+msgstr[5] "%(counter)s مهام مفتوحة"
+
+msgid "No open tasks."
+msgstr "لا مهام مفتوحة."
+
+msgid "Hide completed"
+msgstr "إخفاء المنجزة"
+
+msgid "Show completed"
+msgstr "عرض المنجزة"
+
+msgid "Mark done"
+msgstr "وضع علامة منجَز"
+
+msgid "Overdue"
+msgstr "متأخرة"
+
+msgid "Due soon"
+msgstr "قريبة الاستحقاق"
+
+#, python-format
+msgid "Due %(d)s"
+msgstr "مستحقة %(d)s"
+
+#, python-format
+msgid "Added %(d)s"
+msgstr "أُضيفت %(d)s"
+
+msgid "No tasks yet. Add items from your inbox or a submission page."
+msgstr "لا مهام بعد. أضِف عناصر من صندوق الوارد أو من صفحة طلب."
+
+msgid "New user"
+msgstr "مستخدم جديد"
+
+msgid "Edit user"
+msgstr "تحرير المستخدم"
+
+msgid "Leave both fields blank to keep the current password."
+msgstr "اترك كلا الحقلين فارغين للاحتفاظ بكلمة المرور الحالية."
+
+msgid "Employee profile"
+msgstr "الملف الشخصي للموظف"
+
+msgid "Create user"
+msgstr "إنشاء مستخدم"
+
+msgid "Save changes"
+msgstr "حفظ التغييرات"
+
+msgid "Signatures"
+msgstr "التوقيعات"
+
+msgid "(no label)"
+msgstr "(بدون تسمية)"
+
+msgid "Added"
+msgstr "تمت الإضافة"
+
+msgid "Set as primary"
+msgstr "تعيين كأساسي"
+
+msgid "No signature images yet."
+msgstr "لا توجد صور التوقيع حتى الآن."
+
+msgid "Add signature image"
+msgstr "إضافة صورة التوقيع"
+
+msgid "Upload signature"
+msgstr "تحميل التوقيع"
+
+msgid "Add user"
+msgstr "إضافة مستخدم"
+
+msgid "Username, email, name, employee #, civil ID, job title"
+msgstr ""
+"اسم المستخدم، البريد الإلكتروني، الاسم، رقم الموظف، البطاقة المدنية، المسمى "
+"الوظيفي"
+
+msgid "staff"
+msgstr "طاقم عمل"
+
+msgid "No users match this search."
+msgstr "لا يوجد مستخدمون يطابقون هذا البحث."
+
+msgid "No users found."
+msgstr "لم يتم العثور على مستخدمين."
+
+msgid "Add step"
+msgstr "أضف خطوة"
+
+msgid "Edit step"
+msgstr "تحرير الخطوة"
+
+msgid "Add workflow step"
+msgstr "إضافة خطوة سير العمل"
+
+msgid "Assignees"
+msgstr "المكلفون"
+
+msgid "Remove this step? Submissions referencing it cannot be deleted."
+msgstr "هل تريد إزالة هذه الخطوة؟ ولا يمكن حذف المشاركات التي تشير إليه."
+
+msgid "No workflow steps. Add at least one before publishing."
+msgstr "لا توجد خطوات سير العمل. أضف واحدًا على الأقل قبل النشر."
+
+#| msgid "No signature images yet."
+msgid "Your signature images"
+msgstr "صور توقيعك"
+
+#, python-format
+#| msgid "PNG, JPEG, GIF, WebP, or SVG. Maximum three logos per form."
+msgid "PNG, JPEG, GIF, WebP, or SVG. Up to %(lim)s images."
+msgstr "PNG أو JPEG أو GIF أو WebP أو SVG. حتى %(lim)s صورة."
+
+msgid "Remove this signature image?"
+msgstr "هل تريد إزالة صورة التوقيع هذه؟"
+
+msgid "Back to home"
+msgstr "العودة إلى المنزل"
+
+msgid "Requests"
+msgstr "الطلبات"
+
+#| msgid "Forms to complete"
+msgid "Related forms to complete"
+msgstr "نماذج مرتبطة لإكمالها"
+
+#| msgid "Open forms"
+msgid "Main form"
+msgstr "النموذج الرئيسي"
+
+#| msgid "Compose forms"
+msgid "Complete form"
+msgstr "إكمال النموذج"
+
+msgid "You have no pending related forms."
+msgstr "لا نماذج مرتبطة معلّقة لديك."
+
+msgid "Access denied"
+msgstr "تم رفض الوصول"
+
+msgid "You cannot open this related form"
+msgstr "لا يمكنك فتح هذا النموذج المرتبط"
+
+#| msgid "Organization"
+msgid "Organization home"
+msgstr "الصفحة الرئيسية للمنظمة"
+
+msgid "Track your submission"
+msgstr "تتبع التقديم الخاص بك"
+
+msgid "Dashboard"
+msgstr "لوحة القيادة"
+
+msgid "Current status"
+msgstr "الوضع الحالي"
+
+msgid "All workflow steps are done. Thank you."
+msgstr "تم الانتهاء من جميع خطوات سير العمل. شكرًا لك."
+
+msgid "Not approved"
+msgstr "غير معتمد"
+
+msgid "Last step"
+msgstr "الخطوة الأخيرة"
+
+msgid "No workflow step is assigned yet."
+msgstr "لم يتم تعيين أي خطوة لسير العمل حتى الآن."
+
+msgid "Your answers"
+msgstr "إجاباتك"
+
+#| msgid "Track your submission"
+msgid "Your submission"
+msgstr "تقديمك"
+
+#| msgid "Employee profile"
+msgid "Email on file"
+msgstr "البريد المسجّل"
+
+msgid "Signed in when you submitted"
+msgstr "كنت مسجّل الدخول عند التقديم"
+
+msgid "Anonymous — no account or email was stored."
+msgstr "مجهول — لم يُحفظ حساب ولا بريد."
+
+#| msgid "View document"
+msgid "Filled form document"
+msgstr "مستند النموذج المعبّأ"
+
+msgid "View PDF"
+msgstr "عرض PDF"
+
+msgid "Your documents"
+msgstr "المستندات الخاصة بك"
+
+msgid "No extra documents uploaded yet."
+msgstr "لم يتم تحميل أي مستندات إضافية حتى الآن."
+
+#| msgid "No extra documents yet."
+msgid "No additional documents."
+msgstr "لا مستندات إضافية."
+
+msgid "Waiting for your response"
+msgstr "بانتظار ردك"
+
+msgid "View related answers"
+msgstr "عرض الإجابات المرتبطة"
+
+#| msgid "Compose forms"
+msgid "Complete related form"
+msgstr "إكمال النموذج المرتبط"
+
+msgid "No events yet."
+msgstr "لا توجد أحداث حتى الآن."
+
+#| msgid "Organization portal"
+msgid "Organization not found"
+msgstr "لم تُعثر على المنظمة"
+
+msgid "Go to main site"
+msgstr "الانتقال إلى الموقع الرئيسي"
+
+#, python-format
+#| msgid "Each user can have at most %(max)d signature images."
+msgid "You can have at most %(max)d signature images."
+msgstr "يمكنك %(max)d صورة توقيع كحد أقصى."
+
+#| msgid "Signature image added."
+msgid "Signature image saved."
+msgstr "تم حفظ صورة التوقيع."
+
+msgid "Signature removed."
+msgstr "تمت إزالة التوقيع."
+
+msgid "You can only forward a submission you made while signed in."
+msgstr "يمكنك إحالة تقديم أرسلته وأنت مسجّل الدخول فقط."
+
+#, python-format
+#| msgid "Attachment removed."
+msgid "Attachment removed: %(name)s"
+msgstr "أُزيل المرفق: %(name)s"
+
+msgid "You do not have permission to remove this attachment."
+msgstr "ليس لديك إذن لإزالة هذا المرفق."
+
+msgid "This submission is closed. You cannot upload more documents here."
+msgstr "هذا التقديم مغلق. لا يمكنك رفع مزيد من المستندات هنا."
+
+msgid "Your document was uploaded."
+msgstr "تم تحميل المستند الخاص بك."
+
+#| msgid "no step assigned"
+msgid "You must be signed in."
+msgstr "يجب تسجيل الدخول."
+
+msgid "Cannot undo this approval (missing previous step)."
+msgstr "لا يمكن التراجع عن هذا الاعتماد (الخطوة السابقة مفقودة)."
+
+#| msgid "Submission documents"
+msgid "Submission not found."
+msgstr "لم يُعثر على التقديم."
+
+msgctxt "timeline event"
+msgid "Submitted"
+msgstr "تم الإرسال"
+
+msgctxt "timeline event"
+msgid "Workflow step changed"
+msgstr "تغيّرت خطوة سير العمل"
+
+msgctxt "timeline event"
+msgid "Note"
+msgstr "ملاحظة"
+
+msgctxt "timeline event"
+msgid "Step approved"
+msgstr "تم اعتماد الخطوة"
+
+msgctxt "timeline event"
+msgid "Workflow completed"
+msgstr "اكتمل سير العمل"
+
+msgctxt "timeline event"
+msgid "Approval undone"
+msgstr "تم التراجع عن الاعتماد"
+
+msgctxt "timeline event"
+msgid "Workflow rejected"
+msgstr "رُفض سير العمل"
+
+msgctxt "timeline event"
+msgid "Document attached"
+msgstr "أُرفق مستند"
+
+msgctxt "timeline event"
+msgid "Forwarded"
+msgstr "أُحيل"
+
+msgctxt "timeline event"
+msgid "Related form available"
+msgstr "نموذج مرتبط متاح"
+
+msgctxt "timeline event"
+msgid "Related form submitted"
+msgstr "أُرسل النموذج المرتبط"
+
+msgctxt "timeline delegate"
+msgid " [delegate for: %(names)s]"
+msgstr " [نيابة عن: %(names)s]"
+
+msgctxt "timeline delegate"
+msgid " [delegate]"
+msgstr " [نيابة]"
+
+msgid "Form submitted."
+msgstr "تم إرسال النموذج."
+
+msgid "Workflow rejected; stopped at this step."
+msgstr "رُفض سير العمل؛ توقّف عند هذه الخطوة."
+
+msgid "All workflow steps approved; submission complete."
+msgstr "اعُتمدت كل خطوات سير العمل؛ اكتمل التقديم."
+
+#, python-format
+msgid "Approved; advanced to \"%(step)s\"."
+msgstr "اعتماد؛ الانتقال إلى «%(step)s»."
+
+msgid "Comment:"
+msgstr "تعليق:"
+
+#, python-format
+msgid "Document added: %(file)s"
+msgstr "أُضيف مستند: %(file)s"
+
+#, python-format
+msgid "Document added (manage): %(file)s"
+msgstr "أُضيف مستند (إدارة): %(file)s"
+
+#, python-format
+msgid "Document added: %(file)s — %(title)s"
+msgstr "أُضيف مستند: %(file)s — %(title)s"
+
+#, python-format
+msgid "Document added (manage): %(file)s — %(title)s"
+msgstr "أُضيف مستند (إدارة): %(file)s — %(title)s"
+
+#, python-format
+msgid "Forwarded to %(user)s"
+msgstr "أُحيل إلى %(user)s"
+
+#, python-format
+msgid "Forwarded to %(user)s (%(name)s)"
+msgstr "أُحيل إلى %(user)s (%(name)s)"
+
+#, python-format
+msgid "Forwarded to %(user)s\nNote: %(note)s"
+msgstr "أُحيل إلى %(user)s\nملاحظة: %(note)s"
+
+#, python-format
+msgid "Forwarded to %(user)s (%(name)s)\nNote: %(note)s"
+msgstr "أُحيل إلى %(user)s (%(name)s)\nملاحظة: %(note)s"
+
+msgid "Build the path a submission follows. Click a step to edit it, or use “+” to insert one between steps."
+msgstr "ابنِ المسار الذي يمر به الطلب. اضغط على خطوة لتعديلها، أو استخدم «+» لإدراج خطوة بين خطوتين."
+
+msgid "Workflow path"
+msgstr "مسار سير العمل"
+
+msgid "Enable JavaScript to use the workflow builder."
+msgstr "فعّل JavaScript لاستخدام منشئ سير العمل."
+
+msgid "Step settings"
+msgstr "إعداد الخطوة"
+
+msgid "Select a step on the path, or press “+” to add one."
+msgstr "اختر خطوة من المسار، أو اضغط «+» لإضافة خطوة."
+
+msgid "Step name"
+msgstr "اسم الخطوة"
+
+msgid "Who is responsible?"
+msgstr "من المسؤول؟"
+
+msgid "e.g. Department head"
+msgstr "مثال: رئيس القسم"
+
+msgid "This step needs at least one assignee so someone receives submissions."
+msgstr "هذه الخطوة تحتاج مسؤولًا واحدًا على الأقل حتى يستلم الطلبات."
+
+msgid "Move up"
+msgstr "نقل لأعلى"
+
+msgid "Move down"
+msgstr "نقل لأسفل"
+
+msgid "Delete this step"
+msgstr "حذف هذه الخطوة"
+
+msgid "Path check"
+msgstr "فحص المسار"
+
+msgid "Applicant submits the form"
+msgstr "الموظف يقدم الطلب"
+
+msgid "End"
+msgstr "النهاية"
+
+msgid "New step"
+msgstr "خطوة جديدة"
+
+msgid "No assignee"
+msgstr "بلا مسؤول"
+
+msgid "Not saved yet"
+msgstr "لم تُحفظ بعد"
+
+msgid "Insert a step here"
+msgstr "أدرج خطوة هنا"
+
+msgid "%(count)s assignee(s)"
+msgstr "%(count)s مسؤول"
+
+msgid "The path is complete. Every step has someone responsible."
+msgstr "المسار مكتمل. لكل خطوة مسؤول محدد."
+
+msgid "Add at least one step. Forms without workflow steps cannot be published."
+msgstr "أضف خطوة واحدة على الأقل. لا يمكن نشر نموذج بلا خطوات سير عمل."
+
+msgid "Step “%(label)s” has no assignee, so nobody receives submissions there."
+msgstr "خطوة «%(label)s» ليس لها مسؤول محدد، فلن يستلم أحد الطلبات فيها."
+
+msgid "A new step is not saved yet."
+msgstr "هناك خطوة جديدة لم تُحفظ بعد."
+
+msgid "Step name “%(label)s” is used more than once."
+msgstr "اسم الخطوة «%(label)s» مستخدم أكثر من مرة."
+
+msgid "Enter a step name."
+msgstr "أدخل اسم الخطوة."
+
+msgid "Could not reach the server. Check your connection and try again."
+msgstr "تعذر الوصول إلى الخادم. تحقق من الاتصال وحاول مرة أخرى."
+
+msgid "Discard unsaved changes to this step?"
+msgstr "هل تريد تجاهل التغييرات غير المحفوظة في هذه الخطوة؟"
+
+msgid "Remove this step?"
+msgstr "هل تريد حذف هذه الخطوة؟"
+
+msgid "%(count)s submission(s) are currently on this step. Move them before removing it."
+msgstr "يوجد %(count)s طلب حاليًا في هذه الخطوة. انقلها قبل حذف الخطوة."
+
+msgid "Invalid request."
+msgstr "طلب غير صالح."
+
+msgid "Step name is too long."
+msgstr "اسم الخطوة طويل جدًا."
+
+msgid "Description is too long."
+msgstr "الوصف طويل جدًا."
+
+msgid "Choose assignees from this organization's members only."
+msgstr "اختر المسؤولين من أعضاء هذه المنظمة فقط."
+
+msgid "Follow the site language"
+msgstr "حسب لغة الموقع"
+
+msgid "Right to left (Arabic)"
+msgstr "من اليمين إلى اليسار (عربي)"
+
+msgid "Left to right (English)"
+msgstr "من اليسار إلى اليمين (إنجليزي)"
+
+msgid "Default layout direction"
+msgstr "اتجاه التخطيط الافتراضي"
+
+msgid "Text direction of the public form pages. “Follow the site language” switches with the visitor's language; RTL or LTR pins the layout regardless of language."
+msgstr "اتجاه النص في صفحات النموذج العامة. «حسب لغة الموقع» يتغير مع لغة الزائر، أما RTL أو LTR فيثبّت التخطيط بغض النظر عن اللغة."
+
+msgid "Your filled form"
+msgstr "نموذجك بعد التعبئة"
+
+msgid "Thank you. Your submission was received and your answers were placed into the form document below."
+msgstr "شكرًا لك. تم استلام طلبك وتم إدراج إجاباتك في مستند النموذج أدناه."
+
+msgid "Filled document"
+msgstr "المستند بعد التعبئة"
+
+msgid "Track this submission"
+msgstr "تتبع هذا الطلب"
+
+msgid "Keep this link private: anyone who has it can open the document."
+msgstr "احتفظ بهذا الرابط سريًا: يمكن لأي شخص يملكه فتح المستند."
+
+msgid "Right-click (or press and hold on touch screens) anywhere on the document to draw your signature at that point."
+msgstr "انقر بزر الفأرة الأيمن (أو اضغط مطولًا على شاشات اللمس) في أي مكان على المستند لرسم توقيعك عند تلك النقطة."
+
+msgid "Draw your signature"
+msgstr "ارسم توقيعك"
+
+msgid "Use your mouse or finger. The signature will be placed where you clicked."
+msgstr "استخدم الفأرة أو إصبعك. سيوضع التوقيع في المكان الذي نقرت عليه."
+
+msgid "Size"
+msgstr "الحجم"
+
+msgid "Small"
+msgstr "صغير"
+
+msgid "Medium"
+msgstr "متوسط"
+
+msgid "Large"
+msgstr "كبير"
+
+msgid "Place signature"
+msgstr "وضع التوقيع"
+
+msgid "Signatures on this document"
+msgstr "التواقيع على هذا المستند"
+
+msgid "The document could not be displayed. Use Download PDF instead."
+msgstr "تعذر عرض المستند. استخدم تنزيل PDF بدلًا من ذلك."
+
+msgid "Page %(n)s"
+msgstr "صفحة %(n)s"
+
+msgid "Signature placed."
+msgstr "تم وضع التوقيع."
+
+msgid "Draw your signature before placing it."
+msgstr "ارسم توقيعك قبل وضعه."
+
+msgid "Remove this signature?"
+msgstr "هل تريد إزالة هذا التوقيع؟"
+
+msgid "Signature %(n)s · page %(page)s"
+msgstr "التوقيع %(n)s · صفحة %(page)s"
+
+msgid "Too many signatures on this document."
+msgstr "عدد التواقيع على هذا المستند كبير جدًا."
+
+msgid "Signature must be a PNG image."
+msgstr "يجب أن يكون التوقيع صورة PNG."
+
+msgid "Signature image is too large."
+msgstr "صورة التوقيع كبيرة جدًا."
+
+msgid "Signature image is not valid."
+msgstr "صورة التوقيع غير صالحة."
+
+msgid "Ink color"
+msgstr "لون الحبر"
+
+msgid "Black"
+msgstr "أسود"
+
+msgid "Blue"
+msgstr "أزرق"
+
+msgid "Red"
+msgstr "أحمر"
+
+msgid "Green"
+msgstr "أخضر"
+
+msgid "Placing…"
+msgstr "جارٍ الوضع…"
+
+msgid "Updating the document with your signature…"
+msgstr "جارٍ تحديث المستند بتوقيعك…"
+
+msgid "Removing the signature…"
+msgstr "جارٍ إزالة التوقيع…"
+
+msgid "This document is locked because it is already being processed."
+msgstr "هذا المستند مقفل لأنه قيد المعالجة بالفعل."
+
+msgid "Only the person who submitted this form can change its signatures."
+msgstr "فقط الشخص الذي قدّم هذا النموذج يمكنه تغيير تواقيعه."
+
+msgid "This document is locked because it is already being processed. Signatures can no longer be added or removed."
+msgstr "هذا المستند مقفل لأنه قيد المعالجة بالفعل. لم يعد بالإمكان إضافة التواقيع أو إزالتها."
+
+msgid "Only the person who submitted this form can add or remove signatures. This link is view-only."
+msgstr "فقط الشخص الذي قدّم هذا النموذج يمكنه إضافة التواقيع أو إزالتها. هذا الرابط للعرض فقط."
+
+msgid "Add signature"
+msgstr "إضافة توقيع"
+
+msgid "Tasks"
+msgstr "المهام"
+
+msgid "More"
+msgstr "المزيد"
+
+msgid "Workspace"
+msgstr "مساحة العمل"
+
+msgid "Form setup"
+msgstr "إعداد النموذج"
+
+msgid "Activity log"
+msgstr "سجل النشاط"
+
+msgid "My drafts"
+msgstr "مسوداتي"
+
+msgid "Choose an organization"
+msgstr "اختر منظمة"
+
+msgid "Pick the organization you want to work in. You can switch later from the scope selector in the top bar."
+msgstr "اختر المنظمة التي تريد العمل فيها. يمكنك التبديل لاحقًا من محدد النطاق في الشريط العلوي."
+
+msgid "Name or slug"
+msgstr "الاسم أو المعرّف"
+
+msgid "No organizations match your search."
+msgstr "لا توجد منظمات مطابقة لبحثك."
+
+msgid "%(count)s form"
+msgstr "%(count)s نموذج"
+
+msgid "Inactive"
+msgstr "غير نشطة"
+
+msgid "Pick the organization you want to work in. You can switch later with the Switch link in the top bar."
+msgstr "اختر المنظمة التي تريد العمل فيها. يمكنك التبديل لاحقًا عبر رابط «تبديل» في الشريط العلوي."
+
+msgid "Switch"
+msgstr "تبديل"
+
+msgid "Delete form"
+msgstr "حذف النموذج"
+
+msgid "Delete this form? It is unpublished and hidden from public and normal lists. You can restore it later from Deleted forms."
+msgstr "هل تريد حذف هذا النموذج؟ سيتم إلغاء نشره وإخفاؤه من القوائم العامة والعادية. يمكنك استعادته لاحقًا من «النماذج المحذوفة»."
+
+msgid "Deleted"
+msgstr "محذوف"
+
+msgid "Deleted forms"
+msgstr "النماذج المحذوفة"
+
+msgid "No deleted forms."
+msgstr "لا توجد نماذج محذوفة."
+
+msgid "No deleted forms yet."
+msgstr "لا توجد نماذج محذوفة بعد."
+
+msgid "This form is already deleted."
+msgstr "هذا النموذج محذوف بالفعل."
+
+msgid "This form is not deleted."
+msgstr "هذا النموذج غير محذوف."
+
+msgid "The form “%(title)s” was restored."
+msgstr "تمت استعادة النموذج «%(title)s»."
+
+msgid "The form “%(title)s” was deleted. It no longer appears in public or normal workspace lists; restore it from Deleted forms."
+msgstr "تم حذف النموذج «%(title)s». لم يعد يظهر في القوائم العامة أو قوائم مساحة العمل العادية؛ يمكنك استعادته من «النماذج المحذوفة»."
+
+msgid "Type “confirm” to delete this form."
+msgstr "اكتب «confirm» لحذف هذا النموذج."
+
+msgid "The form “%(title)s” was moved to Deleted forms."
+msgstr "تم نقل النموذج «%(title)s» إلى النماذج المحذوفة."
+
+msgid "Delete this form?"
+msgstr "هل تريد حذف هذا النموذج؟"
+
+msgid "It is unpublished and hidden from public and normal lists. Submissions are kept, and you can restore the form from Deleted forms at any time."
+msgstr "سيتم إلغاء نشره وإخفاؤه من القوائم العامة والعادية. تبقى الطلبات محفوظة، ويمكنك استعادة النموذج من «النماذج المحذوفة» في أي وقت."
+
+msgid "Type “confirm” to continue"
+msgstr "اكتب «confirm» للمتابعة"
+
+msgid "“%(title)s” was moved to Deleted forms."
+msgstr "تم نقل «%(title)s» إلى النماذج المحذوفة."
+
+msgid "Undo"
+msgstr "تراجع"
+
+msgid "Restore"
+msgstr "استعادة"
+
+msgid "{{ n }} deleted form(s) match “{{ q }}”."
+msgstr "{{ n }} نموذج محذوف يطابق «{{ q }}»."
+
+msgid "{{ total }} deleted form(s). Restore one to bring it back."
+msgstr "{{ total }} نموذج محذوف. استعد أحدها لإرجاعه."
+
+msgid "{{ n }} form(s) match “{{ q }}”."
+msgstr "{{ n }} نموذج يطابق «{{ q }}»."
+
+msgid "Published forms for your organization."
+msgstr "النماذج المنشورة لمنظمتك."
+
+msgid "More statistics"
+msgstr "إحصاءات إضافية"
+
+msgid "%(counter)s form, recently updated first."
+msgid_plural "%(counter)s forms, recently updated first."
+msgstr[0] "لا توجد نماذج."
+msgstr[1] "نموذج واحد، الأحدث تحديثًا أولًا."
+msgstr[2] "نموذجان، الأحدث تحديثًا أولًا."
+msgstr[3] "%(counter)s نماذج، الأحدث تحديثًا أولًا."
+msgstr[4] "%(counter)s نموذجًا، الأحدث تحديثًا أولًا."
+msgstr[5] "%(counter)s نموذج، الأحدث تحديثًا أولًا."
+
+msgid "Search title, reference, email"
+msgstr "ابحث بالعنوان أو المرجع أو البريد"
+
+msgid "%(counter)s submission waiting for your action."
+msgid_plural "%(counter)s submissions waiting for your action."
+msgstr[0] "لا توجد طلبات بانتظار إجرائك."
+msgstr[1] "طلب واحد بانتظار إجرائك."
+msgstr[2] "طلبان بانتظار إجرائك."
+msgstr[3] "%(counter)s طلبات بانتظار إجرائك."
+msgstr[4] "%(counter)s طلبًا بانتظار إجرائك."
+msgstr[5] "%(counter)s طلب بانتظار إجرائك."
+
+
+#~ msgid "Site"
+#~ msgstr "الموقع"
+
+#~ msgid "Full sign-in page"
+#~ msgstr "صفحة تسجيل الدخول الكاملة"
+
+#, python-format
+#~ msgid "%(counter)s organization in scope"
+#~ msgid_plural "%(counter)s organizations in scope"
+#~ msgstr[0] "%(counter)s مؤسسة في النطاق"
+#~ msgstr[1] "مؤسسة واحدة في النطاق"
+#~ msgstr[2] "مؤسستان في النطاق"
+#~ msgstr[3] "%(counter)s مؤسسات في النطاق"
+#~ msgstr[4] "%(counter)s مؤسسة في النطاق"
+#~ msgstr[5] "%(counter)s مؤسسة في النطاق"
+
+#~ msgid "Search organizations"
+#~ msgstr "البحث في المؤسسات"
+
+#~ msgid "Search by name or slug…"
+#~ msgstr "بحث بالاسم أو المعرّف…"
+
+#~ msgid "Use all organizations"
+#~ msgstr "استخدام كل المؤسسات"
+
+#~ msgid ""
+#~ "Leave none selected to include every organization. Select one or more, then "
+#~ "Apply, to limit lists, inbox, and forms."
+#~ msgstr ""
+#~ "اترك كل الخانات غير محددة لتضمين كل المؤسسات. حدد مؤسسة واحدة أو أكثر ثم "
+#~ "اضغط «تطبيق النطاق» لتقييد القوائم والبريد الوارد والنماذج."
+
+#~ msgid "Please enter a correct username and password."
+#~ msgstr "الرجاء إدخال اسم المستخدم وكلمة المرور الصحيحة."
+
+#~ msgid ""
+#~ "Test the public link while the form is still unpublished if your workflow "
+#~ "allows draft review."
+#~ msgstr ""
+#~ "جرّب الرابط العام والنموذج غير منشور إذا كان سير العمل يسمح بمراجعة المسودة."
+
+#, python-format
+#~ msgid "Forms to complete, %(counter)s request"
+#~ msgid_plural "Forms to complete, %(counter)s requests"
+#~ msgstr[0] "نماذج لإكمالها، %(counter)s طلب"
+#~ msgstr[1] "نماذج لإكمالها، %(counter)s طلبات"
+#~ msgstr[2] "نماذج لإكمالها، %(counter)s طلبات"
+#~ msgstr[3] "نماذج لإكمالها، %(counter)s طلبات"
+#~ msgstr[4] "نماذج لإكمالها، %(counter)s طلبات"
+#~ msgstr[5] "نماذج لإكمالها، %(counter)s طلبات"
+
+#~ msgid "Supplementary"
+#~ msgstr "تكميلي"
+
+#~ msgid "Reject this submission and stop the workflow at this step?"
+#~ msgstr "هل تريد رفض هذا الإرسال وإيقاف سير العمل في هذه الخطوة؟"
+
+#~ msgid "Respondent track link"
+#~ msgstr "رابط تتبع الرد"
+
+#~ msgid "share only as needed"
+#~ msgstr "مشاركة فقط حسب الحاجة"
+
+#, fuzzy
+#~ msgid "Supplementary forms"
+#~ msgstr "نماذج مفتوحة"
+
+#, fuzzy
+#~ msgid "Remove this supplementary link?"
+#~ msgstr "هل تريد إزالة صورة التوقيع هذه؟"
+
+#~ msgid "Workflow step updated."
+#~ msgstr "تم تحديث خطوة سير العمل."
+
+#~ msgid "— No step —"
+#~ msgstr "- لا خطوة -"
+
+#~ msgid "PNG, JPEG, GIF, WebP, or SVG. You can add many signatures per user."
+#~ msgstr ""
+#~ "PNG أو JPEG أو GIF أو WebP أو SVG. يمكنك إضافة العديد من التوقيعات لكل "
+#~ "مستخدم."
+
+#~ msgid "Open portal"
+#~ msgstr "فتح البوابة"
+
+#~ msgid ""
+#~ "Staff open <a class=\"mf-link\" href=\"/manage/\">/manage/</a> and sign in "
+#~ "at <a class=\"mf-link\" href=\"/manage/login/\">/manage/login/</a>. Drag "
+#~ "rows by the handle to reorder fields and workflow."
+#~ msgstr ""
+#~ "يفتح الموظفون <a class=\"mf-link\" href=\"/manage/\">/manage/</a> ويسجلون "
+#~ "الدخول على <a class=\"mf-link\" href=\"/manage/login/\">/manage/login/</a>. "
+#~ "اسحب الصفوف بجوار المقبض لإعادة ترتيب الحقول وسير العمل."
+
+#~ msgid "Superuser"
+#~ msgstr "المستخدم المتميز"
+
+#~ msgid "Django admin"
+#~ msgstr "مشرف جانغو"
+
+#~ msgid "Generate from text"
+#~ msgstr "توليد من النص"
+
+#~ msgid "Recently updated (up to 200)."
+#~ msgstr "تم تحديثه مؤخرًا (حتى 200)."
+
+#~ msgid "published"
+#~ msgstr "نشرت"
+
+#~ msgid "draft"
+#~ msgstr "مسودة"
+
+#~ msgid "passed"
+#~ msgstr "اجتاز"
+
+#~ msgid "read document section on each submission in manage"
+#~ msgstr "اقرأ قسم المستندات في كل إرسال في الإدارة"
+
+#, python-format
+#~ msgid "showing the %(cap)s most recent"
+#~ msgstr "showing the %(cap)s most recent"
+
+#~ msgid "Order"
+#~ msgstr "طلب"
+
+#~ msgid "Template"
+#~ msgstr "نموذج"
+
+#~ msgid ""
+#~ "In <strong>DOCX</strong> templates use Jinja placeholders that match each "
+#~ "field’s internal <strong>name</strong> (slug), e.g."
+#~ msgstr ""
+#~ "في قوالب <strong>DOCX</strong>، استخدم عناصر Jinja النائبة التي تتطابق مع "
+#~ "<strong>الاسم</strong> الداخلي لكل حقل (الارتباط الثابت)، على سبيل المثال."
+
+#~ msgid ""
+#~ "Hyphens in names are duplicated as underscores for Jinja. For "
+#~ "<strong>PDF</strong> templates, AcroForm field names should match those "
+#~ "internal names. Built-in text keys include <code class=\"mf-"
+#~ "code\">form_title</code>, <code class=\"mf-code\">form_description</code>, "
+#~ "<code class=\"mf-code\">submitter_email</code>, <code class=\"mf-"
+#~ "code\">reference_token</code>, <code class=\"mf-code\">submitted_at</code>, "
+#~ "<code class=\"mf-code\">current_step_label</code>, <code class=\"mf-"
+#~ "code\">workflow_timeline</code> (chronological log with comments), <code "
+#~ "class=\"mf-code\">workflow_actions_summary</code> (approve / reject / "
+#~ "complete line), <code class=\"mf-code\">workflow_comments</code>, <code "
+#~ "class=\"mf-code\">workflow_last_action</code>, <code class=\"mf-"
+#~ "code\">workflow_last_comment</code>. <strong>DOCX:</strong> when the "
+#~ "respondent was signed in, Jinja can loop <code class=\"mf-"
+#~ "code\">submission_signatures</code> (each row has <code class=\"mf-"
+#~ "code\">label</code> and <code class=\"mf-code\">image</code>) or use <code "
+#~ "class=\"mf-code\">signature_primary</code> for the first stored signature "
+#~ "image only. <strong>PDF</strong> AcroForm fields are text-only (use the "
+#~ "workflow strings). <strong>PDF exported from a DOCX</strong> template "
+#~ "(Download PDF) includes those images after LibreOffice conversion."
+#~ msgstr ""
+#~ "يتم تكرار الواصلات في الأسماء كشرطات سفلية لـ Jinja. بالنسبة لقوالب "
+#~ "<strong>PDF</strong>، يجب أن تتطابق أسماء حقول AcroForm مع تلك الأسماء "
+#~ "الداخلية. تشتمل مفاتيح النص المضمنة على <code class=\"mf-"
+#~ "code\">form_title</code>، و<code class=\"mf-code\">form_description</code>، "
+#~ "و<code class=\"mf-code\">submitter_email</code>، و<code class=\"mf-"
+#~ "code\">reference_token</code>، و<code class=\"mf-code\">submit_at</code>، "
+#~ "و<code class = \"mf-code\">current_step_label</code>، <code class = \"mf-"
+#~ "code\">workflow_timeline</code> (سجل زمني مع التعليقات)، <code class = \"mf-"
+#~ "code\">workflow_actions_summary</code> (موافقة / رفض / سطر كامل)، <code "
+#~ "class = \"mf-code\">workflow_comments</code>، <code class = \"mf-"
+#~ "code\">workflow_last_action</code>، <code> class=\"mf-"
+#~ "code\">workflow_last_comment</code>. <strong>DOCX:</strong> عندما يقوم "
+#~ "المستجيب بتسجيل الدخول، يمكن لـ Jinja تكرار <code class=\"mf-"
+#~ "code\">submission_signatures</code> (يحتوي كل صف على <code class=\"mf-"
+#~ "code\">label</code> و<code class=\"mf-code\">صورة</code>) أو استخدام <code "
+#~ "class=\"mf-code\">signature_primary</code> لأول صورة توقيع مخزنة فقط. حقول "
+#~ "<strong>PDF</strong> AcroForm هي حقول نصية فقط (استخدم سلاسل سير العمل). "
+#~ "<strong>يتضمن ملف PDF المُصدَّر من قالب DOCX</strong> (تنزيل ملف PDF) تلك "
+#~ "الصور بعد تحويل LibreOffice."
+
+#~ msgid "Download editable DOCX"
+#~ msgstr "قم بتنزيل DOCX القابل للتحرير"
+
+#~ msgid ""
+#~ "In-page PDF needs LibreOffice (<code class=\"mf-code\">soffice</code> on "
+#~ "<code class=\"mf-code\">PATH</code> or <code class=\"mf-"
+#~ "code\">MAGIFORM_SOFFICE</code>). The document page explains until that is "
+#~ "configured."
+#~ msgstr ""
+#~ "يحتاج ملف PDF الموجود في الصفحة إلى LibreOffice (<code class=\"mf-"
+#~ "code\">soffice</code> على <code class=\"mf-code\">PATH</code> أو <code "
+#~ "class=\"mf-code\">MAGIFORM_SOFFICE</code>). تشرح صفحة المستند حتى يتم تكوين "
+#~ "ذلك."
+
+#: magicforms/templates/magicforms/manage/base_manage.html
+msgid "Hide menu"
+msgstr "إخفاء القائمة"
+
+#: magicforms/templates/magicforms/manage/base_manage.html
+msgid "Show menu"
+msgstr "إظهار القائمة"
+
+#: magicforms/templates/magicforms/manage/dashboard.html
+msgid "Back to active forms"
+msgstr "العودة إلى النماذج النشطة"
+
+#: magicforms/templates/magicforms/manage/includes/studio_footer.html
+msgid "Support"
+msgstr "الدعم"
+
+#: magicforms/templates/magicforms/home.html
+msgid "Landing page"
+msgstr "الصفحة الرئيسية"
+
+#: magicforms/templates/magicforms/home.html
+msgid "SwapForms"
+msgstr "سواب فورمز"
+
+#: magicforms/templates/magicforms/home.html
+msgid "Forms, approvals and documents in one calm place"
+msgstr "نماذج وموافقات ومستندات في مكان واحد هادئ"
+
+#: magicforms/templates/magicforms/home.html
+msgid "Forms, approvals and documents. One calm place."
+msgstr "نماذج وموافقات ومستندات. مكان واحد هادئ."
+
+#: magicforms/templates/magicforms/home.html
+msgid "Publish a form in minutes, route every submission through the right people, and give applicants a link they can follow. No code, no clutter."
+msgstr "انشر نموذجًا في دقائق، ومرّر كل طلب عبر الأشخاص المناسبين، وامنح المتقدمين رابطًا يتابعون منه. بلا برمجة وبلا تشويش."
+
+#: magicforms/templates/magicforms/home.html
+msgid "Sign in to your workspace"
+msgstr "تسجيل الدخول إلى مساحة العمل"
+
+#: magicforms/templates/magicforms/home.html
+msgid "Open workspace"
+msgstr "فتح مساحة العمل"
+
+#: magicforms/templates/magicforms/home.html
+msgid "Arabic and English, right-to-left ready, hosted in the cloud."
+msgstr "بالعربية والإنجليزية، تدعم الاتجاه من اليمين إلى اليسار، ومستضافة في السحابة."
+
+#: magicforms/templates/magicforms/home.html
+msgid "3 submissions waiting for your action."
+msgstr "3 طلبات تنتظر إجراءك."
+
+#: magicforms/templates/magicforms/home.html
+msgid "Leave request"
+msgstr "طلب إجازة"
+
+#: magicforms/templates/magicforms/home.html
+msgid "Manager review"
+msgstr "مراجعة المدير"
+
+#: magicforms/templates/magicforms/home.html
+msgid "Vendor registration"
+msgstr "تسجيل مورّد"
+
+#: magicforms/templates/magicforms/home.html
+msgid "Finance"
+msgstr "المالية"
+
+#: magicforms/templates/magicforms/home.html
+msgid "Training enrolment"
+msgstr "التسجيل في تدريب"
+
+#: magicforms/templates/magicforms/home.html
+msgid "Signed PDF"
+msgstr "PDF موقّع"
+
+#: magicforms/templates/magicforms/home.html
+msgid "Build"
+msgstr "ابنِ"
+
+#: magicforms/templates/magicforms/home.html
+msgid "Add fields, sections and rules in the workspace. Start from a template or describe the form and let AI draft it."
+msgstr "أضف الحقول والأقسام والقواعد في مساحة العمل. ابدأ من قالب أو صف النموذج ودع الذكاء الاصطناعي يصيغه."
+
+#: magicforms/templates/magicforms/home.html
+msgid "Route"
+msgstr "مرّر"
+
+#: magicforms/templates/magicforms/home.html
+msgid "Draw the approval path once. Each submission moves step by step to the right people, with delegation when someone is away."
+msgstr "ارسم مسار الموافقة مرة واحدة. ينتقل كل طلب خطوة بخطوة إلى الأشخاص المناسبين، مع التفويض عند غياب أحدهم."
+
+#: magicforms/templates/magicforms/home.html
+msgid "Deliver"
+msgstr "سلّم"
+
+#: magicforms/templates/magicforms/home.html
+msgid "Applicants follow progress from a reference link. Approved cases become merged PDF documents, signed in the browser."
+msgstr "يتابع المتقدمون التقدم من رابط مرجعي. تتحول الحالات المعتمدة إلى مستندات PDF مدمجة وموقّعة في المتصفح."
+
+#: magicforms/templates/magicforms/home.html
+msgid "Built for organizations"
+msgstr "مصمم للمؤسسات"
+
+#: magicforms/templates/magicforms/home.html
+msgid "Approval workflows"
+msgstr "مسارات الموافقة"
+
+#: magicforms/templates/magicforms/home.html
+msgid "Ordered steps, assignees, delegation and undo. Every decision is logged."
+msgstr "خطوات مرتبة، ومكلّفون، وتفويض، وتراجع. كل قرار مسجّل."
+
+#: magicforms/templates/magicforms/home.html
+msgid "Documents and signatures"
+msgstr "المستندات والتوقيعات"
+
+#: magicforms/templates/magicforms/home.html
+msgid "Upload a DOCX template with placeholders. Answers merge into a PDF that can be signed with a fingertip."
+msgstr "ارفع قالب DOCX يحوي متغيرات. تُدمج الإجابات في ملف PDF يمكن توقيعه بطرف الإصبع."
+
+#: magicforms/templates/magicforms/home.html
+msgid "Arabic first"
+msgstr "العربية أولًا"
+
+#: magicforms/templates/magicforms/home.html
+msgid "Every form chooses its direction. Arabic text, dates and PDFs render correctly out of the box."
+msgstr "كل نموذج يختار اتجاهه. تظهر النصوص العربية والتواريخ وملفات PDF بشكل صحيح دون إعداد."
+
+#: magicforms/templates/magicforms/home.html
+msgid "Announcement pages and QR"
+msgstr "صفحات الإعلان ورمز QR"
+
+#: magicforms/templates/magicforms/home.html
+msgid "Give a form its own page with capacity, deadline and a QR code for posters and screens."
+msgstr "امنح النموذج صفحته الخاصة مع السعة والموعد النهائي ورمز QR للملصقات والشاشات."
+
+#: magicforms/templates/magicforms/home.html
+msgid "Connects to your systems"
+msgstr "يتصل بأنظمتك"
+
+#: magicforms/templates/magicforms/home.html
+msgid "Validate answers against your API before submit, and post results to other systems on every step."
+msgstr "تحقق من الإجابات عبر واجهتك البرمجية قبل الإرسال، وأرسل النتائج إلى الأنظمة الأخرى في كل خطوة."
+
+#: magicforms/templates/magicforms/home.html
+msgid "One workspace per organization"
+msgstr "مساحة عمل لكل مؤسسة"
+
+#: magicforms/templates/magicforms/home.html
+msgid "Roles, members and branding stay separate for each organization, with one sign-in for staff."
+msgstr "تبقى الأدوار والأعضاء والهوية منفصلة لكل مؤسسة، مع تسجيل دخول واحد للموظفين."
+
+#: magicforms/templates/magicforms/home.html
+msgid "Ready when you are."
+msgstr "جاهز متى كنت جاهزًا."
+
+#: magicforms/templates/magicforms/home.html
+msgid "Staff sign in with their organization account. Applicants never need one."
+msgstr "يسجل الموظفون الدخول بحساب مؤسستهم. أما المتقدمون فلا يحتاجون حسابًا أبدًا."
+
+#: magicforms/templates/magicforms/home.html
+msgid "Talk to support"
+msgstr "تواصل مع الدعم"
+
+#: magicforms/templates/magicforms/home.html
+msgid "Forms, approvals and documents for organizations, with a calm experience for staff and applicants."
+msgstr "نماذج وموافقات ومستندات للمؤسسات، مع تجربة هادئة للموظفين والمتقدمين."
+
+#: magicforms/templates/magicforms/home.html
+#, python-format
+msgid "© %(year)s SwapForms. All rights reserved."
+msgstr "© %(year)s سواب فورمز. جميع الحقوق محفوظة."
+
+#: magicforms/templates/magicforms/home.html
+msgid "Track a submission"
+msgstr "تتبّع طلبًا"
+
+#: magicforms/templates/magicforms/includes/site_footer.html
+msgid "Partners"
+msgstr "الشركاء"
+
+#: magicforms/templates/magicforms/home.html
+msgid "Plans"
+msgstr "الخطط"
+
+#: magicforms/templates/magicforms/home.html
+msgid "Start free, grow when your forms do. Applicants are always free."
+msgstr "ابدأ مجانًا، وتوسّع عندما تكبر نماذجك. المتقدمون مجانًا دائمًا."
+
+#: magicforms/templates/magicforms/home.html
+msgid "Free"
+msgstr "مجاني"
+
+#: magicforms/templates/magicforms/home.html
+msgid "Try SwapForms with one live form."
+msgstr "جرّب سواب فورمز بنموذج واحد فعّال."
+
+#: magicforms/templates/magicforms/home.html
+msgid "1 organization"
+msgstr "مؤسسة واحدة"
+
+#: magicforms/templates/magicforms/home.html
+msgid "1 form"
+msgstr "نموذج واحد"
+
+#: magicforms/templates/magicforms/home.html
+msgid "Submission tracking link"
+msgstr "رابط تتبع الطلب"
+
+#: magicforms/templates/magicforms/home.html
+msgid "Approval workflow"
+msgstr "مسار الموافقة"
+
+#: magicforms/templates/magicforms/home.html
+msgid "Start free"
+msgstr "ابدأ مجانًا"
+
+#: magicforms/templates/magicforms/home.html
+msgid "Starter"
+msgstr "المبتدئ"
+
+#: magicforms/templates/magicforms/home.html
+msgid "Ask for pricing"
+msgstr "اطلب عرض الأسعار"
+
+#: magicforms/templates/magicforms/home.html
+msgid "For a team that runs a few forms."
+msgstr "لفريق يدير بضعة نماذج."
+
+#: magicforms/templates/magicforms/home.html
+msgid "5 forms"
+msgstr "5 نماذج"
+
+#: magicforms/templates/magicforms/home.html
+msgid "Business"
+msgstr "الأعمال"
+
+#: magicforms/templates/magicforms/home.html
+msgid "Everything, without limits."
+msgstr "كل شيء، بلا حدود."
+
+#: magicforms/templates/magicforms/home.html
+msgid "Unlimited organizations"
+msgstr "مؤسسات غير محدودة"
+
+#: magicforms/templates/magicforms/home.html
+msgid "Unlimited forms"
+msgstr "نماذج غير محدودة"
+
+#: magicforms/templates/magicforms/includes/site_footer.html
+msgid "swapkuwait.com is a Swap Kuwait initiative. Amazon Web Services, Google and PayPal are trademarks of their respective owners."
+msgstr "swapkuwait.com مبادرة من سواب الكويت. Amazon Web Services وGoogle وPayPal علامات تجارية لأصحابها."
+
+#: magicforms/templates/magicforms/home.html
+msgid "USD / month"
+msgstr "دولار / شهريًا"
+
+#: magicforms/templates/magicforms/home.html
+msgid "forever"
+msgstr "للأبد"
+
+#: magicforms/templates/magicforms/includes/pdf_sign_widget.html
+msgid "You can read this document, but your role cannot add or remove signatures."
+msgstr "يمكنك قراءة هذا المستند، لكن دورك لا يسمح بإضافة التوقيعات أو إزالتها."
+
+#: magicforms/templates/magicforms/includes/pdf_sign_widget.html
+msgid "Your role cannot add or remove signatures on this document."
+msgstr "دورك لا يسمح بإضافة التوقيعات أو إزالتها على هذا المستند."
+
+#: magicforms/templates/magicforms/includes/pdf_sign_widget.html
+msgid "Right-click a spot on the page (press and hold on touch screens) to draw a signature there. Signatures are stamped into the merged PDF."
+msgstr "انقر بزر الفأرة الأيمن على موضع في الصفحة (اضغط مطولًا على شاشات اللمس) لرسم توقيع هناك. تُطبع التوقيعات داخل ملف PDF المدمج."
+
+#: magicforms/views.py
+msgid "Sealed: a decision was made after this signature was placed."
+msgstr "مختوم: اتُّخذ قرار بعد وضع هذا التوقيع."
+
+#: magicforms/views.py
+msgid "This signature is sealed: it was approved or rejected after being placed and cannot be removed."
+msgstr "هذا التوقيع مختوم: تمت الموافقة أو الرفض بعد وضعه ولا يمكن إزالته."
+
+#: magicforms/templates/magicforms/includes/pdf_sign_widget.html
+msgid "Saved signature not found."
+msgstr "التوقيع المحفوظ غير موجود."
+
+#: magicforms/templates/magicforms/includes/pdf_sign_widget.html
+msgid "Saved signature could not be read."
+msgstr "تعذّر قراءة التوقيع المحفوظ."
+
+#: magicforms/templates/magicforms/includes/pdf_sign_widget.html
+msgid "Drawn on a document"
+msgstr "مرسوم على مستند"
+
+#: magicforms/templates/magicforms/includes/pdf_sign_widget.html
+msgid "Placing your saved signature…"
+msgstr "جارٍ وضع توقيعك المحفوظ…"
+
+#: magicforms/templates/magicforms/includes/pdf_sign_widget.html
+msgid "Saved as your signature. Next time a right-click places it directly."
+msgstr "حُفظ كتوقيعك. في المرة القادمة يضعه النقر بزر الفأرة الأيمن مباشرة."
+
+#: magicforms/templates/magicforms/includes/pdf_sign_widget.html
+msgid "This template places your saved signature automatically when you approve. Nothing to draw here."
+msgstr "يضع هذا القالب توقيعك المحفوظ تلقائيًا عند الموافقة. لا حاجة للرسم هنا."
+
+#: magicforms/templates/magicforms/includes/pdf_sign_widget.html
+msgid "Right-click (or press and hold) where your signature goes. Your saved signature is placed there and you can approve or reject right away."
+msgstr "انقر بزر الفأرة الأيمن (أو اضغط مطولًا) حيث يوضع توقيعك. يوضع توقيعك المحفوظ هناك ويمكنك الموافقة أو الرفض فورًا."
+
+#: magicforms/templates/magicforms/includes/pdf_sign_widget.html
+msgid "Your first drawing is saved, so next time one click places it."
+msgstr "يُحفظ رسمك الأول، فتضعه نقرة واحدة في المرة القادمة."
+
+#: magicforms/templates/magicforms/includes/pdf_sign_widget.html
+msgid "Signature placed. Approve or reject?"
+msgstr "وُضع التوقيع. موافقة أم رفض؟"
+
+#: magicforms/templates/magicforms/includes/pdf_sign_widget.html
+msgid "Approve advances to the next step. Reject stops the workflow here and needs a reason."
+msgstr "الموافقة تنقل إلى الخطوة التالية. الرفض يوقف المسار هنا ويتطلب سببًا."
+
+#: magicforms/templates/magicforms/includes/pdf_sign_widget.html
+msgid "Later"
+msgstr "لاحقًا"
+
+#: magicforms/views.py
+msgid "Signature placed. Approve or reject to keep it as your signature for next time."
+msgstr "وُضع التوقيع. وافق أو ارفض ليُحفظ كتوقيعك للمرة القادمة."
+
+#: magicforms/views.py
+msgid "Approve or reject after placing it and the drawing is kept as your signature for next time."
+msgstr "وافق أو ارفض بعد وضعه ليُحفظ الرسم كتوقيعك للمرة القادمة."
+
+#: magicforms/manage_views.py
+msgid "No action is required from you on this submission, so the document is read-only."
+msgstr "لا يُطلب منك أي إجراء على هذا الطلب، لذا المستند للقراءة فقط."
+
+#: magicforms/manage_views.py
+msgid "No action is required from you, so this document is read-only."
+msgstr "لا يُطلب منك أي إجراء، لذا هذا المستند للقراءة فقط."
+
+#: magicforms/views.py
+msgid "Update signature"
+msgstr "تحديث التوقيع"
+
+#: magicforms/views.py
+msgid "Update your signature"
+msgstr "حدّث توقيعك"
+
+#: magicforms/views.py
+msgid "Draw it again. This replaces the saved signature used for right-click placement."
+msgstr "ارسمه من جديد. يحل هذا محل التوقيع المحفوظ المستخدم عند النقر بزر الفأرة الأيمن."
+
+#: magicforms/views.py
+msgid "Save signature"
+msgstr "حفظ التوقيع"
+
+#: magicforms/views.py
+msgid "Saving…"
+msgstr "جارٍ الحفظ…"
+
+#: magicforms/views.py
+msgid "Signature updated."
+msgstr "تم تحديث التوقيع."
+
+#: magicforms/templates/magicforms/home.html
+msgid "Add fields, sections and rules in the workspace. Start from a template or build it field by field."
+msgstr "أضف الحقول والأقسام والقواعد في مساحة العمل. ابدأ من قالب أو ابنه حقلًا بعد حقل."
+
+#: magicforms/templates/magicforms/manage/submission_manage_detail.html
+msgid "Hide side panel"
+msgstr "إخفاء اللوحة الجانبية"
+
+#: magicforms/templates/magicforms/manage/submission_manage_detail.html
+msgid "Show side panel"
+msgstr "إظهار اللوحة الجانبية"
+
+#: magicforms/models.py
+msgid "Fixed steps (configured order and assignees)"
+msgstr "خطوات ثابتة (ترتيب ومكلّفون محددون مسبقًا)"
+
+#: magicforms/models.py
+msgid "Dynamic routing (choose who receives it next, each time)"
+msgstr "توجيه ديناميكي (اختر من يستلمها تاليًا في كل مرة)"
+
+#: magicforms/staff_forms.py
+msgid "Workflow routing"
+msgstr "توجيه مسار العمل"
+
+#: magicforms/staff_forms.py
+msgid "Fixed steps follow the ordered steps and assignees on the Workflow tab. Dynamic routing lets whoever is acting choose the next person by name or job title instead. Dynamic routing is being rolled out: forms set to it pause approve/reject until that engine ships. You can only change this while no submission is awaiting approval."
+msgstr "الخطوات الثابتة تتبع الترتيب والمكلّفين في تبويب مسار العمل. التوجيه الديناميكي يتيح لمن يتخذ الإجراء اختيار الشخص التالي بالاسم أو المسمى الوظيفي بدلًا من ذلك. التوجيه الديناميكي قيد الإطلاق التدريجي: النماذج المضبوطة عليه توقف الموافقة والرفض مؤقتًا حتى يجهز ذلك المحرك. لا يمكن تغيير هذا الخيار إلا عندما لا يوجد طلب في انتظار الموافقة."
+
+#: magicforms/staff_forms.py
+msgid "This form has submissions awaiting approval. Wait until none are in progress before changing workflow routing."
+msgstr "لدى هذا النموذج طلبات في انتظار الموافقة. انتظر حتى لا يبقى أي طلب قيد المعالجة قبل تغيير توجيه مسار العمل."
+
+#: magicforms/manage_views.py
+msgid "Dynamic routing is being set up for this form; workflow actions aren't available yet."
+msgstr "التوجيه الديناميكي قيد الإعداد لهذا النموذج؛ إجراءات مسار العمل غير متاحة بعد."
+
+#: magicforms/templates/magicforms/manage/submission_manage_detail.html
+msgid "This form is set to dynamic routing, which is still being rolled out. Workflow actions will return once that is ready."
+msgstr "هذا النموذج مضبوط على التوجيه الديناميكي، وهو ما زال قيد الإطلاق التدريجي. ستعود إجراءات مسار العمل بمجرد أن يصبح جاهزًا."
+
+#: magicforms/templates/magicforms/manage/form_edit.html
+msgid "This form has a submission awaiting approval, so routing is locked until none are in progress."
+msgstr "لدى هذا النموذج طلب في انتظار الموافقة، لذا التوجيه مقفل حتى لا يبقى أي طلب قيد المعالجة."
+
+#: magicforms/templates/magicforms/manage/form_edit.html
+msgid "Steps and assignees are configured on the Workflow tab."
+msgstr "تُضبط الخطوات والمكلّفون في تبويب مسار العمل."
+
+#: magicforms/staff_forms.py
+msgid "Route to"
+msgstr "توجيه إلى"
+
+#: magicforms/staff_forms.py
+msgid "Mark complete"
+msgstr "وضع علامة مكتمل"
+
+#: magicforms/staff_forms.py
+msgid "Stage (optional)"
+msgstr "المرحلة (اختياري)"
+
+#: magicforms/staff_forms.py
+msgid "e.g. Finance review"
+msgstr "مثال: مراجعة مالية"
+
+#: magicforms/staff_forms.py
+msgid "Choose who this goes to next."
+msgstr "اختر إلى من يذهب هذا تاليًا."
+
+#: magicforms/manage_views.py
+msgid "Done."
+msgstr "تم."
+
+#: magicforms/manage_views.py
+msgid "That action could not be completed."
+msgstr "تعذّر إتمام هذا الإجراء."
+
+#: magicforms/templates/magicforms/manage/submission_manage_detail.html
+msgid "Route this to whoever handles it next, mark it complete, or reject it back to the original submitter."
+msgstr "وجّه هذا إلى من يتولاه تاليًا، أو ضع علامة مكتمل، أو ارفضه ليعود إلى مقدّم الطلب الأصلي."
+
+#: magicforms/templates/magicforms/manage/submission_manage_detail.html
+msgid "Search by name or job title."
+msgstr "ابحث بالاسم أو المسمى الوظيفي."
+
+#: magicforms/templates/magicforms/manage/submission_manage_detail.html
+msgid "Shown on the timeline; not required."
+msgstr "يظهر في السجل الزمني؛ غير إلزامي."
+
+#: magicforms/templates/magicforms/manage/submission_manage_detail.html
+msgid "Optional, except required when rejecting."
+msgstr "اختياري، إلا أنه إلزامي عند الرفض."
+
+#: magicforms/workflow_decision.py
+msgid "Choose someone other than yourself."
+msgstr "اختر شخصًا آخر غيرك."
+
+#: magicforms/workflow_decision.py
+msgid "Choose someone from this form's organization."
+msgstr "اختر شخصًا من مؤسسة هذا النموذج."
+
+#: magicforms/workflow_decision.py
+msgid "That person could not be found. Refresh and try again."
+msgstr "تعذّر العثور على هذا الشخص. أعد تحميل الصفحة وحاول مرة أخرى."
+
+#: magicforms/templates/magicforms/manage/submission_manage_detail.html
+#, python-format
+msgid "This submission is currently with %(holder)s."
+msgstr "هذا الطلب حاليًا لدى %(holder)s."
+
+#: magicforms/timeline_i18n.py
+
+msgctxt "timeline event"
+msgid "Routed"
+msgstr "تم التوجيه"

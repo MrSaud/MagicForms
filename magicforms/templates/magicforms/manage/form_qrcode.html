@@ -1,0 +1,161 @@
+{% extends "magicforms/manage/base_manage.html" %}
+{% load i18n magicforms_i18n %}
+
+{% block manage_title %}{% trans "Share form" %} · {{ form_obj.title|mf_trans }}{% endblock %}
+
+{% block manage_content %}
+<section class="mf-manage-section mf-stack">
+  <p class="mf-eyebrow">{{ form_obj.title|mf_trans }}</p>
+  <h1 class="mf-display mf-display--small">{% trans "QR code for this form" %}</h1>
+  <p class="mf-muted">
+    {% blocktrans trimmed %}
+      Only people who can open the workspace see this page. Scanning opens the public form link used for submissions.
+    {% endblocktrans %}
+  </p>
+  {% if form_obj.deleted_at %}
+  <div class="mf-alert mf-alert--error">
+    {% trans "This form is archived — the link may not work for new submissions until it is restored and published." %}
+  </div>
+  {% elif not form_obj.is_published %}
+  <div class="mf-alert mf-alert--error">
+    {% trans "This form is not published yet — the link will show “not published” until you turn on Published in form settings." %}
+  </div>
+  {% endif %}
+
+  <div class="mf-card mf-card--soft mf-stack mf-stack--md">
+    <h2 class="mf-heading">{% trans "Secure link & regenerate QR" %}</h2>
+    <p class="mf-body-text mf-muted">
+      {% blocktrans trimmed %}
+        When a <strong>secure share link</strong> is on, the public URL must include a secret query parameter. The QR code and workspace links include it. <strong>Regenerate</strong> replaces that secret so old printed QR codes and shared URLs stop working.
+      {% endblocktrans %}
+    </p>
+    {% if form_obj.public_share_key %}
+    <p class="mf-body-text">
+      <span class="mf-muted">{% trans "Status" %}:</span>
+      <strong>{% trans "Secure link enabled" %}</strong>
+    </p>
+    {% else %}
+    <p class="mf-body-text">
+      <span class="mf-muted">{% trans "Status" %}:</span>
+      {% trans "Standard link (anyone with /e/…/f/…/ can try to open; publish rules still apply)." %}
+    </p>
+    {% endif %}
+    <div class="mf-actions mf-stack">
+      {% if not form_obj.public_share_key %}
+      <form
+        id="mf-share-key-enable-form"
+        method="post"
+        action="{% url 'manage:form_share_key_action' form_obj.pk %}"
+        class="mf-share-secure-enable-form"
+      >
+        {% csrf_token %}
+        <input type="hidden" name="share_key_action" value="enable" />
+        <p class="mf-hint mf-share-secure-enable-hint">
+          {% blocktrans trimmed %}
+            Type <code class="mf-code">confirm</code> to require a secret in the public URL and QR (any letter case).
+          {% endblocktrans %}
+        </p>
+        <div class="mf-share-secure-enable-row">
+          <label class="mf-label mf-share-secure-enable-label" for="mf-share-key-confirm">{% trans "Confirmation" %}</label>
+          <input
+            id="mf-share-key-confirm"
+            class="mf-input mf-share-secure-enable-input"
+            type="text"
+            name="share_key_confirm"
+            autocomplete="off"
+            autocapitalize="off"
+            spellcheck="false"
+            placeholder="{% trans "confirm" %}"
+            aria-describedby="mf-share-key-confirm-error"
+            aria-invalid="false"
+          />
+          <button type="submit" class="mf-button mf-button--primary mf-share-secure-enable-submit">{% trans "Turn on secure share link" %}</button>
+        </div>
+        <p id="mf-share-key-confirm-error" class="mf-alert mf-alert--error mf-share-secure-enable-error" role="alert"{% if request.GET.share_confirm != 'invalid' %} hidden{% endif %}>
+          {% trans "Type confirm in the confirmation field, then submit again." %}
+        </p>
+      </form>
+      <script>
+        (function () {
+          var form = document.getElementById("mf-share-key-enable-form");
+          var input = document.getElementById("mf-share-key-confirm");
+          var err = document.getElementById("mf-share-key-confirm-error");
+          if (!form || !input || !err) return;
+          form.addEventListener("submit", function (e) {
+            if (String(input.value || "").trim().toLowerCase() === "confirm") {
+              err.hidden = true;
+              input.setAttribute("aria-invalid", "false");
+              return;
+            }
+            e.preventDefault();
+            err.hidden = false;
+            input.setAttribute("aria-invalid", "true");
+            input.focus();
+            err.scrollIntoView({ block: "nearest", behavior: "smooth" });
+          });
+          input.addEventListener("input", function () {
+            if (!err.hidden && String(input.value || "").trim().toLowerCase() === "confirm") {
+              err.hidden = true;
+              input.setAttribute("aria-invalid", "false");
+              try {
+                var u = new URL(window.location.href);
+                if (u.searchParams.get("share_confirm") === "invalid") {
+                  u.searchParams.delete("share_confirm");
+                  var qs = u.searchParams.toString();
+                  window.history.replaceState({}, "", u.pathname + (qs ? "?" + qs : "") + u.hash);
+                }
+              } catch (e) {}
+            }
+          });
+          if (!err.hidden) {
+            input.setAttribute("aria-invalid", "true");
+            input.focus();
+          }
+        })();
+      </script>
+      {% else %}
+      <form method="post" action="{% url 'manage:form_share_key_action' form_obj.pk %}" class="mf-inline-form" onsubmit="return confirm('{% trans "Regenerate the secret? Old QR codes and links with the previous secret will stop working." %}');">
+        {% csrf_token %}
+        <input type="hidden" name="share_key_action" value="regenerate" />
+        <button type="submit" class="mf-button mf-button--primary">{% trans "Regenerate secret (invalidate old QR)" %}</button>
+      </form>
+      <form method="post" action="{% url 'manage:form_share_key_action' form_obj.pk %}" class="mf-inline-form" onsubmit="return confirm('{% trans "Turn off the secure link? The form will open without a secret in the URL again." %}');">
+        {% csrf_token %}
+        <input type="hidden" name="share_key_action" value="disable" />
+        <button type="submit" class="mf-button mf-button--secondary">{% trans "Turn off secure link" %}</button>
+      </form>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="mf-qr-block mf-card mf-card--glass mf-stack mf-stack--md" >
+    <p class="mf-body-text mf-muted">{% trans "Scan to open" %}</p>
+    <p>
+      <img
+        src="{% url 'manage:form_qrcode_image' form_obj.pk %}?v={{ form_obj.updated_at|date:'U' }}"
+        alt="{% trans 'QR code linking to the public form' %}"
+        width="280"
+        height="280"
+        class="mf-img-fluid"
+      />
+    </p>
+    <p class="mf-body-text"><strong>{% trans "Link" %}</strong></p>
+    <p class="mf-body-text"><code class="mf-break-all mf-code" >{{ public_url }}</code></p>
+    <p class="mf-body-text mf-muted">
+      {% blocktrans trimmed %}
+        Share the same public link by email or WhatsApp (your device opens the mail app or WhatsApp).
+      {% endblocktrans %}
+    </p>
+    <p class="mf-actions mf-share-actions">
+      <a class="mf-button mf-button--secondary" href="{{ share_mailto }}">{% trans "Share by email" %}</a>
+      <a
+        class="mf-button mf-button--secondary"
+        href="{{ share_whatsapp }}"
+        target="_blank"
+        rel="noopener noreferrer"
+      >{% trans "Share via WhatsApp" %}</a>
+      <a class="mf-button mf-button--secondary" download="form-{{ form_obj.slug }}-qr.png" href="{% url 'manage:form_qrcode_image' form_obj.pk %}?v={{ form_obj.updated_at|date:'U' }}">{% trans "Download QR (PNG)" %}</a>
+    </p>
+  </div>
+</section>
+{% endblock %}

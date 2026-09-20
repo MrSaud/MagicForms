@@ -1,0 +1,147 @@
+{% extends "magicforms/manage/studio_submission_list_page.html" %}
+{% load opaque_ids i18n magicforms_i18n %}
+
+{% block manage_title %}{% trans "Search" %}{% endblock %}
+
+{% block studio_list_heading %}{% trans "Search" %}{% endblock %}
+
+{% block studio_list_lead %}
+  {% blocktrans trimmed %}
+    Submissions connected to you: as <strong>applicant</strong> (account or matching email),
+    on the <strong>current step</strong> as assignee or delegate, or anywhere on the <strong>workflow path</strong>
+    (approvals, rejections, notes, forwards, attachments you added in manage).
+    Use <strong>Your tag</strong> to narrow the list to submissions you labeled for yourself on the submission page.
+  {% endblocktrans %}
+{% endblock %}
+
+{% block studio_list_filters %}
+  <form method="get" class="mf-card mf-card--glass mf-manage-search-panel mf-manage-search-panel--compact mf-stack">
+    <input type="hidden" name="per_page" value="{{ per_page }}" />
+    <div class="mf-manage-search-filters-grid">
+      <div class="mf-manage-search-field mf-manage-search-field--wide">
+        <label class="mf-manage-search-label" for="id_submission_search_q">{% trans "Keywords" %}</label>
+        <input
+          id="id_submission_search_q"
+          class="mf-input mf-manage-search-text"
+          type="search"
+          name="q"
+          value="{{ search_q }}"
+          maxlength="200"
+          placeholder="{% trans 'Title, slug, reference, email, username' %}"
+          autocomplete="off"
+        />
+      </div>
+      <div class="mf-manage-search-field">
+        <label class="mf-manage-search-label" for="id_submission_search_tag">{% trans "Your tag" %}</label>
+        <input
+          id="id_submission_search_tag"
+          class="mf-input mf-manage-search-text"
+          type="search"
+          name="tag"
+          value="{{ tag_filter_raw }}"
+          maxlength="80"
+          placeholder="{% trans 'Exact tag (your private labels)' %}"
+          list="mf-submission-search-tag-suggestions"
+          autocomplete="off"
+        />
+        <datalist id="mf-submission-search-tag-suggestions">
+          {% for t in user_tag_suggestions %}
+          <option value="{{ t }}"></option>
+          {% endfor %}
+        </datalist>
+      </div>
+      <div class="mf-manage-search-field">
+        <label class="mf-manage-search-label" for="id_relation">{% trans "Connection" %}</label>
+        <div class="mf-select-control">
+          <select id="id_relation" name="relation" class="mf-input mf-input--select mf-input--select-sm">
+            <option value="any" {% if relation == "any" %}selected{% endif %}>{% trans "All connections" %}</option>
+            <option value="applicant" {% if relation == "applicant" %}selected{% endif %}>{% trans "Applicant only" %}</option>
+            <option value="workflow" {% if relation == "workflow" %}selected{% endif %}>{% trans "Workflow only (assignee or timeline)" %}</option>
+          </select>
+        </div>
+      </div>
+      <div class="mf-manage-search-field">
+        <label class="mf-manage-search-label" for="id_workflow_state">{% trans "State" %}</label>
+        <div class="mf-select-control">
+          <select id="id_workflow_state" name="workflow_state" class="mf-input mf-input--select mf-input--select-sm">
+            <option value="" {% if not workflow_state %}selected{% endif %}>{% trans "Any state" %}</option>
+            {% for val, label in workflow_states.choices %}
+              <option value="{{ val }}" {% if workflow_state == val %}selected{% endif %}>{{ label }}</option>
+            {% endfor %}
+          </select>
+        </div>
+      </div>
+      <div class="mf-manage-search-field">
+        <label class="mf-manage-search-label" for="id_submitted_from">{% trans "Submitted from" %}</label>
+        <input
+          id="id_submitted_from"
+          class="mf-input mf-manage-search-text"
+          type="date"
+          name="submitted_from"
+          value="{{ submitted_from }}"
+        />
+      </div>
+      <div class="mf-manage-search-field">
+        <label class="mf-manage-search-label" for="id_submitted_to">{% trans "Submitted to" %}</label>
+        <input
+          id="id_submitted_to"
+          class="mf-input mf-manage-search-text"
+          type="date"
+          name="submitted_to"
+          value="{{ submitted_to }}"
+        />
+      </div>
+      <div class="mf-manage-search-field mf-manage-search-field--form">
+        <label class="mf-manage-search-label" for="id_form_filter">{% trans "Form" %}</label>
+        <div class="mf-select-control">
+          <select id="id_form_filter" name="form" class="mf-input mf-input--select mf-input--select-sm">
+            <option value="">{% trans "All forms" %}</option>
+            {% for f in forms_for_filter %}
+              <option value="{{ f.pk|oid }}" {% if form_filter_id == f.pk %}selected{% endif %}>{{ f.entity.name|mf_trans }} — {{ f.title|mf_trans }}</option>
+            {% endfor %}
+          </select>
+        </div>
+      </div>
+      <div class="mf-manage-search-field">
+        <label class="mf-manage-search-label" for="id_sort">{% trans "Sort by" %}</label>
+        <div class="mf-select-control">
+          <select id="id_sort" name="sort" class="mf-input mf-input--select mf-input--select-sm">
+            <option value="submitted_at_desc" {% if sort_key == "submitted_at_desc" %}selected{% endif %}>{% trans "Submitted (newest)" %}</option>
+            <option value="submitted_at_asc" {% if sort_key == "submitted_at_asc" %}selected{% endif %}>{% trans "Submitted (oldest)" %}</option>
+            <option value="updated_at_desc" {% if sort_key == "updated_at_desc" %}selected{% endif %}>{% trans "Updated (newest)" %}</option>
+            <option value="updated_at_asc" {% if sort_key == "updated_at_asc" %}selected{% endif %}>{% trans "Updated (oldest)" %}</option>
+            <option value="form_title" {% if sort_key == "form_title" %}selected{% endif %}>{% trans "Form title (A–Z)" %}</option>
+            <option value="form_title_desc" {% if sort_key == "form_title_desc" %}selected{% endif %}>{% trans "Form title (Z–A)" %}</option>
+          </select>
+        </div>
+      </div>
+      <div class="mf-manage-search-field mf-manage-search-field--submit">
+        <span class="mf-manage-search-label mf-manage-search-label--phantom" aria-hidden="true">{% trans "Apply" %}</span>
+        <button type="submit" class="mf-button mf-button--primary mf-manage-search-submit" aria-label="{% trans 'Apply filters' %}">{% trans "Apply" %}</button>
+      </div>
+    </div>
+  </form>
+{% endblock %}
+
+{% block studio_list_summary %}
+  <p class="mf-muted mf-body-text">
+    {% if submissions.paginator.count %}
+      {% blocktrans with n=submissions.paginator.count trimmed %}{{ n }} submission(s) match.{% endblocktrans %}
+      {% if submissions.start_index %}
+        · {% blocktrans with lo=submissions.start_index hi=submissions.end_index trimmed %}Showing {{ lo }}–{{ hi }}{% endblocktrans %}
+      {% endif %}
+    {% else %}
+      {% trans "No matching submissions." %}
+    {% endif %}
+  </p>
+{% endblock %}
+
+{% block studio_list_body %}
+  {% if submissions.paginator.count %}
+    {% include "magicforms/manage/includes/studio_pagination.html" with page_obj=submissions %}
+    {% include "magicforms/manage/includes/studio_submission_list_ul.html" with list_mode="search" %}
+    {% include "magicforms/manage/includes/studio_pagination.html" with page_obj=submissions studio_pagination_footer=1 %}
+  {% endif %}
+{% endblock %}
+
+{% block studio_list_footer %}{% endblock %}

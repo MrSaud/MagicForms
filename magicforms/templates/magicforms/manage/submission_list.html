@@ -1,0 +1,73 @@
+{% extends "magicforms/manage/base_manage.html" %}
+{% load i18n magicforms_i18n %}
+
+{% block manage_title %}{% trans "Submissions" %} · {{ form_obj.title|mf_trans }}{% endblock %}
+
+{% block manage_content %}
+<section class="mf-manage-section mf-stack">
+  <h1 class="mf-display mf-display--small">{% trans "Submissions" %}</h1>
+  <p class="mf-muted">{{ form_obj.title|mf_trans }}</p>
+
+  {% if submissions %}
+  {% include "magicforms/manage/includes/studio_pagination.html" with page_obj=submissions %}
+  <ul class="mf-manage-table mf-card mf-card--glass">
+    {% for s in submissions %}
+      <li class="mf-manage-row">
+        <div>
+          <a class="mf-manage-row-title" href="{% url 'manage:submission_manage_detail' form_obj.pk s.pk %}">
+            {{ s.reference_token }}
+          </a>
+          <span class="mf-muted">{{ s.submitted_at|date:"M j, Y P" }} · {{ s.get_workflow_state_display }}{% if s.current_step %} · {{ s.current_step.label|mf_trans }}{% endif %}</span>
+        </div>
+        <div class="mf-manage-row-actions mf-manage-row-actions--inbox-quick">
+          {% if s.list_workflow_quick_enabled %}
+          <form
+            method="post"
+            action="{% url 'manage:submission_manage_detail' form_obj.pk s.pk %}"
+            class="mf-inline-form mf-workflow-decision"
+            data-mf-busy-aria-label="{% trans 'Loading' %}"
+            {% include "magicforms/manage/includes/workflow_approve_undo_hint_attrs.html" %}
+          >
+            {% csrf_token %}
+            <input type="hidden" name="workflow_action_anchor" value="{{ s.current_step_id|default:0 }}" />
+            <input type="hidden" name="workflow_decision" value="approve" />
+            <input type="hidden" name="next" value="{{ request.get_full_path }}" />
+            <button type="submit" class="mf-button mf-button--primary mf-button--small">{% trans "Approve" %}</button>
+          </form>
+          <form
+            method="post"
+            action="{% url 'manage:submission_manage_detail' form_obj.pk s.pk %}"
+            class="mf-inline-form mf-workflow-decision mf-workflow-reject-with-reason"
+            data-mf-busy-aria-label="{% trans 'Loading' %}"
+          >
+            {% csrf_token %}
+            <input type="hidden" name="workflow_action_anchor" value="{{ s.current_step_id|default:0 }}" />
+            <input type="hidden" name="workflow_decision" value="reject" />
+            <input type="hidden" name="next" value="{{ request.get_full_path }}" />
+            <label class="mf-sr-only" for="mf-workflow-reject-reason-{{ s.pk }}">{% trans "Rejection reason" %}</label>
+            <input
+              id="mf-workflow-reject-reason-{{ s.pk }}"
+              type="text"
+              name="workflow_decision_comment"
+              class="mf-input"
+              maxlength="800"
+              required
+              autocomplete="off"
+              placeholder="{% trans 'Rejection reason (required)' %}"
+            />
+            <button type="submit" class="mf-button mf-button--secondary mf-button--small">{% trans "Reject" %}</button>
+          </form>
+          {% elif s.workflow_state == "in_progress" and form_has_workflow_steps %}
+          <span class="mf-muted mf-inbox-no-workflow-action" role="status">{% trans "No action required" %}</span>
+          {% endif %}
+          <a href="{% url 'manage:submission_manage_detail' form_obj.pk s.pk %}">{% trans "Manage" %}</a>
+        </div>
+      </li>
+    {% endfor %}
+  </ul>
+  {% include "magicforms/manage/includes/studio_pagination.html" with page_obj=submissions studio_pagination_footer=1 %}
+  {% else %}
+  <div class="mf-empty"><p class="mf-empty__title">{% trans "No submissions yet" %}</p></div>
+  {% endif %}
+</section>
+{% endblock %}
