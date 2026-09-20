@@ -410,15 +410,6 @@ class Form(models.Model):
         "this job title instead of opening to any organization member. Matched the same loose way as the "
         "“Route to” search (name or job title, partial match). Leave blank to keep today's behaviour.",
     )
-    submit_route_suggested_user = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True,
-        related_name="submit_route_suggestions",
-        help_text="Learned automatically: the last person manually routed to for this form's submit-stage "
-        "role, used as the default pick when more than one person currently holds that role.",
-    )
     print_template = models.FileField(
         "Print template (DOCX or PDF)",
         upload_to="form_print_templates/%Y/%m/",
@@ -1199,6 +1190,35 @@ class SupplementarySubmission(models.Model):
 
     def __str__(self):
         return f"rel {self.parent_submission_id} → {self.link.child_form_id}"
+
+
+class FormSubmitRoutePick(models.Model):
+    """
+    Per form, how many times each person has been manually routed to at the submit stage
+    (Form.submit_route_role). The most frequently picked current role-holder is used as the
+    auto-route suggestion for new submissions (see workflow_decision.apply_submit_route_role).
+    """
+
+    form = models.ForeignKey(
+        Form,
+        on_delete=models.CASCADE,
+        related_name="submit_route_picks",
+    )
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="+",
+    )
+    times_picked = models.PositiveIntegerField(default=0)
+    last_picked_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=["form", "user"], name="uniq_submit_route_pick_form_user"),
+        ]
+
+    def __str__(self):
+        return f"{self.form_id}:{self.user_id} x{self.times_picked}"
 
 
 class WorkflowDelegation(models.Model):

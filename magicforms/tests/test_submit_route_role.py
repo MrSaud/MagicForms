@@ -1,8 +1,8 @@
 """
 Role-based auto-routing for dynamic-routing forms (Form.submit_route_role,
-Form.submit_route_suggested_user): a fresh submission auto-claims itself on behalf of whoever
-holds the configured role, and a human's manual pick on an unclaimed submission becomes the
-remembered default for next time.
+FormSubmitRoutePick): a fresh submission auto-claims itself on behalf of whoever holds the
+configured role, favoring whoever has been picked most often for this form; a human's manual
+pick on an unclaimed submission adds one to that person's count.
 """
 
 from django.contrib.auth import get_user_model
@@ -17,6 +17,7 @@ from magicforms.models import (
     Form,
     FormField,
     FormSubmission,
+    FormSubmitRoutePick,
     SubmissionEvent,
 )
 from magicforms.staff_forms import StaffMetaForm
@@ -24,11 +25,11 @@ from magicforms.workflow_decision import apply_submit_route_role, perform_dynami
 
 
 class SubmitRouteRoleDefaultsTests(TestCase):
-    def test_new_forms_default_to_no_role_and_no_suggestion(self):
+    def test_new_forms_default_to_no_role_and_no_picks(self):
         entity = Entity.objects.create(name="Org", slug="org-submit-route-default")
         form = Form.objects.create(entity=entity, title="F", slug="f-submit-route-default")
         self.assertEqual(form.submit_route_role, "")
-        self.assertIsNone(form.submit_route_suggested_user_id)
+        self.assertFalse(FormSubmitRoutePick.objects.filter(form=form).exists())
 
 
 class StaffMetaFormSubmitRouteRoleTests(TestCase):
@@ -97,6 +98,10 @@ def _dynamic_form(entity, slug="dyn-submit-route", role=""):
     )
 
 
+def _pick(form, user, times):
+    FormSubmitRoutePick.objects.create(form=form, user=user, times_picked=times)
+
+
 class ApplySubmitRouteRoleTests(TestCase):
     def setUp(self):
         self.entity = Entity.objects.create(name="Org", slug="org-apply-route-role")
@@ -132,7 +137,7 @@ class ApplySubmitRouteRoleTests(TestCase):
         sub.refresh_from_db()
         self.assertIsNone(sub.current_holder_id)
 
-    def test_exactly_one_holder_auto_routes(self):
+    def test_exactly_one_holder_auto_routes_even_with_no_picks_yet(self):
         EmployeeProfile.objects.update_or_create(user=self.finn, defaults={"job_title": "Finance Manager"})
         form = _dynamic_form(self.entity, role="Finance Manager")
         sub = self._submission(form)
@@ -143,7 +148,7 @@ class ApplySubmitRouteRoleTests(TestCase):
             SubmissionEvent.objects.filter(submission=sub, kind=SubmissionEvent.Kind.ROUTED).exists()
         )
 
-    def test_multiple_holders_no_suggestion_stays_unclaimed(self):
+    def test_multiple_holders_no_picks_stays_unclaimed(self):
         EmployeeProfile.objects.update_or_create(user=self.finn, defaults={"job_title": "Finance Manager"})
         EmployeeProfile.objects.update_or_create(user=self.gwen, defaults={"job_title": "Finance Manager"})
         form = _dynamic_form(self.entity, role="Finance Manager")
@@ -152,29 +157,51 @@ class ApplySubmitRouteRoleTests(TestCase):
         sub.refresh_from_db()
         self.assertIsNone(sub.current_holder_id)
 
-    def test_multiple_holders_with_a_valid_suggestion_uses_it(self):
+    def test_multiple_holders_tied_pick_counts_stays_unclaimed(self):
         EmployeeProfile.objects.update_or_create(user=self.finn, defaults={"job_title": "Finance Manager"})
         EmployeeProfile.objects.update_or_create(user=self.gwen, defaults={"job_title": "Finance Manager"})
         form = _dynamic_form(self.entity, role="Finance Manager")
-        form.submit_route_suggested_user = self.gwen
-        form.save(update_fields=["submit_route_suggested_user"])
+        _pick(form, self.finn, 2)
+        _pick(form, self.gwen, 2)
+        sub = self._submission(form)
+        apply_submit_route_role(sub)
+        sub.refresh_from_db()
+        self.assertIsNone(sub.current_holder_id)
+
+    def test_multiple_holders_the_most_picked_one_wins(self):
+        EmployeeProfile.objects.update_or_create(user=self.finn, defaults={"job_title": "Finance Manager"})
+        EmployeeProfile.objects.update_or_create(user=self.gwen, defaults={"job_title": "Finance Manager"})
+        form = _dynamic_form(self.entity, role="Finance Manager")
+        _pick(form, self.finn, 1)
+        _pick(form, self.gwen, 3)
         sub = self._submission(form)
         apply_submit_route_role(sub)
         sub.refresh_from_db()
         self.assertEqual(sub.current_holder_id, self.gwen.pk)
 
-    def test_stale_suggestion_who_no_longer_holds_the_role_is_ignored(self):
+    def test_pick_for_someone_who_no_longer_holds_the_role_is_ignored(self):
         EmployeeProfile.objects.update_or_create(user=self.finn, defaults={"job_title": "Finance Manager"})
         form = _dynamic_form(self.entity, role="Finance Manager")
-        form.submit_route_suggested_user = self.gwen  # gwen doesn't hold the role at all
-        form.save(update_fields=["submit_route_suggested_user"])
+        _pick(form, self.gwen, 5)  # gwen was picked before but doesn't hold the role at all
         sub = self._submission(form)
         apply_submit_route_role(sub)
         sub.refresh_from_db()
         self.assertEqual(sub.current_holder_id, self.finn.pk)
 
+    def test_picks_on_a_different_form_do_not_count(self):
+        EmployeeProfile.objects.update_or_create(user=self.finn, defaults={"job_title": "Finance Manager"})
+        EmployeeProfile.objects.update_or_create(user=self.gwen, defaults={"job_title": "Finance Manager"})
+        form = _dynamic_form(self.entity, slug="dyn-a", role="Finance Manager")
+        other_form = _dynamic_form(self.entity, slug="dyn-b", role="Finance Manager")
+        _pick(other_form, self.gwen, 9)  # heavily picked, but on a different form
+        sub = self._submission(form)
+        apply_submit_route_role(sub)
+        sub.refresh_from_db()
+        # No picks recorded on *this* form and two candidates: stays open.
+        self.assertIsNone(sub.current_holder_id)
 
-class SubmitRouteRoleSuggestionLearningTests(TestCase):
+
+class SubmitRouteRolePickCountingTests(TestCase):
     def setUp(self):
         self.entity = Entity.objects.create(name="Org", slug="org-learn-route-role")
         User = get_user_model()
@@ -186,38 +213,39 @@ class SubmitRouteRoleSuggestionLearningTests(TestCase):
         EmployeeProfile.objects.update_or_create(user=self.finn, defaults={"job_title": "Finance Manager"})
         EmployeeProfile.objects.update_or_create(user=self.gwen, defaults={"job_title": "Marketing Lead"})
 
-    def test_manual_route_on_unclaimed_submission_to_a_role_holder_is_learned(self):
-        form = _dynamic_form(self.entity, role="Finance Manager")
-        sub = FormSubmission.objects.create(form=form)
+    def _route(self, form, sub, target_pk, actor=None):
         ok, err, result = perform_dynamic_route_decision(
-            user=self.holder, submission=sub, action="route", target_user_id=self.finn.pk
+            user=actor or self.holder, submission=sub, action="route", target_user_id=target_pk
         )
         self.assertTrue(ok, err)
-        form.refresh_from_db()
-        self.assertEqual(form.submit_route_suggested_user_id, self.finn.pk)
 
-    def test_manual_route_to_someone_outside_the_role_is_not_learned(self):
+    def test_manual_route_on_unclaimed_submission_to_a_role_holder_is_counted(self):
         form = _dynamic_form(self.entity, role="Finance Manager")
         sub = FormSubmission.objects.create(form=form)
-        ok, err, result = perform_dynamic_route_decision(
-            user=self.holder, submission=sub, action="route", target_user_id=self.gwen.pk
-        )
-        self.assertTrue(ok, err)
-        form.refresh_from_db()
-        self.assertIsNone(form.submit_route_suggested_user_id)
+        self._route(form, sub, self.finn.pk)
+        pick = FormSubmitRoutePick.objects.get(form=form, user=self.finn)
+        self.assertEqual(pick.times_picked, 1)
 
-    def test_second_hop_routing_does_not_change_the_suggestion(self):
+    def test_three_separate_submissions_routed_to_the_same_holder_accumulate(self):
         form = _dynamic_form(self.entity, role="Finance Manager")
-        form.submit_route_suggested_user = self.finn
-        form.save(update_fields=["submit_route_suggested_user"])
+        for _ in range(3):
+            sub = FormSubmission.objects.create(form=form)
+            self._route(form, sub, self.finn.pk)
+        pick = FormSubmitRoutePick.objects.get(form=form, user=self.finn)
+        self.assertEqual(pick.times_picked, 3)
+
+    def test_manual_route_to_someone_outside_the_role_is_not_counted(self):
+        form = _dynamic_form(self.entity, role="Finance Manager")
+        sub = FormSubmission.objects.create(form=form)
+        self._route(form, sub, self.gwen.pk)
+        self.assertFalse(FormSubmitRoutePick.objects.filter(form=form, user=self.gwen).exists())
+
+    def test_second_hop_routing_does_not_add_a_pick(self):
+        form = _dynamic_form(self.entity, role="Finance Manager")
         sub = FormSubmission.objects.create(form=form, current_holder=self.finn)
-        # finn already holds it (second hop); routing on to someone else must not relearn.
-        ok, err, result = perform_dynamic_route_decision(
-            user=self.finn, submission=sub, action="route", target_user_id=self.holder.pk
-        )
-        self.assertTrue(ok, err)
-        form.refresh_from_db()
-        self.assertEqual(form.submit_route_suggested_user_id, self.finn.pk)
+        # finn already holds it (second hop); routing on to someone else must not count.
+        self._route(form, sub, self.holder.pk, actor=self.finn)
+        self.assertFalse(FormSubmitRoutePick.objects.filter(form=form, user=self.holder).exists())
 
 
 class SubmitRouteRoleEndToEndTests(TestCase):

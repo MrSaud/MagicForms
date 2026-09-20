@@ -4,8 +4,9 @@ from __future__ import annotations
 
 from django.contrib.auth import get_user_model
 from django.db import transaction
+from django.db.models import F
 
-from magicforms.models import EntityMembership, FormSubmission, SubmissionEvent
+from magicforms.models import EntityMembership, FormSubmission, FormSubmitRoutePick, SubmissionEvent
 from magicforms.workflow_access import (
     delegate_action_suffix,
     dynamic_delegate_action_suffix,
@@ -20,22 +21,21 @@ def _submit_route_role_candidates(form_instance, role: str):
     return entity_users_for_entity(form_instance.entity_id).filter(profile__job_title__icontains=role)
 
 
-def _learn_submit_route_suggestion(form_instance, target, *, was_unclaimed: bool) -> None:
+def _record_submit_route_pick(form_instance, target, *, was_unclaimed: bool) -> None:
     """
     A human manually routing an unclaimed submission for a role-bound form, to someone who
-    actually holds that role, becomes the new default pick for next time (see
+    actually holds that role, adds one to that person's pick count for this form. The most
+    frequently picked current role-holder becomes the auto-route suggestion (see
     ``apply_submit_route_role``). Routing at any later hop, or to someone who doesn't hold the
-    role, doesn't change the suggestion.
+    role, doesn't count.
     """
     role = (form_instance.submit_route_role or "").strip()
     if not was_unclaimed or not role:
         return
     if not _submit_route_role_candidates(form_instance, role).filter(pk=target.pk).exists():
         return
-    if form_instance.submit_route_suggested_user_id == target.pk:
-        return
-    form_instance.submit_route_suggested_user = target
-    form_instance.save(update_fields=["submit_route_suggested_user"])
+    pick, _created = FormSubmitRoutePick.objects.get_or_create(form=form_instance, user=target)
+    FormSubmitRoutePick.objects.filter(pk=pick.pk).update(times_picked=F("times_picked") + 1)
 
 
 def apply_submit_route_role(submission: FormSubmission) -> None:
@@ -44,10 +44,10 @@ def apply_submit_route_role(submission: FormSubmission) -> None:
     submit-stage role, auto-claim the (still unclaimed) submission on behalf of whoever holds
     that role, so it doesn't sit open when the answer is obvious.
 
-    Picks, in order: the last person manually routed to for this role (if they still hold it),
-    otherwise the sole current holder of the role. If nobody holds it, or more than one person
-    does with no prior pick, the submission is left open for any organization member to claim,
-    same as a dynamic-routing form with no role set.
+    Picks, in order: the current role-holder most frequently routed to on this form (only when
+    they're the clear, unique leader), otherwise the sole current holder of the role. If nobody
+    holds it, or more than one person does with no clear favorite, the submission is left open
+    for any organization member to claim, same as a dynamic-routing form with no role set.
     """
     form_instance = submission.form
     role = (form_instance.submit_route_role or "").strip()
@@ -55,14 +55,20 @@ def apply_submit_route_role(submission: FormSubmission) -> None:
         return
 
     candidates = _submit_route_role_candidates(form_instance, role)
-    suggested = form_instance.submit_route_suggested_user
+    candidate_ids = list(candidates.values_list("pk", flat=True))
+    if not candidate_ids:
+        return
+
+    top_picks = list(
+        FormSubmitRoutePick.objects.filter(form=form_instance, user_id__in=candidate_ids)
+        .select_related("user")
+        .order_by("-times_picked")[:2]
+    )
     target = None
-    if suggested is not None and candidates.filter(pk=suggested.pk).exists():
-        target = suggested
-    else:
-        matches = list(candidates[:2])
-        if len(matches) == 1:
-            target = matches[0]
+    if top_picks and (len(top_picks) == 1 or top_picks[0].times_picked > top_picks[1].times_picked):
+        target = top_picks[0].user
+    elif len(candidate_ids) == 1:
+        target = candidates.first()
 
     if target is None:
         return
@@ -314,7 +320,7 @@ def perform_dynamic_route_decision(
                         message=event_message(base_msg),
                         created_by=user,
                     )
-                    _learn_submit_route_suggestion(form_instance, target, was_unclaimed=was_unclaimed)
+                    _record_submit_route_pick(form_instance, target, was_unclaimed=was_unclaimed)
                     outcome = {
                         "outcome": "routed",
                         "target_label": target_label,
