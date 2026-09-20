@@ -46,6 +46,7 @@ class FormLayoutDirectionTests(TestCase):
                 "title": "F",
                 "description": "",
                 "layout_direction": "rtl",
+                "routing_mode": Form.RoutingMode.FIXED_STEPS,
                 "submission_deadline": "",
                 "intro_capacity": "",
                 "category": "",

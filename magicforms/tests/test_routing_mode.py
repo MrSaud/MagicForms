@@ -138,7 +138,10 @@ class DynamicRoutingPausesDecisionsTests(TestCase):
         self.dyn_sub.refresh_from_db()
         self.assertEqual(self.dyn_sub.current_step_id, self.dyn_step.pk)
 
-    def test_studio_detail_page_shows_the_pending_message_for_dynamic_forms(self):
+    def test_studio_detail_page_shows_the_dynamic_route_form_instead_of_fixed_step_actions(self):
+        # Phase 1 (schema only) showed a "still being rolled out" placeholder here; now that the
+        # dynamic routing engine (Phase 2) is live, an eligible org member sees the real route form
+        # instead, and the old fixed-step approve/reject controls never render for this form.
         self.client.force_login(self.actor)
         url = reverse(
             "manage:submission_manage_detail",
@@ -147,7 +150,7 @@ class DynamicRoutingPausesDecisionsTests(TestCase):
         r = self.client.get(url)
         self.assertEqual(r.status_code, 200)
         self.assertNotContains(r, 'name="workflow_decision" value="approve"')
-        self.assertContains(r, "still being rolled out")
+        self.assertContains(r, 'name="workflow_dynamic_route_submit"')
 
     def test_studio_detail_page_post_is_refused_for_dynamic_forms(self):
         self.client.force_login(self.actor)

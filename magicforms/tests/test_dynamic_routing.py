@@ -350,7 +350,14 @@ class DynamicFormIntegrationRegressionTests(TestCase):
         self.assertTrue(_staff_may_sign_document(_FakeRequest(self.holder), sub))
         self.assertFalse(_staff_may_sign_document(_FakeRequest(self.other), sub))
 
-    def test_nobody_may_sign_an_unclaimed_dynamic_submission_via_the_step_based_helper(self):
-        # Signing specifically requires being the (current) holder; an unclaimed submission has none yet.
+    def test_unclaimed_dynamic_submission_may_be_signed_by_any_org_member(self):
+        # Same "any org member may take the first hop" rule that lets anyone route an unclaimed
+        # submission also lets them sign it, since signing delegates to the same permission check.
         sub = FormSubmission.objects.create(form=self.form)
-        self.assertFalse(_staff_may_sign_document(_FakeRequest(self.holder), sub))
+        self.assertTrue(_staff_may_sign_document(_FakeRequest(self.holder), sub))
+        self.assertTrue(_staff_may_sign_document(_FakeRequest(self.other), sub))
+
+    def test_outsider_may_not_sign_an_unclaimed_dynamic_submission(self):
+        outsider = get_user_model().objects.create_user(username="outsider1", password="x")
+        sub = FormSubmission.objects.create(form=self.form)
+        self.assertFalse(_staff_may_sign_document(_FakeRequest(outsider), sub))

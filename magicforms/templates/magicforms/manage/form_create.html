@@ -37,6 +37,12 @@
     </section>
 
     <section class="mf-card mf-card--glass mf-stack">
+      <h2 class="mf-heading mf-heading--section">{% trans "Workflow routing" %}</h2>
+      {% include "magicforms/manage/includes/studio_bound_field.html" with bound=form.routing_mode %}
+      <p class="mf-hint">{% trans "Steps and assignees for fixed routing are configured after the form is created." %}</p>
+    </section>
+
+    <section class="mf-card mf-card--glass mf-stack">
       <h2 class="mf-heading mf-heading--section">{% trans "Publishing & access" %}</h2>
       {% include "magicforms/manage/includes/studio_bound_field.html" with bound=form.is_published %}
       {% include "magicforms/manage/includes/studio_bound_field.html" with bound=form.one_time_submit %}

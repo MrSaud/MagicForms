@@ -4642,6 +4642,10 @@ msgstr "لدى هذا النموذج طلب في انتظار الموافقة،
 msgid "Steps and assignees are configured on the Workflow tab."
 msgstr "تُضبط الخطوات والمكلّفون في تبويب مسار العمل."
 
+#: magicforms/templates/magicforms/manage/form_create.html
+msgid "Steps and assignees for fixed routing are configured after the form is created."
+msgstr "تُضبط الخطوات والمكلّفون للتوجيه الثابت بعد إنشاء النموذج."
+
 #: magicforms/staff_forms.py
 msgid "Route to"
 msgstr "توجيه إلى"
