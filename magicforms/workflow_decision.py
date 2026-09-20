@@ -14,6 +14,69 @@ from magicforms.workflow_access import (
 )
 
 
+def _submit_route_role_candidates(form_instance, role: str):
+    from magicforms.entity_access import entity_users_for_entity
+
+    return entity_users_for_entity(form_instance.entity_id).filter(profile__job_title__icontains=role)
+
+
+def _learn_submit_route_suggestion(form_instance, target, *, was_unclaimed: bool) -> None:
+    """
+    A human manually routing an unclaimed submission for a role-bound form, to someone who
+    actually holds that role, becomes the new default pick for next time (see
+    ``apply_submit_route_role``). Routing at any later hop, or to someone who doesn't hold the
+    role, doesn't change the suggestion.
+    """
+    role = (form_instance.submit_route_role or "").strip()
+    if not was_unclaimed or not role:
+        return
+    if not _submit_route_role_candidates(form_instance, role).filter(pk=target.pk).exists():
+        return
+    if form_instance.submit_route_suggested_user_id == target.pk:
+        return
+    form_instance.submit_route_suggested_user = target
+    form_instance.save(update_fields=["submit_route_suggested_user"])
+
+
+def apply_submit_route_role(submission: FormSubmission) -> None:
+    """
+    Dynamic routing only. Called right after a submission is created: if the form defines a
+    submit-stage role, auto-claim the (still unclaimed) submission on behalf of whoever holds
+    that role, so it doesn't sit open when the answer is obvious.
+
+    Picks, in order: the last person manually routed to for this role (if they still hold it),
+    otherwise the sole current holder of the role. If nobody holds it, or more than one person
+    does with no prior pick, the submission is left open for any organization member to claim,
+    same as a dynamic-routing form with no role set.
+    """
+    form_instance = submission.form
+    role = (form_instance.submit_route_role or "").strip()
+    if not form_instance.uses_dynamic_routing or not role:
+        return
+
+    candidates = _submit_route_role_candidates(form_instance, role)
+    suggested = form_instance.submit_route_suggested_user
+    target = None
+    if suggested is not None and candidates.filter(pk=suggested.pk).exists():
+        target = suggested
+    else:
+        matches = list(candidates[:2])
+        if len(matches) == 1:
+            target = matches[0]
+
+    if target is None:
+        return
+
+    submission.current_holder = target
+    submission.save(update_fields=["current_holder"])
+    target_label = target.get_full_name() or target.get_username()
+    SubmissionEvent.objects.create(
+        submission=submission,
+        kind=SubmissionEvent.Kind.ROUTED,
+        message=f"Automatically routed to {target_label} ({role}).",
+    )
+
+
 def perform_workflow_decision(
     *,
     user,
@@ -199,6 +262,7 @@ def perform_dynamic_route_decision(
             .select_for_update()
             .get(pk=submission.pk, form=form_instance)
         )
+        was_unclaimed = fresh.current_holder_id is None
         if fresh.workflow_state != FormSubmission.WorkflowState.IN_PROGRESS:
             workflow_block_error = "This submission is not awaiting approval."
         elif not user_may_act_on_submission_workflow(user, fresh):
@@ -250,6 +314,7 @@ def perform_dynamic_route_decision(
                         message=event_message(base_msg),
                         created_by=user,
                     )
+                    _learn_submit_route_suggestion(form_instance, target, was_unclaimed=was_unclaimed)
                     outcome = {
                         "outcome": "routed",
                         "target_label": target_label,

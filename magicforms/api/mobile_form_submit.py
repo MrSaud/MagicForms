@@ -199,6 +199,9 @@ def _create_submission_from_valid_form(request: HttpRequest, form_def: Form, For
         step=initial_step,
         message="Form submitted.",
     )
+    from magicforms.workflow_decision import apply_submit_route_role
+
+    apply_submit_route_role(sub)
     ensure_related_invitations(sub)
     queue_after_submission_event(sub, submit_event, request=request)
     return sub

@@ -253,6 +253,9 @@ def related_form_submit_payload(request: HttpRequest, access_token: str) -> tupl
         step=initial_step,
         message="Form submitted.",
     )
+    from magicforms.workflow_decision import apply_submit_route_role
+
+    apply_submit_route_role(sub)
     queue_after_submission_event(sub, submit_event, request=request)
     record_related_child_submitted(parent, child.title)
 

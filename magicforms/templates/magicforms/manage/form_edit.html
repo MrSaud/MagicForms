@@ -57,6 +57,7 @@
       {% endif %}
       {% include "magicforms/manage/includes/studio_bound_field.html" with bound=form.routing_mode %}
       <p class="mf-hint"><a class="mf-link" href="{% url 'manage:workflow_list' form_obj.pk %}">{% trans "Steps and assignees are configured on the Workflow tab." %}</a></p>
+      {% include "magicforms/manage/includes/studio_bound_field.html" with bound=form.submit_route_role %}
     </section>
 
     <section class="mf-card mf-card--glass mf-stack">

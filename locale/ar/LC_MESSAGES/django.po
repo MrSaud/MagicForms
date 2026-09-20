@@ -4619,8 +4619,20 @@ msgid "Workflow routing"
 msgstr "توجيه مسار العمل"
 
 #: magicforms/staff_forms.py
-msgid "Fixed steps follow the ordered steps and assignees on the Workflow tab. Dynamic routing lets whoever is acting choose the next person by name or job title instead. Dynamic routing is being rolled out: forms set to it pause approve/reject until that engine ships. You can only change this while no submission is awaiting approval."
-msgstr "الخطوات الثابتة تتبع الترتيب والمكلّفين في تبويب مسار العمل. التوجيه الديناميكي يتيح لمن يتخذ الإجراء اختيار الشخص التالي بالاسم أو المسمى الوظيفي بدلًا من ذلك. التوجيه الديناميكي قيد الإطلاق التدريجي: النماذج المضبوطة عليه توقف الموافقة والرفض مؤقتًا حتى يجهز ذلك المحرك. لا يمكن تغيير هذا الخيار إلا عندما لا يوجد طلب في انتظار الموافقة."
+msgid "Fixed steps follow the ordered steps and assignees on the Workflow tab. Dynamic routing lets whoever is acting choose the next person by name or job title instead. You can only change this while no submission is awaiting approval."
+msgstr "الخطوات الثابتة تتبع الترتيب والمكلّفين في تبويب مسار العمل. التوجيه الديناميكي يتيح لمن يتخذ الإجراء اختيار الشخص التالي بالاسم أو المسمى الوظيفي بدلًا من ذلك. لا يمكن تغيير هذا الخيار إلا عندما لا يوجد طلب في انتظار الموافقة."
+
+#: magicforms/staff_forms.py
+msgid "Route new submissions to role"
+msgstr "توجيه الطلبات الجديدة إلى مسمى وظيفي"
+
+#: magicforms/staff_forms.py
+msgid "Dynamic routing only. When set, a new submission automatically goes to whoever holds this job title instead of opening to any organization member. Matched the same loose way as the “Route to” search (name or job title, partial match). Leave blank to keep today's behaviour."
+msgstr "خاص بالتوجيه الديناميكي فقط. عند ضبطه، يذهب الطلب الجديد تلقائيًا إلى من يحمل هذا المسمى الوظيفي بدلًا من أن يُفتح لأي عضو في المنظمة. يُطابَق بنفس الطريقة التقريبية المستخدمة في بحث «توجيه إلى» (الاسم أو المسمى الوظيفي، تطابق جزئي). اتركه فارغًا للإبقاء على السلوك الحالي."
+
+#: magicforms/staff_forms.py
+msgid "e.g. Finance Manager"
+msgstr "مثال: مدير مالي"
 
 #: magicforms/staff_forms.py
 msgid "This form has submissions awaiting approval. Wait until none are in progress before changing workflow routing."

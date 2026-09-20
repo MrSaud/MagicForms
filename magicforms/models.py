@@ -400,8 +400,24 @@ class Form(models.Model):
         choices=RoutingMode.choices,
         default=RoutingMode.FIXED_STEPS,
         help_text="Fixed steps follow the ordered steps and assignees configured below. Dynamic routing lets "
-        "whoever is acting choose the next person by name or job title instead of a pre-built path. "
-        "Dynamic routing is being rolled out: forms set to it pause workflow actions until it is ready.",
+        "whoever is acting choose the next person by name or job title instead of a pre-built path.",
+    )
+    submit_route_role = models.CharField(
+        "Route new submissions to role",
+        max_length=255,
+        blank=True,
+        help_text="Dynamic routing only. When set, a new submission automatically goes to whoever holds "
+        "this job title instead of opening to any organization member. Matched the same loose way as the "
+        "“Route to” search (name or job title, partial match). Leave blank to keep today's behaviour.",
+    )
+    submit_route_suggested_user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="submit_route_suggestions",
+        help_text="Learned automatically: the last person manually routed to for this form's submit-stage "
+        "role, used as the default pick when more than one person currently holds that role.",
     )
     print_template = models.FileField(
         "Print template (DOCX or PDF)",

@@ -56,6 +56,7 @@ class StaffMetaForm(forms.ModelForm):
             "is_for_public",
             "allow_submission_forward",
             "routing_mode",
+            "submit_route_role",
             "hide_from_form_lists",
         )
         labels = {
@@ -73,6 +74,7 @@ class StaffMetaForm(forms.ModelForm):
             "is_for_public": _("Allow access without signing in"),
             "allow_submission_forward": _("Allow forwarding submissions"),
             "routing_mode": _("Workflow routing"),
+            "submit_route_role": _("Route new submissions to role"),
             "hide_from_form_lists": _("Hide from portal & home lists"),
         }
         help_texts = {
@@ -119,9 +121,13 @@ class StaffMetaForm(forms.ModelForm):
             ),
             "routing_mode": _(
                 "Fixed steps follow the ordered steps and assignees on the Workflow tab. Dynamic routing lets "
-                "whoever is acting choose the next person by name or job title instead. Dynamic routing is "
-                "being rolled out: forms set to it pause approve/reject until that engine ships. You can only "
-                "change this while no submission is awaiting approval."
+                "whoever is acting choose the next person by name or job title instead. You can only change "
+                "this while no submission is awaiting approval."
+            ),
+            "submit_route_role": _(
+                "Dynamic routing only. When set, a new submission automatically goes to whoever holds this "
+                "job title instead of opening to any organization member. Matched the same loose way as the "
+                "“Route to” search (name or job title, partial match). Leave blank to keep today's behaviour."
             ),
             "hide_from_form_lists": _(
                 "When on, this form is hidden from the organization public portal, the global published directory, "
@@ -164,6 +170,9 @@ class StaffMetaForm(forms.ModelForm):
             "is_for_public": forms.CheckboxInput(attrs={"class": "mf-checkbox"}),
             "allow_submission_forward": forms.CheckboxInput(attrs={"class": "mf-checkbox"}),
             "routing_mode": forms.Select(attrs={"class": "mf-input mf-input--select"}),
+            "submit_route_role": forms.TextInput(
+                attrs={"class": "mf-input", "placeholder": _("e.g. Finance Manager")}
+            ),
             "hide_from_form_lists": forms.CheckboxInput(attrs={"class": "mf-checkbox"}),
         }
 

@@ -812,6 +812,9 @@ def form_public(request, slug, entity_slug=None):
                 step=initial_step,
                 message="Form submitted.",
             )
+            from .workflow_decision import apply_submit_route_role
+
+            apply_submit_route_role(sub)
             ensure_related_invitations(sub)
             from .notification_emails import queue_after_submission_event
 
@@ -1030,6 +1033,9 @@ def related_form_public(request, slug, access_token, entity_slug=None):
                 step=initial_step,
                 message="Form submitted.",
             )
+            from .workflow_decision import apply_submit_route_role
+
+            apply_submit_route_role(sub)
             from .notification_emails import queue_after_submission_event
 
             queue_after_submission_event(sub, rel_submit_event, request=request)
