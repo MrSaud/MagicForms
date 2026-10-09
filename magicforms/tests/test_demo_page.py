@@ -37,6 +37,8 @@ class DemoPageTests(TestCase):
     def test_landing_page_and_footer_link_to_the_tour(self):
         r = self.client.get("/welcome/")
         self.assertContains(r, 'href="/app/"')
+        # The hero itself carries a button to the tour, not just the nav and footer.
+        self.assertContains(r, 'class="mf-button mf-button--secondary" href="/app/"')
         r = self.client.get("/app/")
         self.assertContains(r, 'href="/welcome/"')
 

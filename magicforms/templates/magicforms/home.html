@@ -39,6 +39,7 @@
       {% else %}
         <a class="mf-button mf-button--primary" href="{% url 'manage:login' %}?next={{ studio_login_next|urlencode }}">{% trans "Sign in to your workspace" %}</a>
       {% endif %}
+      <a class="mf-button mf-button--secondary" href="{{ demo_page_url }}">{% trans "Take the tour" %}</a>
       <a class="mf-button mf-button--secondary" href="{% portal_url 'magicforms:submission_track' %}">{% trans "Track a submission" %}</a>
     </div>
     <p class="mf-landing-hero__note">{% trans "Arabic and English, right-to-left ready, hosted in the cloud." %}</p>
