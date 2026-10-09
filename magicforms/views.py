@@ -197,7 +197,7 @@ def landing(request):
 
 
 def demo(request):
-    """Public product tour at ``/demo/``: what SwapForms is, its features and values. No sign-in needed."""
+    """Public product tour at ``/app/``: what SwapForms is, its features and values. No sign-in needed."""
     return render(
         request,
         "magicforms/demo.html",

@@ -1,5 +1,5 @@
 /*
- * Product tour (/demo/): chips, tabbed walkthrough with drawn mocks, request journey, feature lists,
+ * Product tour (/app/): chips, tabbed walkthrough with drawn mocks, request journey, feature lists,
  * example flows, values and FAQ. Builds on the landing page parts; Graphite tokens only.
  * Without JavaScript every tab panel stays visible, stacked; demo_tour.js adds .is-enhanced to the
  * tab container and hides the inactive panels.

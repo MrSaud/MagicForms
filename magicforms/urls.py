@@ -27,7 +27,7 @@ register_converter(OpaqueIdConverter, "oid")
 urlpatterns = [
     path("", views.home, name="home"),
     path("welcome/", views.landing, name="landing"),
-    path("demo/", views.demo, name="demo"),
+    path("app/", views.demo, name="demo"),
     path("account/signatures/", views.my_signatures, name="my_signatures"),
     path("account/signatures/replace/", views.my_signature_replace, name="my_signature_replace"),
     path(

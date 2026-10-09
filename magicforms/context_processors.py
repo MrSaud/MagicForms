@@ -91,7 +91,7 @@ def portal_studio_urls(request) -> dict[str, Any]:
         "apex_public_home_url": f"{apex_base}/",
         "portal_home_url": portal_home,
         "landing_page_url": "/welcome/",
-        "demo_page_url": "/demo/",
+        "demo_page_url": "/app/",
         "ai_features_enabled": ai_features_enabled(),
     }
 

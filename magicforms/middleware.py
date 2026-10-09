@@ -32,7 +32,7 @@ _PORTAL_ROUTING_EXCLUDED_PREFIXES = (
     "/static",
     "/media",
     "/welcome",  # SwapForms landing page, also on the apex portal host
-    "/demo",  # public product tour, same treatment as the landing page
+    "/app",  # public product tour, same treatment as the landing page
     "/favicon.ico",
     "/apple-touch-icon",
 )
