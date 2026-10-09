@@ -15,6 +15,7 @@
       <p class="mf-site-footer-heading">{% trans "Product" %}</p>
       <ul class="mf-site-footer-links">
         <li><a class="mf-link" href="{{ landing_page_url }}">{% trans "Landing page" %}</a></li>
+        <li><a class="mf-link" href="{{ demo_page_url }}">{% trans "Product tour" %}</a></li>
         <li><a class="mf-link" href="{% url 'magicforms:submission_track' %}">{% trans "Track a submission" %}</a></li>
         <li><a class="mf-link" href="https://support.swapkuwait.com/" rel="noopener noreferrer" target="_blank">{% trans "Support" %}</a></li>
         {% if not user.is_authenticated %}

@@ -298,7 +298,7 @@
   }
 }
 
-.mf-landing-features__grid li {
+.mf-landing-features__grid > li {
   display: flex;
   flex-direction: column;
   gap: var(--mf-space-2);

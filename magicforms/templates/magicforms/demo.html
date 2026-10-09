@@ -1,0 +1,360 @@
+{% extends "magicforms/base.html" %}
+{% load i18n static_versioned portal_urls %}
+
+{% block body_class %} mf-public-site mf-landing-page mf-demo-page{% endblock %}
+
+{% block title %}{% trans "Product tour" %} · {% trans "SwapForms" %}{% endblock %}
+
+{% block extrahead %}
+<meta name="description" content="{% trans 'See what SwapForms is, what it does and what it stands for: forms, approvals, documents and signatures in one calm place.' %}">
+<script src="{% static_v 'magicforms/js/demo_tour.js' %}" defer></script>
+{% endblock %}
+
+{% block public_site_nav %}
+<nav class="mf-landing-nav" aria-label="{% trans 'Product tour' %}">
+  <a class="mf-brand-logo-link" href="{{ landing_page_url }}"><span class="mf-brand-wordmark" aria-label="SwapForms" translate="no"><span class="mf-brand-wordmark__swap">swap</span><span class="mf-brand-wordmark__forms">forms</span></span></a>
+  <div class="mf-landing-nav__links">
+    <a class="mf-landing-nav__link" href="#tour">{% trans "Tour" %}</a>
+    <a class="mf-landing-nav__link" href="#features">{% trans "Features" %}</a>
+    <a class="mf-landing-nav__link" href="#values">{% trans "Values" %}</a>
+    <a class="mf-landing-nav__link" href="#faq">{% trans "FAQ" %}</a>
+    <a class="mf-landing-nav__link" href="{{ landing_page_url }}#plans">{% trans "Plans" %}</a>
+    {% if user.is_authenticated and studio_available %}
+      <a class="mf-button mf-button--primary" href="{% url 'manage:dashboard' %}">{% trans "Open workspace" %}</a>
+    {% else %}
+      <a class="mf-button mf-button--secondary" href="{% url 'manage:login' %}?next={{ studio_login_next|urlencode }}">{% trans "Sign in" %}</a>
+    {% endif %}
+    {% include "magicforms/includes/lang_switch.html" %}
+  </div>
+</nav>
+{% endblock %}
+
+{% block content %}
+<section class="mf-landing-hero" id="what" aria-labelledby="mf-demo-title">
+  <div class="mf-landing-hero__copy">
+    <p class="mf-eyebrow">{% trans "Product tour" %}</p>
+    <h1 class="mf-landing-hero__title" id="mf-demo-title">{% trans "What is SwapForms?" %}</h1>
+    <p class="mf-landing-hero__lead">{% trans "SwapForms is an online workspace for organizations. Staff build a form, decide who approves it, and applicants follow their request from submission to a signed PDF, in Arabic or English, with no code." %}</p>
+    <div class="mf-landing-hero__actions">
+      <a class="mf-button mf-button--primary" href="#tour">{% trans "Take the tour" %}</a>
+      <a class="mf-button mf-button--secondary" href="{% portal_url 'magicforms:submission_track' %}">{% trans "Track a submission" %}</a>
+    </div>
+    <ul class="mf-demo-chips" aria-label="{% trans 'Who uses it' %}">
+      <li class="mf-demo-chip">{% trans "HR and leave" %}</li>
+      <li class="mf-demo-chip">{% trans "Procurement and vendors" %}</li>
+      <li class="mf-demo-chip">{% trans "Training and events" %}</li>
+      <li class="mf-demo-chip">{% trans "Government services" %}</li>
+      <li class="mf-demo-chip">{% trans "Education" %}</li>
+    </ul>
+  </div>
+
+  {# What an applicant sees: drawn in CSS so it stays crisp in both themes. #}
+  <div class="mf-demo-mock" aria-hidden="true">
+    <p class="mf-demo-mock__title">{% trans "Leave request" %}</p>
+    <div class="mf-demo-mock__field">
+      <span class="mf-demo-mock__label">{% trans "Full name" %}</span>
+      <span class="mf-demo-mock__input"></span>
+    </div>
+    <div class="mf-demo-mock__field">
+      <span class="mf-demo-mock__label">{% trans "Leave type" %}</span>
+      <span class="mf-demo-mock__input mf-demo-mock__input--select">{% trans "Annual leave" %}</span>
+    </div>
+    <div class="mf-demo-mock__field">
+      <span class="mf-demo-mock__label">{% trans "Dates" %}</span>
+      <span class="mf-demo-mock__input"></span>
+    </div>
+    <div class="mf-demo-mock__actions">
+      <span class="mf-landing-still__btn mf-landing-still__btn--primary">{% trans "Submit" %}</span>
+      <span class="mf-landing-still__btn">{% trans "Save draft" %}</span>
+    </div>
+  </div>
+</section>
+
+<section class="mf-landing-features" aria-labelledby="mf-demo-intro-title">
+  <h2 class="mf-landing-h2" id="mf-demo-intro-title">{% trans "In one minute" %}</h2>
+  <ul class="mf-landing-features__grid">
+    <li><h3>{% trans "What it is" %}</h3><p>{% trans "A form builder, an approval engine and a document generator in one place, instead of three tools stitched together with email." %}</p></li>
+    <li><h3>{% trans "Who it is for" %}</h3><p>{% trans "Organizations that run requests every day: leave, vendor onboarding, enrolment, service applications and more." %}</p></li>
+    <li><h3>{% trans "What you get" %}</h3><p>{% trans "Fewer emails and spreadsheets. Every request has an owner, a status, a full history and, when it is done, a document." %}</p></li>
+  </ul>
+</section>
+
+<section class="mf-demo-tour" id="tour" aria-labelledby="mf-demo-tour-title" data-mf-tabs>
+  <h2 class="mf-landing-h2" id="mf-demo-tour-title">{% trans "A request, start to finish" %}</h2>
+  <p class="mf-demo-lead">{% trans "Pick a stage to see what staff and applicants do there." %}</p>
+
+  <div class="mf-demo-tabs" role="tablist" aria-label="{% trans 'Stages of a request' %}">
+    <button class="mf-demo-tab" type="button" role="tab" id="mf-tour-tab-build" aria-controls="mf-tour-build" aria-selected="true">{% trans "1. Build" %}</button>
+    <button class="mf-demo-tab" type="button" role="tab" id="mf-tour-tab-publish" aria-controls="mf-tour-publish" aria-selected="false" tabindex="-1">{% trans "2. Publish" %}</button>
+    <button class="mf-demo-tab" type="button" role="tab" id="mf-tour-tab-route" aria-controls="mf-tour-route" aria-selected="false" tabindex="-1">{% trans "3. Route" %}</button>
+    <button class="mf-demo-tab" type="button" role="tab" id="mf-tour-tab-deliver" aria-controls="mf-tour-deliver" aria-selected="false" tabindex="-1">{% trans "4. Deliver" %}</button>
+  </div>
+
+  <div class="mf-demo-panel" id="mf-tour-build" role="tabpanel" aria-labelledby="mf-tour-tab-build">
+    <div class="mf-demo-panel__copy">
+      <h3>{% trans "Design the form" %}</h3>
+      <p>{% trans "Add fields in any order and group them into sections. Start from a ready-made template or build it field by field." %}</p>
+      <ul class="mf-demo-list">
+        <li>{% trans "Text, numbers, dates, dropdowns, checklists and file uploads" %}</li>
+        <li>{% trans "Validation rules, including values that must be unique" %}</li>
+        <li>{% trans "Pre-fill answers from the signed-in person's profile" %}</li>
+        <li>{% trans "Each form picks its own direction: right-to-left or left-to-right" %}</li>
+      </ul>
+    </div>
+    <div class="mf-demo-mock" aria-hidden="true">
+      <p class="mf-demo-mock__title">{% trans "Fields" %}</p>
+      <div class="mf-demo-mock__row"><span class="mf-demo-mock__grip"></span><span class="mf-demo-mock__name">{% trans "Full name" %}</span><span class="mf-landing-still__pill">{% trans "Short text" %}</span></div>
+      <div class="mf-demo-mock__row"><span class="mf-demo-mock__grip"></span><span class="mf-demo-mock__name">{% trans "Leave type" %}</span><span class="mf-landing-still__pill">{% trans "Dropdown" %}</span></div>
+      <div class="mf-demo-mock__row"><span class="mf-demo-mock__grip"></span><span class="mf-demo-mock__name">{% trans "Start date" %}</span><span class="mf-landing-still__pill">{% trans "Date" %}</span></div>
+      <div class="mf-demo-mock__row"><span class="mf-demo-mock__grip"></span><span class="mf-demo-mock__name">{% trans "Supporting document" %}</span><span class="mf-landing-still__pill">{% trans "File upload" %}</span></div>
+    </div>
+  </div>
+
+  <div class="mf-demo-panel" id="mf-tour-publish" role="tabpanel" aria-labelledby="mf-tour-tab-publish">
+    <div class="mf-demo-panel__copy">
+      <h3>{% trans "Share it" %}</h3>
+      <p>{% trans "Publish with one switch. Applicants open a link or scan a code, and you decide who may submit." %}</p>
+      <ul class="mf-demo-list">
+        <li>{% trans "A public link and a QR code for posters and screens" %}</li>
+        <li>{% trans "An announcement page with a deadline and a seat capacity" %}</li>
+        <li>{% trans "Open to everyone, or only for signed-in people" %}</li>
+        <li>{% trans "One response per person, and drafts that can be resumed later" %}</li>
+      </ul>
+    </div>
+    <div class="mf-demo-mock" aria-hidden="true">
+      <p class="mf-demo-mock__title">{% trans "Training enrolment" %}</p>
+      <div class="mf-demo-mock__split">
+        <span class="mf-demo-qr"></span>
+        <div>
+          <p class="mf-demo-mock__meta">{% trans "Closes on 30 November" %}</p>
+          <p class="mf-demo-mock__meta">{% trans "42 of 100 seats taken" %}</p>
+          <span class="mf-demo-meter"><span class="mf-demo-meter__bar"></span></span>
+        </div>
+      </div>
+      <div class="mf-demo-mock__row mf-demo-mock__row--link"><span class="mf-demo-mock__name">swapforms.com/e/your-organization/f/training</span></div>
+    </div>
+  </div>
+
+  <div class="mf-demo-panel" id="mf-tour-route" role="tabpanel" aria-labelledby="mf-tour-tab-route">
+    <div class="mf-demo-panel__copy">
+      <h3>{% trans "Send it to the right people" %}</h3>
+      <p>{% trans "Choose the path that fits the process. Both options keep a decision-by-decision history." %}</p>
+      <ul class="mf-demo-list">
+        <li>{% trans "Fixed steps: an ordered chain of approvers, with delegation when someone is away and undo for the last approval" %}</li>
+        <li>{% trans "Dynamic routing: whoever holds a request picks the next person by name or job title" %}</li>
+        <li>{% trans "Name a job title on the form and new requests go straight to whoever holds it, learning your usual pick" %}</li>
+        <li>{% trans "Reject with a reason and the request goes back to the person who submitted it" %}</li>
+      </ul>
+    </div>
+    <div class="mf-demo-mock" aria-hidden="true">
+      <p class="mf-demo-mock__title">{% trans "Fixed steps" %}</p>
+      <ol class="mf-demo-chain">
+        <li class="is-done">{% trans "Manager" %}</li>
+        <li class="is-current">{% trans "Finance" %}</li>
+        <li>{% trans "HR" %}</li>
+      </ol>
+      <p class="mf-demo-mock__title mf-demo-mock__title--gap">{% trans "Dynamic routing" %}</p>
+      <div class="mf-demo-search">
+        <span class="mf-demo-search__label">{% trans "Route to" %}</span>
+        <span class="mf-demo-search__input">{% trans "Finance Manager" %}</span>
+        <span class="mf-demo-search__option mf-demo-search__option--hl">{% trans "Noura Al-Sabah" %} <span class="mf-landing-still__pill mf-landing-still__pill--done">{% trans "Suggested" %}</span></span>
+        <span class="mf-demo-search__option">{% trans "Omar Haddad" %}</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="mf-demo-panel" id="mf-tour-deliver" role="tabpanel" aria-labelledby="mf-tour-tab-deliver">
+    <div class="mf-demo-panel__copy">
+      <h3>{% trans "Close the loop" %}</h3>
+      <p>{% trans "Applicants always know where their request stands, and approved cases turn into a finished document." %}</p>
+      <ul class="mf-demo-list">
+        <li>{% trans "A reference link with a live status timeline, no account needed" %}</li>
+        <li>{% trans "Messages between applicant and team, with email notifications" %}</li>
+        <li>{% trans "Answers merge into your DOCX or PDF template and can be signed in the browser" %}</li>
+        <li>{% trans "Results can be posted to your other systems on every step" %}</li>
+      </ul>
+    </div>
+    <div class="mf-demo-mock" aria-hidden="true">
+      <p class="mf-demo-mock__title">{% trans "Track your submission" %}</p>
+      <p class="mf-demo-mock__meta"><span class="mf-demo-mono">{% trans "Reference" %}: 26092035532960</span></p>
+      <div class="mf-landing-still__timeline">
+        <span class="mf-landing-still__dot mf-landing-still__dot--done"></span><span>{% trans "Submitted" context "timeline event" %}</span>
+        <span class="mf-landing-still__dot mf-landing-still__dot--done"></span><span>{% trans "Manager review" %}</span>
+        <span class="mf-landing-still__dot mf-landing-still__dot--done"></span><span>{% trans "Finance" %}</span>
+        <span class="mf-landing-still__dot mf-landing-still__dot--done"></span><span>{% trans "Signed PDF" %}</span>
+      </div>
+      <div class="mf-demo-mock__actions">
+        <span class="mf-landing-still__btn mf-landing-still__btn--primary">{% trans "Download PDF" %}</span>
+        <span class="mf-landing-still__btn">{% trans "Send message" %}</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="mf-demo-journey" aria-labelledby="mf-demo-journey-title" data-mf-tabs>
+  <h2 class="mf-landing-h2" id="mf-demo-journey-title">{% trans "Follow one request" %}</h2>
+  <p class="mf-demo-lead">{% trans "Step through a leave request and see what happens at each point." %}</p>
+  <div class="mf-demo-tabs mf-demo-tabs--steps" role="tablist" aria-label="{% trans 'Steps of a leave request' %}">
+    <button class="mf-demo-tab" type="button" role="tab" id="mf-journey-tab-1" aria-controls="mf-journey-1" aria-selected="true">{% trans "Submitted" context "timeline event" %}</button>
+    <button class="mf-demo-tab" type="button" role="tab" id="mf-journey-tab-2" aria-controls="mf-journey-2" aria-selected="false" tabindex="-1">{% trans "Manager review" %}</button>
+    <button class="mf-demo-tab" type="button" role="tab" id="mf-journey-tab-3" aria-controls="mf-journey-3" aria-selected="false" tabindex="-1">{% trans "Finance" %}</button>
+    <button class="mf-demo-tab" type="button" role="tab" id="mf-journey-tab-4" aria-controls="mf-journey-4" aria-selected="false" tabindex="-1">{% trans "Signed PDF" %}</button>
+  </div>
+  <div class="mf-demo-panel mf-demo-panel--text" id="mf-journey-1" role="tabpanel" aria-labelledby="mf-journey-tab-1">
+    <p><strong>{% trans "Applicant" %}</strong> {% trans "gets a reference link right away and can follow the status at any time." %}</p>
+    <p><strong>{% trans "Staff" %}</strong> {% trans "see the request arrive in the first reviewer's inbox." %}</p>
+  </div>
+  <div class="mf-demo-panel mf-demo-panel--text" id="mf-journey-2" role="tabpanel" aria-labelledby="mf-journey-tab-2">
+    <p><strong>{% trans "Applicant" %}</strong> {% trans "sees the status move to manager review." %}</p>
+    <p><strong>{% trans "Staff" %}</strong> {% trans "approve, reject with a reason, or hand the request to someone else. A delegate can act while the manager is away." %}</p>
+  </div>
+  <div class="mf-demo-panel mf-demo-panel--text" id="mf-journey-3" role="tabpanel" aria-labelledby="mf-journey-tab-3">
+    <p><strong>{% trans "Applicant" %}</strong> {% trans "can send a message to the team if something is missing." %}</p>
+    <p><strong>{% trans "Staff" %}</strong> {% trans "are notified, decide, and every decision is added to the timeline with who made it and when." %}</p>
+  </div>
+  <div class="mf-demo-panel mf-demo-panel--text" id="mf-journey-4" role="tabpanel" aria-labelledby="mf-journey-tab-4">
+    <p><strong>{% trans "Applicant" %}</strong> {% trans "downloads the finished PDF from the same reference link." %}</p>
+    <p><strong>{% trans "Staff" %}</strong> {% trans "see the answers merged into the template, signed in the browser and ready to file." %}</p>
+  </div>
+</section>
+
+<section class="mf-landing-features" id="features" aria-labelledby="mf-demo-features-title">
+  <h2 class="mf-landing-h2" id="mf-demo-features-title">{% trans "Everything in the box" %}</h2>
+  <ul class="mf-landing-features__grid">
+    <li>
+      <h3>{% trans "Build" %}</h3>
+      <ul class="mf-demo-list">
+        <li>{% trans "Sections, hints and display-only text" %}</li>
+        <li>{% trans "Conditional visibility and validation rules" %}</li>
+        <li>{% trans "Pre-fill from the signed-in profile" %}</li>
+        <li>{% trans "Related forms that applicants are invited to complete" %}</li>
+      </ul>
+    </li>
+    <li>
+      <h3>{% trans "Publish" %}</h3>
+      <ul class="mf-demo-list">
+        <li>{% trans "Public link, secure share link and QR code" %}</li>
+        <li>{% trans "Announcement page with capacity and deadline" %}</li>
+        <li>{% trans "Open access or sign-in required" %}</li>
+        <li>{% trans "Save draft and resume later" %}</li>
+      </ul>
+    </li>
+    <li>
+      <h3>{% trans "Route" %}</h3>
+      <ul class="mf-demo-list">
+        <li>{% trans "Ordered approval steps with assignees" %}</li>
+        <li>{% trans "Dynamic routing by name or job title" %}</li>
+        <li>{% trans "Delegation, undo and a full decision log" %}</li>
+        <li>{% trans "Inbox with quick approve and reject" %}</li>
+      </ul>
+    </li>
+    <li>
+      <h3>{% trans "Track" %}</h3>
+      <ul class="mf-demo-list">
+        <li>{% trans "Reference link with a status timeline" %}</li>
+        <li>{% trans "Messages between applicant and team" %}</li>
+        <li>{% trans "Extra documents uploaded to a request" %}</li>
+        <li>{% trans "Email notifications you can customize" %}</li>
+      </ul>
+    </li>
+    <li>
+      <h3>{% trans "Documents" %}</h3>
+      <ul class="mf-demo-list">
+        <li>{% trans "DOCX or PDF templates with placeholders" %}</li>
+        <li>{% trans "Merged PDFs that render Arabic correctly" %}</li>
+        <li>{% trans "Signatures drawn or saved, applied in the browser" %}</li>
+        <li>{% trans "Responses exported for reporting" %}</li>
+      </ul>
+    </li>
+    <li>
+      <h3>{% trans "Connect and govern" %}</h3>
+      <ul class="mf-demo-list">
+        <li>{% trans "Validate answers against your API before submit" %}</li>
+        <li>{% trans "Post results to other systems on every step" %}</li>
+        <li>{% trans "One workspace per organization with read and write permissions" %}</li>
+        <li>{% trans "Activity log and a mobile API for approvals on the go" %}</li>
+      </ul>
+    </li>
+  </ul>
+</section>
+
+<section class="mf-landing-features" id="uses" aria-labelledby="mf-demo-uses-title">
+  <h2 class="mf-landing-h2" id="mf-demo-uses-title">{% trans "Where it fits" %}</h2>
+  <p class="mf-demo-lead">{% trans "Example flows. Your steps and people are your own." %}</p>
+  <ul class="mf-landing-features__grid">
+    <li>
+      <h3>{% trans "Leave request" %}</h3>
+      <ol class="mf-demo-flow"><li>{% trans "Employee" %}</li><li>{% trans "Manager" %}</li><li>{% trans "HR" %}</li><li>{% trans "Signed approval" %}</li></ol>
+    </li>
+    <li>
+      <h3>{% trans "Vendor registration" %}</h3>
+      <ol class="mf-demo-flow"><li>{% trans "Vendor" %}</li><li>{% trans "Procurement" %}</li><li>{% trans "Finance" %}</li><li>{% trans "Registered" %}</li></ol>
+    </li>
+    <li>
+      <h3>{% trans "Training enrolment" %}</h3>
+      <ol class="mf-demo-flow"><li>{% trans "Applicant" %}</li><li>{% trans "Seat check" %}</li><li>{% trans "Confirmed" %}</li></ol>
+    </li>
+    <li>
+      <h3>{% trans "Service application" %}</h3>
+      <ol class="mf-demo-flow"><li>{% trans "Citizen" %}</li><li>{% trans "Review" %}</li><li>{% trans "Decision letter" %}</li></ol>
+    </li>
+  </ul>
+</section>
+
+<section class="mf-landing-steps" id="values" aria-labelledby="mf-demo-values-title">
+  <h2 class="mf-landing-h2" id="mf-demo-values-title">{% trans "What we stand for" %}</h2>
+  <ul class="mf-demo-values">
+    <li><h3>{% trans "Calm over clutter" %}</h3><p>{% trans "One clear next action on every screen, for staff and for applicants." %}</p></li>
+    <li><h3>{% trans "Accountable by default" %}</h3><p>{% trans "Every decision is recorded on the request's timeline with who made it and when." %}</p></li>
+    <li><h3>{% trans "Open to everyone" %}</h3><p>{% trans "Arabic first and right-to-left ready. Applicants are always free and need no account unless you ask for one." %}</p></li>
+    <li><h3>{% trans "Your organization, separate" %}</h3><p>{% trans "Each organization has its own workspace, members, permissions and branding." %}</p></li>
+    <li><h3>{% trans "Fits how you work" %}</h3><p>{% trans "No code to start, and it connects to your systems when you are ready." %}</p></li>
+  </ul>
+</section>
+
+<section class="mf-demo-faq" id="faq" aria-labelledby="mf-demo-faq-title">
+  <h2 class="mf-landing-h2" id="mf-demo-faq-title">{% trans "Questions people ask" %}</h2>
+  <details class="mf-demo-faq__item">
+    <summary>{% trans "Do applicants need an account?" %}</summary>
+    <p>{% trans "No, unless you choose to require sign-in for a form. Applicants get a reference link to follow their request." %}</p>
+  </details>
+  <details class="mf-demo-faq__item">
+    <summary>{% trans "Does it work in Arabic?" %}</summary>
+    <p>{% trans "Yes. The whole product is available in Arabic and English, each form can pin its direction, and generated PDFs render Arabic correctly." %}</p>
+  </details>
+  <details class="mf-demo-faq__item">
+    <summary>{% trans "Can I design my own approval path?" %}</summary>
+    <p>{% trans "Yes. Use fixed steps with named approvers, or dynamic routing where the person holding a request chooses who gets it next." %}</p>
+  </details>
+  <details class="mf-demo-faq__item">
+    <summary>{% trans "How do documents and signatures work?" %}</summary>
+    <p>{% trans "Upload a DOCX or PDF template with placeholders. Answers merge into a PDF that the right person can sign in the browser." %}</p>
+  </details>
+  <details class="mf-demo-faq__item">
+    <summary>{% trans "Can it talk to our other systems?" %}</summary>
+    <p>{% trans "Yes. Validate answers against your API before submit and post results to other systems as a request moves." %}</p>
+  </details>
+  <details class="mf-demo-faq__item">
+    <summary>{% trans "How do I start?" %}</summary>
+    <p>{% trans "Start free with one live form and grow from there. See the plans on the landing page, or talk to support." %}</p>
+  </details>
+</section>
+
+<section class="mf-landing-cta" aria-labelledby="mf-demo-cta-title">
+  <h2 class="mf-landing-h2" id="mf-demo-cta-title">{% trans "Want to see it with your own forms?" %}</h2>
+  <p>{% trans "Staff sign in with their organization account. Applicants never need one." %}</p>
+  <div class="mf-landing-hero__actions">
+    {% if user.is_authenticated and studio_available %}
+      <a class="mf-button mf-button--primary" href="{% url 'manage:dashboard' %}">{% trans "Open workspace" %}</a>
+    {% else %}
+      <a class="mf-button mf-button--primary" href="{% url 'manage:login' %}?next={{ studio_login_next|urlencode }}">{% trans "Sign in" %}</a>
+    {% endif %}
+    <a class="mf-button mf-button--secondary" href="{{ landing_page_url }}#plans">{% trans "See plans" %}</a>
+    <a class="mf-button mf-button--secondary" href="https://support.swapkuwait.com/" rel="noopener noreferrer" target="_blank">{% trans "Talk to support" %}</a>
+  </div>
+</section>
+{% endblock %}
+
+{% block site_footer %}
+  {% include "magicforms/includes/site_footer.html" %}
+{% endblock %}

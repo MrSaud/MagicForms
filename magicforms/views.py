@@ -196,6 +196,18 @@ def landing(request):
     )
 
 
+def demo(request):
+    """Public product tour at ``/demo/``: what SwapForms is, its features and values. No sign-in needed."""
+    return render(
+        request,
+        "magicforms/demo.html",
+        {
+            "studio_available": False,
+            "studio_login_next": reverse("manage:dashboard"),
+        },
+    )
+
+
 def entity_home(request, entity_slug=None):
     """Branded public portal for one organization: open forms, news, theme."""
     from .entity_access import published_forms_for_entity_portal

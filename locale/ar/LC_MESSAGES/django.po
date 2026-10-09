@@ -3016,7 +3016,7 @@ msgid "Back to submission"
 msgstr "العودة إلى التقديم"
 
 msgid "Download PDF"
-msgstr "تحميل قوات الدفاع الشعبي"
+msgstr "تنزيل PDF"
 
 msgid "Download ODT for editing"
 msgstr "تنزيل ODT للتحرير"
@@ -4634,6 +4634,10 @@ msgstr "خاص بالتوجيه الديناميكي فقط. عند ضبطه، �
 msgid "e.g. Finance Manager"
 msgstr "مثال: مدير مالي"
 
+#: magicforms/manage_views.py
+msgid "Suggested"
+msgstr "مقترَح"
+
 #: magicforms/staff_forms.py
 msgid "This form has submissions awaiting approval. Wait until none are in progress before changing workflow routing."
 msgstr "لدى هذا النموذج طلبات في انتظار الموافقة. انتظر حتى لا يبقى أي طلب قيد المعالجة قبل تغيير توجيه مسار العمل."
@@ -4724,3 +4728,611 @@ msgstr "هذا الطلب حاليًا لدى %(holder)s."
 msgctxt "timeline event"
 msgid "Routed"
 msgstr "تم التوجيه"
+
+#: magicforms/templates/magicforms/demo.html
+msgid "Product tour"
+msgstr "جولة في المنتج"
+
+#: magicforms/templates/magicforms/demo.html
+msgid "See what SwapForms is, what it does and what it stands for: forms, approvals, documents and signatures in one calm place."
+msgstr "تعرّف على سواب فورمز: ما هو، وماذا يقدّم، وما القيم التي يقوم عليها. نماذج واعتمادات ومستندات وتوقيعات في مكان واحد هادئ."
+
+#: magicforms/templates/magicforms/demo.html
+msgid "Tour"
+msgstr "الجولة"
+
+#: magicforms/templates/magicforms/demo.html
+msgid "Values"
+msgstr "القيم"
+
+#: magicforms/templates/magicforms/demo.html
+msgid "FAQ"
+msgstr "الأسئلة الشائعة"
+
+#: magicforms/templates/magicforms/demo.html
+msgid "What is SwapForms?"
+msgstr "ما هو سواب فورمز؟"
+
+#: magicforms/templates/magicforms/demo.html
+msgid "SwapForms is an online workspace for organizations. Staff build a form, decide who approves it, and applicants follow their request from submission to a signed PDF, in Arabic or English, with no code."
+msgstr "سواب فورمز مساحة عمل إلكترونية للمؤسسات. ينشئ الموظفون النموذج ويحدّدون من يعتمده، ويتابع مقدّمو الطلبات طلباتهم من لحظة الإرسال حتى ملف PDF موقَّع، بالعربية أو الإنجليزية ودون أي برمجة."
+
+#: magicforms/templates/magicforms/demo.html
+msgid "Take the tour"
+msgstr "ابدأ الجولة"
+
+#: magicforms/templates/magicforms/demo.html
+msgid "Who uses it"
+msgstr "من يستخدمه"
+
+#: magicforms/templates/magicforms/demo.html
+msgid "HR and leave"
+msgstr "الموارد البشرية والإجازات"
+
+#: magicforms/templates/magicforms/demo.html
+msgid "Procurement and vendors"
+msgstr "المشتريات والموردون"
+
+#: magicforms/templates/magicforms/demo.html
+msgid "Training and events"
+msgstr "التدريب والفعاليات"
+
+#: magicforms/templates/magicforms/demo.html
+msgid "Government services"
+msgstr "الخدمات الحكومية"
+
+#: magicforms/templates/magicforms/demo.html
+msgid "Education"
+msgstr "التعليم"
+
+#: magicforms/templates/magicforms/demo.html
+msgid "Full name"
+msgstr "الاسم الكامل"
+
+#: magicforms/templates/magicforms/demo.html
+msgid "Leave type"
+msgstr "نوع الإجازة"
+
+#: magicforms/templates/magicforms/demo.html
+msgid "Annual leave"
+msgstr "إجازة سنوية"
+
+#: magicforms/templates/magicforms/demo.html
+msgid "Dates"
+msgstr "التواريخ"
+
+#: magicforms/templates/magicforms/demo.html
+msgid "Save draft"
+msgstr "حفظ كمسودة"
+
+#: magicforms/templates/magicforms/demo.html
+msgid "In one minute"
+msgstr "في دقيقة واحدة"
+
+#: magicforms/templates/magicforms/demo.html
+msgid "What it is"
+msgstr "ما هو"
+
+#: magicforms/templates/magicforms/demo.html
+msgid "A form builder, an approval engine and a document generator in one place, instead of three tools stitched together with email."
+msgstr "منشئ نماذج ومحرّك اعتمادات ومولّد مستندات في مكان واحد، بدل ثلاث أدوات تربطها رسائل البريد."
+
+#: magicforms/templates/magicforms/demo.html
+msgid "Who it is for"
+msgstr "لمن هو"
+
+#: magicforms/templates/magicforms/demo.html
+msgid "Organizations that run requests every day: leave, vendor onboarding, enrolment, service applications and more."
+msgstr "للمؤسسات التي تدير طلبات يومية: الإجازات وتسجيل الموردين والالتحاق وطلبات الخدمات وغيرها."
+
+#: magicforms/templates/magicforms/demo.html
+msgid "What you get"
+msgstr "ماذا تحصل عليه"
+
+#: magicforms/templates/magicforms/demo.html
+msgid "Fewer emails and spreadsheets. Every request has an owner, a status, a full history and, when it is done, a document."
+msgstr "رسائل بريد وجداول بيانات أقل. لكل طلب مسؤول وحالة وسجل كامل، وعند اكتماله يصدر مستند."
+
+#: magicforms/templates/magicforms/demo.html
+msgid "A request, start to finish"
+msgstr "طلب واحد من البداية إلى النهاية"
+
+#: magicforms/templates/magicforms/demo.html
+msgid "Pick a stage to see what staff and applicants do there."
+msgstr "اختر مرحلة لترى ما يفعله الموظفون ومقدّمو الطلبات فيها."
+
+#: magicforms/templates/magicforms/demo.html
+msgid "Stages of a request"
+msgstr "مراحل الطلب"
+
+#: magicforms/templates/magicforms/demo.html
+msgid "1. Build"
+msgstr "1. البناء"
+
+#: magicforms/templates/magicforms/demo.html
+msgid "2. Publish"
+msgstr "2. النشر"
+
+#: magicforms/templates/magicforms/demo.html
+msgid "3. Route"
+msgstr "3. التوجيه"
+
+#: magicforms/templates/magicforms/demo.html
+msgid "4. Deliver"
+msgstr "4. التسليم"
+
+#: magicforms/templates/magicforms/demo.html
+msgid "Design the form"
+msgstr "صمّم النموذج"
+
+#: magicforms/templates/magicforms/demo.html
+msgid "Add fields in any order and group them into sections. Start from a ready-made template or build it field by field."
+msgstr "أضف الحقول بالترتيب الذي تريده وقسّمها إلى أقسام. ابدأ من قالب جاهز أو ابنِ النموذج حقلًا حقلًا."
+
+#: magicforms/templates/magicforms/demo.html
+msgid "Text, numbers, dates, dropdowns, checklists and file uploads"
+msgstr "نصوص وأرقام وتواريخ وقوائم منسدلة وقوائم تحقق ورفع ملفات"
+
+#: magicforms/templates/magicforms/demo.html
+msgid "Validation rules, including values that must be unique"
+msgstr "قواعد تحقق، بما فيها القيم التي يجب ألا تتكرر"
+
+#: magicforms/templates/magicforms/demo.html
+msgid "Pre-fill answers from the signed-in person's profile"
+msgstr "تعبئة الإجابات تلقائيًا من ملف الشخص المسجَّل دخوله"
+
+#: magicforms/templates/magicforms/demo.html
+msgid "Each form picks its own direction: right-to-left or left-to-right"
+msgstr "لكل نموذج اتجاهه: من اليمين إلى اليسار أو من اليسار إلى اليمين"
+
+#: magicforms/templates/magicforms/demo.html
+msgid "Short text"
+msgstr "نص قصير"
+
+#: magicforms/templates/magicforms/demo.html
+msgid "Dropdown"
+msgstr "قائمة منسدلة"
+
+#: magicforms/templates/magicforms/demo.html
+msgid "Start date"
+msgstr "تاريخ البدء"
+
+#: magicforms/templates/magicforms/demo.html
+msgid "Date"
+msgstr "تاريخ"
+
+#: magicforms/templates/magicforms/demo.html
+msgid "Supporting document"
+msgstr "مستند داعم"
+
+#: magicforms/templates/magicforms/demo.html
+msgid "File upload"
+msgstr "رفع ملف"
+
+#: magicforms/templates/magicforms/demo.html
+msgid "Share it"
+msgstr "شارِكه"
+
+#: magicforms/templates/magicforms/demo.html
+msgid "Publish with one switch. Applicants open a link or scan a code, and you decide who may submit."
+msgstr "انشر بمفتاح واحد. يفتح مقدّمو الطلبات الرابط أو يمسحون الرمز، وأنت تحدّد من يحق له الإرسال."
+
+#: magicforms/templates/magicforms/demo.html
+msgid "A public link and a QR code for posters and screens"
+msgstr "رابط عام ورمز QR للملصقات والشاشات"
+
+#: magicforms/templates/magicforms/demo.html
+msgid "An announcement page with a deadline and a seat capacity"
+msgstr "صفحة إعلان بموعد نهائي وعدد مقاعد محدد"
+
+#: magicforms/templates/magicforms/demo.html
+msgid "Open to everyone, or only for signed-in people"
+msgstr "مفتوح للجميع أو لمن سجّل الدخول فقط"
+
+#: magicforms/templates/magicforms/demo.html
+msgid "One response per person, and drafts that can be resumed later"
+msgstr "ردّ واحد لكل شخص، ومسودات يمكن استكمالها لاحقًا"
+
+#: magicforms/templates/magicforms/demo.html
+msgid "Closes on 30 November"
+msgstr "يُغلق في 30 نوفمبر"
+
+#: magicforms/templates/magicforms/demo.html
+msgid "42 of 100 seats taken"
+msgstr "42 من 100 مقعد محجوز"
+
+#: magicforms/templates/magicforms/demo.html
+msgid "Send it to the right people"
+msgstr "أرسله إلى الأشخاص المناسبين"
+
+#: magicforms/templates/magicforms/demo.html
+msgid "Choose the path that fits the process. Both options keep a decision-by-decision history."
+msgstr "اختر المسار الذي يناسب إجراءاتك. كلا الخيارين يحفظ سجلًّا بكل قرار على حدة."
+
+#: magicforms/templates/magicforms/demo.html
+msgid "Fixed steps: an ordered chain of approvers, with delegation when someone is away and undo for the last approval"
+msgstr "خطوات ثابتة: سلسلة مرتّبة من المعتمِدين، مع تفويض عند غياب أحدهم وإمكانية التراجع عن آخر اعتماد"
+
+#: magicforms/templates/magicforms/demo.html
+msgid "Dynamic routing: whoever holds a request picks the next person by name or job title"
+msgstr "توجيه ديناميكي: من بيده الطلب يختار الشخص التالي بالاسم أو المسمى الوظيفي"
+
+#: magicforms/templates/magicforms/demo.html
+msgid "Name a job title on the form and new requests go straight to whoever holds it, learning your usual pick"
+msgstr "حدّد مسمى وظيفيًا في النموذج فتذهب الطلبات الجديدة مباشرة إلى من يشغله، مع تعلّم اختيارك المعتاد"
+
+#: magicforms/templates/magicforms/demo.html
+msgid "Reject with a reason and the request goes back to the person who submitted it"
+msgstr "ارفض مع ذكر السبب فيعود الطلب إلى من أرسله"
+
+#: magicforms/templates/magicforms/demo.html
+msgid "Fixed steps"
+msgstr "خطوات ثابتة"
+
+#: magicforms/templates/magicforms/demo.html
+msgid "HR"
+msgstr "الموارد البشرية"
+
+#: magicforms/templates/magicforms/demo.html
+msgid "Dynamic routing"
+msgstr "توجيه ديناميكي"
+
+#: magicforms/templates/magicforms/demo.html
+msgid "Finance Manager"
+msgstr "مدير مالي"
+
+#: magicforms/templates/magicforms/demo.html
+msgid "Noura Al-Sabah"
+msgstr "نورة الصباح"
+
+#: magicforms/templates/magicforms/demo.html
+msgid "Omar Haddad"
+msgstr "عمر حداد"
+
+#: magicforms/templates/magicforms/demo.html
+msgid "Close the loop"
+msgstr "أنهِ الدورة"
+
+#: magicforms/templates/magicforms/demo.html
+msgid "Applicants always know where their request stands, and approved cases turn into a finished document."
+msgstr "يعرف مقدّمو الطلبات دائمًا أين وصل طلبهم، وتتحوّل الحالات المعتمدة إلى مستند جاهز."
+
+#: magicforms/templates/magicforms/demo.html
+msgid "A reference link with a live status timeline, no account needed"
+msgstr "رابط مرجعي بجدول زمني حيّ للحالة، دون الحاجة إلى حساب"
+
+#: magicforms/templates/magicforms/demo.html
+msgid "Messages between applicant and team, with email notifications"
+msgstr "رسائل بين مقدّم الطلب والفريق مع إشعارات بالبريد"
+
+#: magicforms/templates/magicforms/demo.html
+msgid "Answers merge into your DOCX or PDF template and can be signed in the browser"
+msgstr "تُدمج الإجابات في قالب DOCX أو PDF لديك ويمكن توقيعها في المتصفح"
+
+#: magicforms/templates/magicforms/demo.html
+msgid "Results can be posted to your other systems on every step"
+msgstr "يمكن إرسال النتائج إلى أنظمتك الأخرى في كل خطوة"
+
+#: magicforms/templates/magicforms/demo.html
+msgid "Send message"
+msgstr "إرسال رسالة"
+
+#: magicforms/templates/magicforms/demo.html
+msgid "Follow one request"
+msgstr "تابع طلبًا واحدًا"
+
+#: magicforms/templates/magicforms/demo.html
+msgid "Step through a leave request and see what happens at each point."
+msgstr "تنقّل عبر طلب إجازة وشاهد ما يحدث في كل مرحلة."
+
+#: magicforms/templates/magicforms/demo.html
+msgid "Steps of a leave request"
+msgstr "مراحل طلب الإجازة"
+
+#: magicforms/templates/magicforms/demo.html
+msgid "gets a reference link right away and can follow the status at any time."
+msgstr "يحصل فورًا على رابط مرجعي ويمكنه متابعة الحالة في أي وقت."
+
+#: magicforms/templates/magicforms/demo.html
+msgid "Staff"
+msgstr "الموظفون"
+
+#: magicforms/templates/magicforms/demo.html
+msgid "see the request arrive in the first reviewer's inbox."
+msgstr "يرون الطلب يصل إلى صندوق الوارد لدى المراجع الأول."
+
+#: magicforms/templates/magicforms/demo.html
+msgid "sees the status move to manager review."
+msgstr "يرى الحالة تنتقل إلى مراجعة المدير."
+
+#: magicforms/templates/magicforms/demo.html
+msgid "approve, reject with a reason, or hand the request to someone else. A delegate can act while the manager is away."
+msgstr "يعتمدون الطلب أو يرفضونه مع ذكر السبب أو يحيلونه إلى شخص آخر. ويمكن للمفوَّض التصرف أثناء غياب المدير."
+
+#: magicforms/templates/magicforms/demo.html
+msgid "can send a message to the team if something is missing."
+msgstr "يمكنه مراسلة الفريق إذا كان هناك نقص."
+
+#: magicforms/templates/magicforms/demo.html
+msgid "are notified, decide, and every decision is added to the timeline with who made it and when."
+msgstr "يُشعَرون ويقرّرون، ويُضاف كل قرار إلى الجدول الزمني مع اسم صاحبه ووقته."
+
+#: magicforms/templates/magicforms/demo.html
+msgid "downloads the finished PDF from the same reference link."
+msgstr "ينزّل ملف PDF النهائي من الرابط المرجعي نفسه."
+
+#: magicforms/templates/magicforms/demo.html
+msgid "see the answers merged into the template, signed in the browser and ready to file."
+msgstr "يرون الإجابات مدمجة في القالب وموقَّعة في المتصفح وجاهزة للحفظ."
+
+#: magicforms/templates/magicforms/demo.html
+msgid "Everything in the box"
+msgstr "كل ما تحتاجه"
+
+#: magicforms/templates/magicforms/demo.html
+msgid "Sections, hints and display-only text"
+msgstr "أقسام وتلميحات ونصوص للعرض فقط"
+
+#: magicforms/templates/magicforms/demo.html
+msgid "Conditional visibility and validation rules"
+msgstr "ظهور مشروط وقواعد تحقق"
+
+#: magicforms/templates/magicforms/demo.html
+msgid "Pre-fill from the signed-in profile"
+msgstr "تعبئة تلقائية من ملف المستخدم المسجَّل"
+
+#: magicforms/templates/magicforms/demo.html
+msgid "Related forms that applicants are invited to complete"
+msgstr "نماذج مرتبطة يُدعى مقدّمو الطلبات إلى إكمالها"
+
+#: magicforms/templates/magicforms/demo.html
+msgid "Publish"
+msgstr "انشر"
+
+#: magicforms/templates/magicforms/demo.html
+msgid "Public link, secure share link and QR code"
+msgstr "رابط عام ورابط مشاركة آمن ورمز QR"
+
+#: magicforms/templates/magicforms/demo.html
+msgid "Announcement page with capacity and deadline"
+msgstr "صفحة إعلان بالسعة والموعد النهائي"
+
+#: magicforms/templates/magicforms/demo.html
+msgid "Open access or sign-in required"
+msgstr "وصول مفتوح أو تسجيل دخول إلزامي"
+
+#: magicforms/templates/magicforms/demo.html
+msgid "Save draft and resume later"
+msgstr "حفظ المسودة والمتابعة لاحقًا"
+
+#: magicforms/templates/magicforms/demo.html
+msgid "Ordered approval steps with assignees"
+msgstr "خطوات اعتماد مرتّبة مع تحديد المكلّفين"
+
+#: magicforms/templates/magicforms/demo.html
+msgid "Dynamic routing by name or job title"
+msgstr "توجيه ديناميكي بالاسم أو المسمى الوظيفي"
+
+#: magicforms/templates/magicforms/demo.html
+msgid "Delegation, undo and a full decision log"
+msgstr "تفويض وتراجع وسجل كامل للقرارات"
+
+#: magicforms/templates/magicforms/demo.html
+msgid "Inbox with quick approve and reject"
+msgstr "صندوق وارد مع اعتماد ورفض سريعين"
+
+#: magicforms/templates/magicforms/demo.html
+msgid "Track"
+msgstr "تتبّع"
+
+#: magicforms/templates/magicforms/demo.html
+msgid "Reference link with a status timeline"
+msgstr "رابط مرجعي بجدول زمني للحالة"
+
+#: magicforms/templates/magicforms/demo.html
+msgid "Messages between applicant and team"
+msgstr "رسائل بين مقدّم الطلب والفريق"
+
+#: magicforms/templates/magicforms/demo.html
+msgid "Extra documents uploaded to a request"
+msgstr "مستندات إضافية تُرفع إلى الطلب"
+
+#: magicforms/templates/magicforms/demo.html
+msgid "Email notifications you can customize"
+msgstr "إشعارات بريدية قابلة للتخصيص"
+
+#: magicforms/templates/magicforms/demo.html
+msgid "Documents"
+msgstr "المستندات"
+
+#: magicforms/templates/magicforms/demo.html
+msgid "DOCX or PDF templates with placeholders"
+msgstr "قوالب DOCX أو PDF بعناصر نائبة"
+
+#: magicforms/templates/magicforms/demo.html
+msgid "Merged PDFs that render Arabic correctly"
+msgstr "ملفات PDF مدمجة تعرض العربية بشكل صحيح"
+
+#: magicforms/templates/magicforms/demo.html
+msgid "Signatures drawn or saved, applied in the browser"
+msgstr "توقيعات مرسومة أو محفوظة تُطبَّق في المتصفح"
+
+#: magicforms/templates/magicforms/demo.html
+msgid "Responses exported for reporting"
+msgstr "تصدير الردود للتقارير"
+
+#: magicforms/templates/magicforms/demo.html
+msgid "Connect and govern"
+msgstr "اربط وأدِر"
+
+#: magicforms/templates/magicforms/demo.html
+msgid "Validate answers against your API before submit"
+msgstr "تحقّق من الإجابات عبر واجهتك البرمجية قبل الإرسال"
+
+#: magicforms/templates/magicforms/demo.html
+msgid "Post results to other systems on every step"
+msgstr "أرسل النتائج إلى أنظمة أخرى في كل خطوة"
+
+#: magicforms/templates/magicforms/demo.html
+msgid "One workspace per organization with read and write permissions"
+msgstr "مساحة عمل لكل مؤسسة بصلاحيات قراءة وكتابة"
+
+#: magicforms/templates/magicforms/demo.html
+msgid "Activity log and a mobile API for approvals on the go"
+msgstr "سجل نشاط وواجهة برمجية للجوال لاعتماد الطلبات أثناء التنقل"
+
+#: magicforms/templates/magicforms/demo.html
+msgid "Where it fits"
+msgstr "أين يناسبك"
+
+#: magicforms/templates/magicforms/demo.html
+msgid "Example flows. Your steps and people are your own."
+msgstr "أمثلة على المسارات. خطواتك وأشخاصك من اختيارك."
+
+#: magicforms/templates/magicforms/demo.html
+msgid "Employee"
+msgstr "الموظف"
+
+#: magicforms/templates/magicforms/demo.html
+msgid "Signed approval"
+msgstr "موافقة موقَّعة"
+
+#: magicforms/templates/magicforms/demo.html
+msgid "Vendor"
+msgstr "المورّد"
+
+#: magicforms/templates/magicforms/demo.html
+msgid "Procurement"
+msgstr "المشتريات"
+
+#: magicforms/templates/magicforms/demo.html
+msgid "Registered"
+msgstr "مسجَّل"
+
+#: magicforms/templates/magicforms/demo.html
+msgid "Seat check"
+msgstr "التحقق من المقاعد"
+
+#: magicforms/templates/magicforms/demo.html
+msgid "Confirmed"
+msgstr "مؤكَّد"
+
+#: magicforms/templates/magicforms/demo.html
+msgid "Service application"
+msgstr "طلب خدمة"
+
+#: magicforms/templates/magicforms/demo.html
+msgid "Citizen"
+msgstr "المواطن"
+
+#: magicforms/templates/magicforms/demo.html
+msgid "Review"
+msgstr "المراجعة"
+
+#: magicforms/templates/magicforms/demo.html
+msgid "Decision letter"
+msgstr "خطاب القرار"
+
+#: magicforms/templates/magicforms/demo.html
+msgid "What we stand for"
+msgstr "ما نؤمن به"
+
+#: magicforms/templates/magicforms/demo.html
+msgid "Calm over clutter"
+msgstr "الهدوء قبل الازدحام"
+
+#: magicforms/templates/magicforms/demo.html
+msgid "One clear next action on every screen, for staff and for applicants."
+msgstr "إجراء تالٍ واضح واحد في كل شاشة، للموظفين ولمقدّمي الطلبات."
+
+#: magicforms/templates/magicforms/demo.html
+msgid "Accountable by default"
+msgstr "مساءلة تلقائية"
+
+#: magicforms/templates/magicforms/demo.html
+msgid "Every decision is recorded on the request's timeline with who made it and when."
+msgstr "يُسجَّل كل قرار في الجدول الزمني للطلب مع اسم صاحبه ووقته."
+
+#: magicforms/templates/magicforms/demo.html
+msgid "Open to everyone"
+msgstr "مفتوح للجميع"
+
+#: magicforms/templates/magicforms/demo.html
+msgid "Arabic first and right-to-left ready. Applicants are always free and need no account unless you ask for one."
+msgstr "العربية أولًا ودعم كامل للكتابة من اليمين إلى اليسار. استخدام مقدّمي الطلبات مجاني دائمًا ولا يحتاجون إلى حساب ما لم تطلبه."
+
+#: magicforms/templates/magicforms/demo.html
+msgid "Your organization, separate"
+msgstr "مؤسستك مستقلة"
+
+#: magicforms/templates/magicforms/demo.html
+msgid "Each organization has its own workspace, members, permissions and branding."
+msgstr "لكل مؤسسة مساحة عملها وأعضاؤها وصلاحياتها وهويتها."
+
+#: magicforms/templates/magicforms/demo.html
+msgid "Fits how you work"
+msgstr "يتأقلم مع طريقة عملك"
+
+#: magicforms/templates/magicforms/demo.html
+msgid "No code to start, and it connects to your systems when you are ready."
+msgstr "لا حاجة إلى برمجة للبدء، ويتصل بأنظمتك حين تكون جاهزًا."
+
+#: magicforms/templates/magicforms/demo.html
+msgid "Questions people ask"
+msgstr "أسئلة يطرحها الناس"
+
+#: magicforms/templates/magicforms/demo.html
+msgid "Do applicants need an account?"
+msgstr "هل يحتاج مقدّمو الطلبات إلى حساب؟"
+
+#: magicforms/templates/magicforms/demo.html
+msgid "No, unless you choose to require sign-in for a form. Applicants get a reference link to follow their request."
+msgstr "لا، إلا إذا اخترت اشتراط تسجيل الدخول لنموذج ما. يحصل مقدّمو الطلبات على رابط مرجعي لمتابعة طلبهم."
+
+#: magicforms/templates/magicforms/demo.html
+msgid "Does it work in Arabic?"
+msgstr "هل يعمل بالعربية؟"
+
+#: magicforms/templates/magicforms/demo.html
+msgid "Yes. The whole product is available in Arabic and English, each form can pin its direction, and generated PDFs render Arabic correctly."
+msgstr "نعم. المنتج كاملًا متاح بالعربية والإنجليزية، ويمكن تثبيت اتجاه كل نموذج، وتعرض ملفات PDF الناتجة العربية بشكل صحيح."
+
+#: magicforms/templates/magicforms/demo.html
+msgid "Can I design my own approval path?"
+msgstr "هل يمكنني تصميم مسار الاعتماد الخاص بي؟"
+
+#: magicforms/templates/magicforms/demo.html
+msgid "Yes. Use fixed steps with named approvers, or dynamic routing where the person holding a request chooses who gets it next."
+msgstr "نعم. استخدم خطوات ثابتة بمعتمِدين محدّدين، أو التوجيه الديناميكي حيث يختار من بيده الطلب من يستلمه بعده."
+
+#: magicforms/templates/magicforms/demo.html
+msgid "How do documents and signatures work?"
+msgstr "كيف تعمل المستندات والتوقيعات؟"
+
+#: magicforms/templates/magicforms/demo.html
+msgid "Upload a DOCX or PDF template with placeholders. Answers merge into a PDF that the right person can sign in the browser."
+msgstr "ارفع قالب DOCX أو PDF يحتوي عناصر نائبة. تُدمج الإجابات في ملف PDF يستطيع الشخص المعني توقيعه في المتصفح."
+
+#: magicforms/templates/magicforms/demo.html
+msgid "Can it talk to our other systems?"
+msgstr "هل يمكنه التواصل مع أنظمتنا الأخرى؟"
+
+#: magicforms/templates/magicforms/demo.html
+msgid "Yes. Validate answers against your API before submit and post results to other systems as a request moves."
+msgstr "نعم. تحقّق من الإجابات عبر واجهتك البرمجية قبل الإرسال وأرسل النتائج إلى أنظمة أخرى مع تقدّم الطلب."
+
+#: magicforms/templates/magicforms/demo.html
+msgid "How do I start?"
+msgstr "كيف أبدأ؟"
+
+#: magicforms/templates/magicforms/demo.html
+msgid "Start free with one live form and grow from there. See the plans on the landing page, or talk to support."
+msgstr "ابدأ مجانًا بنموذج واحد فعّال ثم توسّع. اطّلع على الخطط في الصفحة الرئيسية أو تواصل مع الدعم."
+
+#: magicforms/templates/magicforms/demo.html
+msgid "Want to see it with your own forms?"
+msgstr "تريد تجربته مع نماذجك الخاصة؟"
+
+#: magicforms/templates/magicforms/demo.html
+msgid "See plans"
+msgstr "اطّلع على الخطط"

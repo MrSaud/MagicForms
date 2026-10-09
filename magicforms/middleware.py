@@ -32,6 +32,7 @@ _PORTAL_ROUTING_EXCLUDED_PREFIXES = (
     "/static",
     "/media",
     "/welcome",  # SwapForms landing page, also on the apex portal host
+    "/demo",  # public product tour, same treatment as the landing page
     "/favicon.ico",
     "/apple-touch-icon",
 )
@@ -131,7 +132,7 @@ class EntitySubdomainMiddleware:
         port_bit = f":{port}" if port and port not in ("80", "443") else ""
         apex = f"{scheme}://{domain}{port_bit}"
         qs = request.META.get("QUERY_STRING", "")
-        if self._path_uses_main_urlconf(path) or path.startswith("/e/") or path.startswith("/welcome"):
+        if self._path_uses_main_urlconf(path) or path.startswith("/e/"):
             target = f"{apex}{path}"
         else:
             target = f"{apex}/e/{slug}{path}"
