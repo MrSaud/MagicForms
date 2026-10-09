@@ -1415,6 +1415,7 @@ def user_search(request):
     q = (request.GET.get("q") or "").strip()
     form_pk = oid_parse(request.GET.get("form"))
     scope = (request.GET.get("scope") or "").strip().lower()
+    suggested_id = None
     if form_pk:
         visibility = "all" if request.user.is_superuser else "active"
         selected = (
@@ -1423,7 +1424,17 @@ def user_search(request):
             .first()
         )
         if selected and scope == "entity" and selected.entity_id:
-            qs = entity_users_for_entity_search(selected.entity_id, q)[:50]
+            qs = list(entity_users_for_entity_search(selected.entity_id, q)[:50])
+            if selected.uses_dynamic_routing and selected.submit_route_role:
+                from .workflow_decision import resolve_submit_route_suggestion
+
+                suggested = resolve_submit_route_suggestion(selected)
+                if suggested is not None:
+                    for i, u in enumerate(qs):
+                        if u.pk == suggested.pk:
+                            suggested_id = suggested.pk
+                            qs.insert(0, qs.pop(i))
+                            break
         elif selected:
             qs = share_targets_queryset(request.user, selected, q=q).exclude(pk=request.user.pk)[:50]
         else:
@@ -1446,6 +1457,8 @@ def user_search(request):
             label += f" ({_('Organization admin')})"
         else:
             label += f" ({_('End user')})"
+        if u.pk == suggested_id:
+            label += f" · {_('Suggested')}"
         results.append({"id": u.pk, "text": label})
     return JsonResponse({"results": results})
 

@@ -38,44 +38,51 @@ def _record_submit_route_pick(form_instance, target, *, was_unclaimed: bool) -> 
     FormSubmitRoutePick.objects.filter(pk=pick.pk).update(times_picked=F("times_picked") + 1)
 
 
-def apply_submit_route_role(submission: FormSubmission) -> None:
+def resolve_submit_route_suggestion(form_instance):
     """
-    Dynamic routing only. Called right after a submission is created: if the form defines a
-    submit-stage role, auto-claim the (still unclaimed) submission on behalf of whoever holds
-    that role, so it doesn't sit open when the answer is obvious.
-
-    Picks, in order: the current role-holder most frequently routed to on this form (only when
-    they're the clear, unique leader), otherwise the sole current holder of the role. If nobody
-    holds it, or more than one person does with no clear favorite, the submission is left open
-    for any organization member to claim, same as a dynamic-routing form with no role set.
+    Dynamic routing only. Who ``apply_submit_route_role`` would auto-claim a fresh submission
+    for right now, or who the "Route to" picker should highlight as the suggested pick: the
+    current role-holder most frequently routed to on this form (only when they're the clear,
+    unique leader), otherwise the sole current holder of the role. ``None`` if nobody holds the
+    role, or more than one person does with no clear favorite.
     """
-    form_instance = submission.form
     role = (form_instance.submit_route_role or "").strip()
     if not form_instance.uses_dynamic_routing or not role:
-        return
+        return None
 
     candidates = _submit_route_role_candidates(form_instance, role)
     candidate_ids = list(candidates.values_list("pk", flat=True))
     if not candidate_ids:
-        return
+        return None
 
     top_picks = list(
         FormSubmitRoutePick.objects.filter(form=form_instance, user_id__in=candidate_ids)
         .select_related("user")
         .order_by("-times_picked")[:2]
     )
-    target = None
     if top_picks and (len(top_picks) == 1 or top_picks[0].times_picked > top_picks[1].times_picked):
-        target = top_picks[0].user
-    elif len(candidate_ids) == 1:
-        target = candidates.first()
+        return top_picks[0].user
+    if len(candidate_ids) == 1:
+        return candidates.first()
+    return None
 
+
+def apply_submit_route_role(submission: FormSubmission) -> None:
+    """
+    Dynamic routing only. Called right after a submission is created: if the form defines a
+    submit-stage role, auto-claim the (still unclaimed) submission on behalf of whoever holds
+    that role, so it doesn't sit open when the answer is obvious. See
+    ``resolve_submit_route_suggestion`` for how the target is picked.
+    """
+    form_instance = submission.form
+    target = resolve_submit_route_suggestion(form_instance)
     if target is None:
         return
 
     submission.current_holder = target
     submission.save(update_fields=["current_holder"])
     target_label = target.get_full_name() or target.get_username()
+    role = (form_instance.submit_route_role or "").strip()
     SubmissionEvent.objects.create(
         submission=submission,
         kind=SubmissionEvent.Kind.ROUTED,

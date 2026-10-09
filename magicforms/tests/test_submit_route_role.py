@@ -2,8 +2,11 @@
 Role-based auto-routing for dynamic-routing forms (Form.submit_route_role,
 FormSubmitRoutePick): a fresh submission auto-claims itself on behalf of whoever holds the
 configured role, favoring whoever has been picked most often for this form; a human's manual
-pick on an unclaimed submission adds one to that person's count.
+pick on an unclaimed submission adds one to that person's count. The manual "Route to" picker
+also highlights that same favorite so staff routing by hand see the same recommendation.
 """
+
+import json
 
 from django.contrib.auth import get_user_model
 from django.test import TestCase
@@ -20,6 +23,7 @@ from magicforms.models import (
     FormSubmitRoutePick,
     SubmissionEvent,
 )
+from magicforms.opaque_ids import encode as oid_encode
 from magicforms.staff_forms import StaffMetaForm
 from magicforms.workflow_decision import apply_submit_route_role, perform_dynamic_route_decision
 
@@ -275,3 +279,62 @@ class SubmitRouteRoleEndToEndTests(TestCase):
         self.assertEqual(r.status_code, 302, getattr(r, "content", None))
         sub = FormSubmission.objects.get(form=form)
         self.assertEqual(sub.current_holder_id, finn.pk)
+
+
+class SubmitRoutePickerSuggestionTests(TestCase):
+    """The manual "Route to" search (manage:user_search) surfaces the same favorite as
+    apply_submit_route_role, so a human routing by hand sees the same recommendation."""
+
+    def setUp(self):
+        self.entity = Entity.objects.create(name="Org", slug="org-picker-suggestion")
+        User = get_user_model()
+        self.finn = User.objects.create_user(username="finn-picker", password="x")
+        self.gwen = User.objects.create_user(username="gwen-picker", password="x")
+        self.staff = User.objects.create_user(username="staff-picker", password="x", is_staff=True)
+        for u in (self.finn, self.gwen, self.staff):
+            EntityMembership.objects.create(user=u, entity=self.entity, view_responses_write=True)
+        EmployeeProfile.objects.update_or_create(user=self.finn, defaults={"job_title": "Finance Manager"})
+        EmployeeProfile.objects.update_or_create(user=self.gwen, defaults={"job_title": "Finance Manager"})
+        self.form = _dynamic_form(self.entity, role="Finance Manager")
+
+    def _search(self, q=""):
+        url = (
+            reverse("manage:user_search")
+            + f"?q={q}&form={oid_encode(self.form.pk)}&scope=entity"
+        )
+        self.client.force_login(self.staff)
+        r = self.client.get(url)
+        self.assertEqual(r.status_code, 200)
+        return json.loads(r.content)["results"]
+
+    def test_no_clear_favorite_marks_no_one_suggested(self):
+        results = self._search()
+        self.assertTrue(all("Suggested" not in row["text"] for row in results))
+
+    def test_leader_is_marked_suggested_and_moved_first(self):
+        _pick(self.form, self.gwen, 3)
+        _pick(self.form, self.finn, 1)
+        results = self._search()
+        self.assertEqual(results[0]["id"], self.gwen.pk)
+        self.assertIn("Suggested", results[0]["text"])
+        self.assertTrue(all("Suggested" not in row["text"] for row in results[1:]))
+
+    def test_tied_leaders_mark_no_one_suggested(self):
+        _pick(self.form, self.gwen, 2)
+        _pick(self.form, self.finn, 2)
+        results = self._search()
+        self.assertTrue(all("Suggested" not in row["text"] for row in results))
+
+    def test_fixed_step_form_never_marks_a_suggestion(self):
+        fixed_form = Form.objects.create(
+            entity=self.entity, title="Fixed", slug="fixed-picker-suggestion"
+        )
+        url = (
+            reverse("manage:user_search")
+            + f"?q=&form={oid_encode(fixed_form.pk)}&scope=entity"
+        )
+        self.client.force_login(self.staff)
+        r = self.client.get(url)
+        self.assertEqual(r.status_code, 200)
+        results = json.loads(r.content)["results"]
+        self.assertTrue(all("Suggested" not in row["text"] for row in results))
